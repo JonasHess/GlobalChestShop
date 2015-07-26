@@ -31,7 +31,7 @@ import eu.blockup.GlobalChestShop.Util.Statements.MainConfig;
 import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
 public class Shop {
-	private Integer			shopID;
+	private Integer			shopID = null;
 	private Integer			owner;
 	private UUID			ownerUUID;
 	private final Location		signLocation;
@@ -57,7 +57,6 @@ public class Shop {
 	private HologramHolder	hologramHolder;
 	private boolean			newAuctions;
 	private boolean			sellAll;
-	private boolean			inconsitenceWarning	= false;
 
 	public Shop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, ShopController verwaltung) {
 		this(owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, verwaltung);
@@ -163,24 +162,26 @@ public class Shop {
 		GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "If you have renamed your world, this was not a good idea! Contact the developer or rename it back");
 		GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "If you are running BungeeCord, make sure all worlds in your network have different names!");
 		GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "This error also appears when the server has crashed and your worlds were not saved correctly");
-		this.inconsitenceWarning = true;
-	}
-
-	public void setShopID(Integer shopID) {
-		this.shopID = shopID;
-		if (this.inconsitenceWarning) {
+		if (this.shopID != null) {
 			GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "The ID of the damaged shop is : " + shopID + ", Owned by: " + GlobalChestShop.plugin.getPlayerController().getPlayersName(this.getOwner()));
 			GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "The Location of the damaged shop is : " + this.getSignLocationString());
-			GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "If you want to get rid of this error, type: \"/GlobalChestShop debug " + shopID + "\" int the chat");
+			GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "If you want to get rid of this error, type: \"/GlobalChestShop debug " + shopID + "\" into the chat");
 			GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "You can also use the command \"/GlobalChestShop debug next\" if you have multiple  errors.");
 			GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "If this did not work, you have to edit the database manually and delete the shop with id: " + shopID);
 			GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "If you get hundreds of errors like this, contact the developer");
 			GlobalChestShop.plugin.getLogger().log(Level.WARNING, "**********************************************************");
-			List<Shop> brokenShopList = GlobalChestShop.plugin.getShopVerwaltung().getBrokenShopList();
-			synchronized (brokenShopList) {
-				brokenShopList.add(this);
-			}
 		}
+		List<Shop> brokenShopList = GlobalChestShop.plugin.getShopVerwaltung().getBrokenShopList();
+		synchronized (brokenShopList) {
+			brokenShopList.add(this);
+		}
+		
+		
+	}
+
+	public void setShopID(Integer shopID) {
+		this.shopID = shopID;
+		
 	}
 
 	public Integer getCategoryID() {

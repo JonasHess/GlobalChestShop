@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Exceptions.WorldHasNoWorldGroupException;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_AuctionCreate;
+import eu.blockup.GlobalChestShop.Util.GUI.GUI_DebugAllShops;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_DefaultCategoryCollection;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_DeleteAllPlayerShops;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_GlobalShopByAuctions;
@@ -114,12 +115,14 @@ public class ShopCommandExecutor implements CommandExecutor {
 			// DEBUG
 			if (args[0].equalsIgnoreCase("debug")) {
 				if (!GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.ADMIN)) {
-					player.sendMessage("No Permission");
+					player.sendMessage(ChatColor.RED + "No Permission");
 					return true;
 				}
 				if (!(args.length > 1)) {
 					player.sendMessage(ChatColor.GREEN + "/GlobalCHestShop debug " + ChatColor.RED + "<ShopID>");
 					player.sendMessage(ChatColor.GREEN + "/GlobalCHestShop debug " + ChatColor.RED + "next");
+					
+					new GUI_DebugAllShops(null).open(player);
 					return true;
 				}
 				
