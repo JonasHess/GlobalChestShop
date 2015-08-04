@@ -54,7 +54,7 @@ public class GUI_AuctionCreate extends InventoryGUI {
 					throw new ItemIsNotAlloedInThisWorldGroupException();
 				}
 			}
-			if (GlobalChestShop.plugin.itemControler.isItemBannedFromShops(item, worldGroup, true)) {
+			if (GlobalChestShop.plugin.itemController.isItemBannedFromShops(item, worldGroup, true)) {
 				if (!(GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN))) {
 					updateAfterChange(player);
 					throw new ItemIsNotAlloedInThisWorldGroupException();

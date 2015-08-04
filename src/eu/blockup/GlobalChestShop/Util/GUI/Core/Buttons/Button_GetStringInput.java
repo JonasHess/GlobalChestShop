@@ -23,13 +23,11 @@ public abstract class Button_GetStringInput extends Button {
 
       @Override
       public boolean shouldPlayerBeUnableToMoveWhileWriting() {
-        // TODO Auto-generated method stub
         return button.shouldPlayerBeUnableToMoveWhileWriting();
       }
 
       @Override
       public boolean shouldPlayerBeBlindWhileWriting() {
-        // TODO Auto-generated method stub
         return button.shouldPlayerBeBlindWhileWriting();
       }
 

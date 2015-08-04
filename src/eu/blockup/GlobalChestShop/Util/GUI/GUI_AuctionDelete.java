@@ -18,18 +18,20 @@ public class GUI_AuctionDelete extends SimpleIInventoryGUI {
 
 	private final Auction	auction;
 	private Integer			worldGroup;
+	private double multiplier;
 
-	public GUI_AuctionDelete(Auction auction, InventoryGUI parentInventoryGUI, Integer worldGroup) {
+	public GUI_AuctionDelete(Auction auction, InventoryGUI parentInventoryGUI, Integer worldGroup, double multiplier) {
 		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAuction_Title), 6, auction.getItemStack(1), parentInventoryGUI);
 		this.auction = auction;
 		this.worldGroup = worldGroup;
+		this.multiplier = multiplier;
 	}
 
 	@Override
 	protected void drawButtons(Player player) {
 
 		// Acution Display Item
-		this.drawButton(4, 1, new Button_Auction(auction, true, false, this.worldGroup, true));
+		this.drawButton(4, 1, new Button_Auction(auction, 1.0, true, false, this.worldGroup, true));
 
 		// Cancel Auction
 		this.drawButton(4, 3, new Button_PolarQuestion(new ItemStack(Material.WOOL, 1, (short) 14), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAuction_Cancel_Auction)) {
@@ -77,6 +79,7 @@ public class GUI_AuctionDelete extends SimpleIInventoryGUI {
 						auction.canceleAuction();
 						player.getInventory().addItem(auction.getItemStack(auction.getAmount()));
 						player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.GUI_Message_RemovedAuction));
+						GlobalChestShop.plugin.logToTradeLogger(player.getName(), player.getUniqueId(), player.getName() + " has canceled the auction : " + auction.toString(multiplier));
 						inventoryGUI.getParentGUI().returnToParentGUI(player);
 					} catch (NoFreeSlotInInventoryException e) {
 						InventoryGUI.warning(GlobalChestShop.text.get(GlobalChestShop.text.Inventory_NoSpace), false, player, inventoryGUI.getParentGUI());

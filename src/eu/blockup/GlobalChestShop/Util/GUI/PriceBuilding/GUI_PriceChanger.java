@@ -55,7 +55,7 @@ public class GUI_PriceChanger extends InventoryGUI {
 
 			@Override
 			public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
-				GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_StateCangerDouble(((GUI_PriceChanger) inventoryGUI).prices.getBuyPrice(), GlobalChestShop.text.get(GlobalChestShop.text.GUI_Button_BuyPrice_Title), new ItemStack(Material.NAME_TAG), inventoryGUI, 4, amount) {
+				GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_StateCangerDouble(((GUI_PriceChanger) inventoryGUI).prices.getBuyPrice(), GlobalChestShop.text.get(GlobalChestShop.text.GUI_Button_BuyPrice_Title), new ItemStack(Material.NAME_TAG), inventoryGUI, 4, amount, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1) {
 
 					@Override
 					public boolean shouldReturnButtonBeDrawn() {
@@ -100,7 +100,7 @@ public class GUI_PriceChanger extends InventoryGUI {
 					@Override
 					protected void drawAdditionalButtons(Player player) {
 						// -1.0 Button
-						this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14), this.getValueObject(), -99.0D, ModifyTyp.setValue, amount));
+						this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14), this.getValueObject(), -99.0D, ModifyTyp.setValue, amount, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
 
 					}
 
@@ -127,7 +127,7 @@ public class GUI_PriceChanger extends InventoryGUI {
 
 			@Override
 			public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
-				GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_StateCangerDouble(((GUI_PriceChanger) inventoryGUI).prices.getSellPrice(), GlobalChestShop.text.get(GlobalChestShop.text.GUI_Button_SellPrice_Title), new ItemStack(Material.NAME_TAG), inventoryGUI, 4, amount) {
+				GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_StateCangerDouble(((GUI_PriceChanger) inventoryGUI).prices.getSellPrice(), GlobalChestShop.text.get(GlobalChestShop.text.GUI_Button_SellPrice_Title), new ItemStack(Material.NAME_TAG), inventoryGUI, 4, amount, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1) {
 
 					@Override
 					public boolean shouldReturnButtonBeDrawn() {
@@ -172,7 +172,7 @@ public class GUI_PriceChanger extends InventoryGUI {
 					@Override
 					protected void drawAdditionalButtons(Player player) {
 						// -1.0 Button
-						this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14), this.getValueObject(), -99.0D, ModifyTyp.setValue, amount));
+						this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14), this.getValueObject(), -99.0D, ModifyTyp.setValue, amount, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
 
 					}
 

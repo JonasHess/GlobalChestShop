@@ -89,6 +89,7 @@ public class GUI_AuctionCreateSubmit extends InventoryGUI {
 					
 					// BroadCast																													//player, 64, stone, price
 					String broadcastMessage = GlobalChestShop.text.get(GlobalChestShop.text.Message_BroadcastCreationOfNewAuction, player.getName(), String.valueOf(soldItems), GlobalChestShop.plugin.getItemStackDisplayName(itemForSale), GlobalChestShop.plugin.formatPrice(auctionPrepare.getPriceObject().getCurrentState(player), false));
+					GlobalChestShop.plugin.logToTradeLogger(player.getName(), player.getUniqueId(), broadcastMessage);
 					GlobalChestShop.plugin.getLogger().log(Level.INFO, ChatColor.stripColor(broadcastMessage));
 					if (GlobalChestShop.plugin.getMainConfig().broadcastCreationOfNewAuctions) {
 						for (Player p : GlobalChestShop.plugin.getServer().getOnlinePlayers()) {

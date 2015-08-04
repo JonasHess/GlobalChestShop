@@ -20,9 +20,10 @@ public class GUI_AuctionBuy extends GUI_Shop {
 
 	private Auction	auction;
 	private Integer	worldGroup;
+	private double multiplier;
 
-	public GUI_AuctionBuy(Auction auction, InventoryGUI parentGUI, Integer worldGroup) {
-		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_BuyAuction_Title), auction.getItemStack(auction.getAmount()), parentGUI, auction, GlobalChestShop.plugin.getEconomy(), true, true, true);
+	public GUI_AuctionBuy(Auction auction, InventoryGUI parentGUI, Integer worldGroup, double multiplier) {
+		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_BuyAuction_Title), auction.getItemStack(auction.getAmount()), parentGUI, auction, GlobalChestShop.plugin.getEconomy(), true, true, true, multiplier);
 		this.auction = auction;
 		this.setAmount(auction.getAmount());
 		this.worldGroup = worldGroup;
@@ -101,7 +102,7 @@ public class GUI_AuctionBuy extends GUI_Shop {
 
 				@Override
 				public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
-					GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_AuctionDelete(auction, inventoryGUI, worldGroup));
+					GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_AuctionDelete(auction, inventoryGUI, worldGroup, multiplier));
 				}
 			});
 		}

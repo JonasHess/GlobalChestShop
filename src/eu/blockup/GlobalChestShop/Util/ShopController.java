@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
+
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -254,18 +256,18 @@ public class ShopController {
 	public Shop createNewGlobalShop(ShopInfoPack infoPack) {
 
 		if (infoPack.getShopTyp() == EShopTyp.GlobalChestShop) {
-			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getChestLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, null, infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance());
+			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getChestLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, null, infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier());
 
 		} else if (infoPack.getShopTyp() == EShopTyp.GlobalSignShop) {
-			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), null, infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, null, infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance());
+			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), null, infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, null, infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier());
 
 		} else if (infoPack.getShopTyp() == EShopTyp.GlobalItemframeShop) {
-			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), true, null, infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance());
+			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), true, null, infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier());
 		} else if (infoPack.getShopTyp() == EShopTyp.GlobalHoloShop) {
-			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, null, infoPack.getCategoryID(), true, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance());
+			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, null, infoPack.getCategoryID(), true, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier());
 
 		} else if (infoPack.getShopTyp() == EShopTyp.GlobalNpcShop) {
-			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, infoPack.getNpcID(), infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance());
+			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, infoPack.getNpcID(), infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier());
 		}
 		System.out.println("Shop Verwaltung ERROR");
 		return null;
@@ -299,17 +301,17 @@ public class ShopController {
 	// }
 
 	public synchronized Shop createNewLocalChestShop(Player player, Location signLocation, Location chestLocation, Integer worldGroup) {
-		return this.createNewShop(GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(player.getUniqueId()), signLocation, chestLocation, worldGroup, null, false, false, null, null, false, false, false, 0);
+		return this.createNewShop(GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(player.getUniqueId()), signLocation, chestLocation, worldGroup, null, false, false, null, null, false, false, false, 0, 1.0);
 	}
 
-	private synchronized Shop createNewShop(Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance) {
-		Shop shop = addShop(playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance);
+	private synchronized Shop createNewShop(Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier) {
+		Shop shop = addShop(playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier);
 		this.wirteShopToDatabase(shop);
 		this.setShopID(shop);
 		return shop;
 	}
 
-	private synchronized Shop loadShopFromDB(Integer shopID, Integer owner, String signLocation, String location2, Integer worldGroup, Integer itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance) throws LocationNotFoundException, WorldHasNoWorldGroupException, RequiredPluginNotFoundException {
+	private synchronized Shop loadShopFromDB(Integer shopID, Integer owner, String signLocation, String location2, Integer worldGroup, Integer itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier) throws LocationNotFoundException, WorldHasNoWorldGroupException, RequiredPluginNotFoundException {
 		Location L_signLocation = this.stringToLocation(signLocation);
 		Location L_location2 = this.stringToLocation(location2);
 		Integer worldGoupTmp = null;
@@ -330,15 +332,15 @@ public class ShopController {
 			throw new RequiredPluginNotFoundException();
 		}
 
-		return this.addShop(shopID, owner, L_signLocation, L_location2, worldGroup, GlobalChestShop.plugin.itemControler.formatInternalItemIdToItemStack(itemStack), adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance);
+		return this.addShop(shopID, owner, L_signLocation, L_location2, worldGroup, GlobalChestShop.plugin.itemController.formatInternalItemIdToItemStack(itemStack), adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier);
 	}
 
-	private Shop addShop(Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance) {
-		return this.addShop(-1, owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance);
+	private Shop addShop(Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier) {
+		return this.addShop(-1, owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier);
 	}
 
-	private Shop addShop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance) {
-		Shop s = new Shop(shopID, owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, this);
+	private Shop addShop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier) {
+		Shop s = new Shop(shopID, owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, this);
 		synchronized (hashMap_AllShops) {
 			if (!this.hashMap_AllShops.containsKey(s.getOwner())) {
 				this.hashMap_AllShops.put(s.getOwner(), java.util.Collections.synchronizedList(new LinkedList<Shop>()));
@@ -495,7 +497,7 @@ public class ShopController {
 					itemStack = null;
 				}
 				try {
-					this.loadShopFromDB(rs.getInt("shopID"), rs.getInt("ownerID"), rs.getString("signLocation"), rs.getString("location2"), rs.getInt("worldGroup"), itemStack, rs.getBoolean("adminshopOnly"), rs.getBoolean("itemFrame"), npcID, categoryID, rs.getBoolean("holo"), rs.getBoolean("newAuctions"), rs.getBoolean("sellAll"), rs.getInt("appearance"));
+					this.loadShopFromDB(rs.getInt("shopID"), rs.getInt("ownerID"), rs.getString("signLocation"), rs.getString("location2"), rs.getInt("worldGroup"), itemStack, rs.getBoolean("adminshopOnly"), rs.getBoolean("itemFrame"), npcID, categoryID, rs.getBoolean("holo"), rs.getBoolean("newAuctions"), rs.getBoolean("sellAll"), rs.getInt("appearance"), rs.getDouble("multiplier"));
 
 				
 				} catch (LocationNotFoundException e) {
@@ -569,5 +571,7 @@ public class ShopController {
 		});
 		return resultList;
 	}
+
+
 
 }

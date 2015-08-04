@@ -89,7 +89,7 @@ public class GUI_AdminShopChooseItem extends SimpleIInventoryGUI{
           if (adminShop == null) {
             new GUI_AdminShopCreate(itemStack, inventoryGUI, worldGroup).open(player);
           } else {
-            new GUI_AdminShopEdit(adminShop, inventoryGUI, worldGroup).open(player);;
+            new GUI_AdminShopEdit(adminShop, inventoryGUI, worldGroup).open(player);
           }
         }
       });

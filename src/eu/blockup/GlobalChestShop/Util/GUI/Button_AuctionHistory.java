@@ -33,7 +33,7 @@ public class Button_AuctionHistory extends Button{
       if (this.showRunningAuctions){
         visibility = Visibility.AllActive;
       } else {
-        visibility = Visibility.AllSold;
+        visibility = Visibility.AllExpired;
       }
         GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_AuctionHistory(inventoryGUI, player.getUniqueId(), visibility, this.showRunningAuctions, createNewAuctionButton, this.worldGroup));
     }

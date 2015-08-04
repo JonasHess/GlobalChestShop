@@ -35,7 +35,6 @@ public abstract class GUI_StateChangerInteger extends GUI_StateChangerNumeric<In
 
   public GUI_StateChangerInteger(StateKeeper<Integer> valueObject, String guiTitle, ItemStack displayItem, InventoryGUI parentGUI, int height) {
     super(valueObject, guiTitle, displayItem, parentGUI, height);
-    // TODO Auto-generated constructor stub
   }
 
   @Override

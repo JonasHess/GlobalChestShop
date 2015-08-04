@@ -14,11 +14,13 @@ import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 public class GUI_SubmitBuy extends GUI_PolarQuestion {
 	private Auction	auction;
 	private int		amount;
+	private double multiplier;
 
-	public GUI_SubmitBuy(Auction auction, int amount, InventoryGUI parentGUI) {
+	public GUI_SubmitBuy(Auction auction, int amount, double multiplier, InventoryGUI parentGUI) {
 		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitBuy_Title), parentGUI);
 		this.auction = auction;
 		this.amount = amount;
+		this.multiplier = multiplier;
 	}
 
 	@Override
@@ -67,7 +69,7 @@ public class GUI_SubmitBuy extends GUI_PolarQuestion {
 
 	@Override
 	protected void onYesButtonClick(InventoryGUI inventoryGUI, Player player) {
-		GlobalChestShop.plugin.getAuctionController(auction.getworldGroup()).buyAuction(amount, auction, inventoryGUI, player);
+		GlobalChestShop.plugin.getAuctionController(auction.getworldGroup()).buyAuction(amount, auction, multiplier,  inventoryGUI, player);
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class GUI_SubmitBuy extends GUI_PolarQuestion {
 
 	@Override
 	public Button_Bare get_the_Question_Button() {
-		return new Button_Bare(auction.getItemStack(amount), GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitBuy_Sure_to_Buy), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(auction.getShopToPlayerPrice(this.amount), false)));
+		return new Button_Bare(auction.getItemStack(amount), GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitBuy_Sure_to_Buy), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(auction.getShopToPlayerPrice(this.amount, multiplier), false)));
 	}
 
 	@Override

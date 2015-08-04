@@ -26,7 +26,7 @@ public class CustomCategoryController {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(query);
-			st.setInt(1, GlobalChestShop.plugin.itemControler.getInteralIdOfItemStack(displayItem));
+			st.setInt(1, GlobalChestShop.plugin.itemController.getInteralIdOfItemStack(displayItem));
 			st.setString(2, name);
 			st.setBoolean(3, adminShopOnly);
 			st.executeUpdate();

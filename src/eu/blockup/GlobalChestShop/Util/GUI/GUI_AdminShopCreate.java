@@ -73,7 +73,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
         GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(
             player,
             new GUI_StateCangerDouble(((GUI_AdminShopCreate) inventoryGUI).sellPrice, GlobalChestShop.text
-                .get(GlobalChestShop.text.GUI_CreateAdminShop_SetSellPrice_Title), itemStack, inventoryGUI, 4, 1) {
+                .get(GlobalChestShop.text.GUI_CreateAdminShop_SetSellPrice_Title), itemStack, inventoryGUI, 4, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1) {
 
               @Override
               public boolean shouldReturnButtonBeDrawn() {
@@ -120,7 +120,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
               protected void drawAdditionalButtons(Player player) {
              // -1.0 Button
                 this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14),
-                    this.getValueObject(), -99.0D, ModifyTyp.setValue, 1));
+                    this.getValueObject(), -99.0D, ModifyTyp.setValue, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
               }
 
               @Override
@@ -151,7 +151,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
         GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(
             player,
             new GUI_StateCangerDouble(((GUI_AdminShopCreate) inventoryGUI).buyPrice, GlobalChestShop.text
-                .get(GlobalChestShop.text.GUI_CreateAdminShop_SetBuyPrice_Title), itemStack, inventoryGUI, 4, 1) {
+                .get(GlobalChestShop.text.GUI_CreateAdminShop_SetBuyPrice_Title), itemStack, inventoryGUI, 4, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1) {
 
               @Override
               public boolean shouldReturnButtonBeDrawn() {
@@ -198,7 +198,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
               protected void drawAdditionalButtons(Player player) {
              // -1.0 Button
                 this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14),
-                    this.getValueObject(), -99.0D, ModifyTyp.setValue, 1));
+                    this.getValueObject(), -99.0D, ModifyTyp.setValue, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
               }
 
               @Override

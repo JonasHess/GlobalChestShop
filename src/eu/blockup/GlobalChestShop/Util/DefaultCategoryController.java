@@ -18,6 +18,7 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
 import eu.blockup.GlobalChestShop.GlobalChestShop;
+import eu.blockup.GlobalChestShop.Util.Exceptions.RecipeTypeNotFound;
 
 public class DefaultCategoryController {
 	private Map<Integer, DefaultCategory>	hashMap_Categories;
@@ -93,25 +94,28 @@ public class DefaultCategoryController {
 		}
 	}
 
-	private void addItem(Recipe recipe) {
+	private void addItem(Recipe recipe) throws RecipeTypeNotFound {
 		this.addItem(this.evaluateRecipe(recipe));
 	}
 
 	private void generateAllItemList() {
 		List<Integer> auctionItemList = GlobalChestShop.plugin.getAuctionController(worldGroup).getAllActiveItems();
 		for (int i : auctionItemList) {
-			this.addItem(GlobalChestShop.plugin.itemControler.formatInternalItemIdToItemStack(i));
+			this.addItem(GlobalChestShop.plugin.itemController.formatInternalItemIdToItemStack(i));
 		}
 		Iterator<Recipe> iterator = GlobalChestShop.plugin.getServer().recipeIterator();
 		while (iterator.hasNext()) {
-			this.addItem(iterator.next());
+			try {
+				this.addItem(iterator.next());
+			} catch (RecipeTypeNotFound e) {
+			}
 		}
 		for (Material material : Material.values()) {
 			this.addItem(new ItemStack(material));
 		}
 	}
 
-	private EvaluatedRecipe evaluateRecipe(Recipe recipe) {
+	private EvaluatedRecipe evaluateRecipe(Recipe recipe) throws RecipeTypeNotFound {
 		EvaluatedRecipe tempEvaluatedRecepie;
 
 		// ShapedRecipe
@@ -135,14 +139,17 @@ public class DefaultCategoryController {
 		}
 
 		// ShapelessRecipe
-		tempEvaluatedRecepie = (new EvaluatedRecipe(recipe.getResult()));
-		List<ItemStack> itemlist = ((ShapelessRecipe) recipe).getIngredientList();
-		for (ItemStack listelement : itemlist) {
-			if (listelement.clone() != null) {
-				tempEvaluatedRecepie.addImputItem(listelement.clone());
+		if (recipe instanceof ShapelessRecipe) {
+			tempEvaluatedRecepie = (new EvaluatedRecipe(recipe.getResult()));
+			List<ItemStack> itemlist = ((ShapelessRecipe) recipe).getIngredientList();
+			for (ItemStack listelement : itemlist) {
+				if (listelement.clone() != null) {
+					tempEvaluatedRecepie.addImputItem(listelement.clone());
+				}
 			}
+			return tempEvaluatedRecepie;
 		}
-		return tempEvaluatedRecepie;
+		throw new RecipeTypeNotFound();
 	}
 
 	class EvaluatedRecipe {

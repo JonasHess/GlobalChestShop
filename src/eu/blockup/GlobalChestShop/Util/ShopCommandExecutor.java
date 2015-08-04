@@ -1,6 +1,5 @@
 package eu.blockup.GlobalChestShop.Util;
 
-
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -18,7 +17,9 @@ import eu.blockup.GlobalChestShop.Util.GUI.GUI_DefaultCategoryCollection;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_DeleteAllPlayerShops;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_GlobalShopByAuctions;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_GlobalShopByPlayers;
+import eu.blockup.GlobalChestShop.Util.GUI.GUI_PriceMultiplierPicker;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_Search;
+import eu.blockup.GlobalChestShop.Util.GUI.PriceMultiplierStateKeeper;
 import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
 public class ShopCommandExecutor implements CommandExecutor {
@@ -31,9 +32,6 @@ public class ShopCommandExecutor implements CommandExecutor {
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
 
 		if (args.length > 0) {
-
-			// Argument && CONSOLE
-
 			// RELOAD
 			if (args[0].equalsIgnoreCase("reload")) {
 				if (GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.ADMIN)) {
@@ -41,7 +39,7 @@ public class ShopCommandExecutor implements CommandExecutor {
 					GlobalChestShop.plugin.getServer().getScheduler().scheduleSyncDelayedTask(GlobalChestShop.plugin, new Runnable() {
 						public void run() {
 							GlobalChestShop.plugin.reload();
-							commandSender.sendMessage( ChatColor.GREEN + "GlobalChestShop reloaded");
+							commandSender.sendMessage(ChatColor.GREEN + "GlobalChestShop reloaded");
 						}
 					}, 1L);
 				} else {
@@ -50,27 +48,33 @@ public class ShopCommandExecutor implements CommandExecutor {
 
 				return true;
 			}
+		}
 
-			if (!(cs instanceof Player)) {
-				cs.sendMessage("You are not a player");
+		Player player;
+		int worldGroup;
+		if (cs instanceof Player) {
+			player = (Player) cs;
+			try {
+				worldGroup = GlobalChestShop.plugin.getworldGroup(player.getLocation());
+			} catch (WorldHasNoWorldGroupException e) {
+				player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Message_worldNotFound));
+				if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
+					player.sendMessage("You have to configure /plugins/GlobalChestShop/worldGroups.yml");
+				}
 				return true;
 			}
-			final Player player = (Player) cs;
+		} else {
+			cs.sendMessage("This command has to be triggered ingame!");
+			return true;
+		}
+
+		if (args.length > 0) {
 
 			// Argument && NO CONSOLE
 
 			// BUY
-			if (args[0].equalsIgnoreCase("buy")) {
-				int worldGroup;
-				try {
-					worldGroup = GlobalChestShop.plugin.getworldGroup(player.getLocation());
-				} catch (WorldHasNoWorldGroupException e) {
-					player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Message_worldNotFound));
-					if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
-						player.sendMessage("You have to configure /plugins/GlobalChestShop/worldGroups.yml");
-					}
-					return true;
-				}
+			if (args[0].equalsIgnoreCase("buy") || args[0].equalsIgnoreCase("search")) {
+
 				if (!GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.VIP_SELL_COMMAND + "." + worldGroup)) {
 					GlobalChestShop.plugin.permissionWarning(player);
 					return true;
@@ -84,22 +88,13 @@ public class ShopCommandExecutor implements CommandExecutor {
 					searched = GlobalChestShop.plugin.getItemStackDisplayName(player.getItemInHand());
 				}
 
-				new GUI_Search(searched, null, worldGroup, GlobalChestShop.plugin.getMainConfig().buyCommandShowsOnlyAdminShops, GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.VIP_CREATE_NEW_AUCTIONS_INSIDE_BUY_COMMAND)).open(player);
+				new GUI_Search(searched, null, worldGroup, GlobalChestShop.plugin.getMainConfig().buyCommandShowsOnlyAdminShops, GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.VIP_CREATE_NEW_AUCTIONS_INSIDE_BUY_COMMAND), 1.0).open(player);
 				return true;
 			}
 
 			// Sell
 			if (args[0].equalsIgnoreCase("sell")) {
-				int worldGroup;
-				try {
-					worldGroup = GlobalChestShop.plugin.getworldGroup(player.getLocation());
-				} catch (WorldHasNoWorldGroupException e) {
-					player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Message_worldNotFound));
-					if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
-						player.sendMessage("You have to configure /plugins/GlobalChestShop/worldGroups.yml");
-					}
-					return true;
-				}
+
 				if (!GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.VIP_SELL_COMMAND + "." + worldGroup)) {
 					GlobalChestShop.plugin.permissionWarning(player);
 					return true;
@@ -121,13 +116,13 @@ public class ShopCommandExecutor implements CommandExecutor {
 				if (!(args.length > 1)) {
 					player.sendMessage(ChatColor.GREEN + "/GlobalCHestShop debug " + ChatColor.RED + "<ShopID>");
 					player.sendMessage(ChatColor.GREEN + "/GlobalCHestShop debug " + ChatColor.RED + "next");
-					
+
 					new GUI_DebugAllShops(null).open(player);
 					return true;
 				}
-				
+
 				if (args[1].equalsIgnoreCase("next")) {
-					
+
 					if (GlobalChestShop.plugin.getShopVerwaltung().getBrokenShopList().isEmpty()) {
 						player.sendMessage(ChatColor.GREEN + "There are no more broken shops :)");
 						return true;
@@ -166,21 +161,50 @@ public class ShopCommandExecutor implements CommandExecutor {
 			// Test
 			if (args[0].equalsIgnoreCase("test")) {
 				if (GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.ADMIN)) {
-					// player.sendMessage(" May Auctions: " + new
-					// AuctionLimitController().getMaxAmountOfRunningAuctions(player,
-					// 1));
-					// GlobalChestShop.plugin.getPriceEngine().openPriceChangeMenuForItem(player,
-					// null, player.getItemInHand(), 1);
-					// new PriceWriter();
-					// player.sendMessage(new
-					// ItemStackUtil().toString(player.getItemInHand()));
-					// player.sendMessage("DONE");
+					
 					return true;
 				} else {
 					player.sendMessage("No Permission");
 					return true;
 				}
 			}
+
+			// 1
+			if (args[0].equalsIgnoreCase("1") || args[0].equalsIgnoreCase("categories")) {
+				if (GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.VIP_OPEN_GLOBALSHOP_BY_COMMAND + "." + worldGroup)) {
+					boolean canCreateNewAuctions = GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.VIP_CREATE_NEW_AUCTIONS_INSIDE_GLOBALSHOP_COMMAND + "." + worldGroup);
+					new GUI_DefaultCategoryCollection(null, false, worldGroup, canCreateNewAuctions, 1.0).open(player);
+					return true;
+				} else {
+					GlobalChestShop.plugin.permissionWarning(cs);
+				}
+			}
+
+			// 2
+			
+			if (args[0].equalsIgnoreCase("2") || args[0].equalsIgnoreCase("localshops")) {
+				if (GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.VIP_OPEN_GLOBALSHOP_BY_COMMAND + "." + worldGroup)) {
+					boolean canCreateNewAuctions = GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.VIP_CREATE_NEW_AUCTIONS_INSIDE_GLOBALSHOP_COMMAND + "." + worldGroup);
+					 new GUI_GlobalShopByPlayers(worldGroup, canCreateNewAuctions, null, 1.0).open(player);
+					return true;
+				} else {
+					GlobalChestShop.plugin.permissionWarning(cs);
+				}
+			}
+
+			// 3
+			
+			if (args[0].equalsIgnoreCase("3") || args[0].equalsIgnoreCase("allauctions")) {
+				if (GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.VIP_OPEN_GLOBALSHOP_BY_COMMAND + "." + worldGroup)) {
+					boolean canCreateNewAuctions = GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.VIP_CREATE_NEW_AUCTIONS_INSIDE_GLOBALSHOP_COMMAND + "." + worldGroup);
+					 new GUI_GlobalShopByAuctions(worldGroup, false, canCreateNewAuctions, 1.0, null).open(player);
+					return true;
+				} else {
+					GlobalChestShop.plugin.permissionWarning(cs);
+				}
+			}
+			
+			
 
 			// reset
 			if (args[0].equalsIgnoreCase("reset")) {
@@ -202,33 +226,21 @@ public class ShopCommandExecutor implements CommandExecutor {
 			cs.sendMessage("You are not a player");
 			return true;
 		}
-		final Player player = (Player) cs;
 
 		// !Argument && CONSOLE
-
-		int worldGroup;
-		try {
-			worldGroup = GlobalChestShop.plugin.getworldGroup(player.getLocation());
-		} catch (WorldHasNoWorldGroupException e) {
-			player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Message_worldNotFound));
-			if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
-				player.sendMessage("You have to configure /plugins/GlobalChestShop/worldGroups.yml");
-			}
-			return true;
-		}
 
 		// OPEN GLOBAL SHOP
 		if (GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.VIP_OPEN_GLOBALSHOP_BY_COMMAND + "." + worldGroup)) {
 			int defaultShopTypForTheGlobalShopCommand = GlobalChestShop.plugin.getMainConfig().defaultShopTypForTheGlobalShopCommand;
 			boolean canCreateNewAuctions = GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.VIP_CREATE_NEW_AUCTIONS_INSIDE_GLOBALSHOP_COMMAND + "." + worldGroup);
 			if (defaultShopTypForTheGlobalShopCommand == 1) {
-				new GUI_DefaultCategoryCollection(null, false, worldGroup, canCreateNewAuctions).open(player);
-			} else if ( defaultShopTypForTheGlobalShopCommand == 2){
-				new GUI_GlobalShopByPlayers(worldGroup, canCreateNewAuctions, null).open(player);
+				new GUI_DefaultCategoryCollection(null, false, worldGroup, canCreateNewAuctions, 1.0).open(player);
+			} else if (defaultShopTypForTheGlobalShopCommand == 2) {
+				new GUI_GlobalShopByPlayers(worldGroup, canCreateNewAuctions, null, 1.0).open(player);
 			} else {
-				new GUI_GlobalShopByAuctions(worldGroup, false, canCreateNewAuctions, null).open(player);
+				new GUI_GlobalShopByAuctions(worldGroup, false, canCreateNewAuctions, 1.0, null).open(player);
 			}
-			
+
 			return true;
 		} else {
 			GlobalChestShop.plugin.permissionWarning(cs);

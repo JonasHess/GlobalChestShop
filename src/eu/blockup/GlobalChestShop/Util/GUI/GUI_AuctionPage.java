@@ -18,12 +18,14 @@ public abstract class GUI_AuctionPage extends GUI_PageView<Auction> {
 	protected boolean		highlightAdminShops;
 	protected final Integer	worldGroup;
 	private boolean			showStatusLine;
+	private double multiplier;
 
-	public GUI_AuctionPage(String title, ItemStack displayItem, InventoryGUI parentGUI, boolean highlightAdminShops, Integer worldGroup, boolean showStatusLine) {
+	public GUI_AuctionPage(String title, ItemStack displayItem, InventoryGUI parentGUI, boolean highlightAdminShops, Integer worldGroup, boolean showStatusLine, double multiplier) {
 		super(title, displayItem, 1, parentGUI);
 		this.worldGroup = worldGroup;
 		this.showStatusLine = showStatusLine;
 		this.highlightAdminShops = highlightAdminShops;
+		this.multiplier = multiplier;
 	}
 
 	public abstract boolean drawAuctionCreateButton(Player player);
@@ -55,35 +57,6 @@ public abstract class GUI_AuctionPage extends GUI_PageView<Auction> {
 		// Create new AdminShop
 		if (drawAdminShopCreateButton() && GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
 			this.drawButton(this.getWidth() - 2, this.getHeight() - 1, new Button_AdminShopCreate(this.getPresetAdminShopItem(), worldGroup));
-			// this.drawButton(this.getWidth() - 2, this.getHeight() - 1,
-			// new Button(new ItemStack(Material.ENDER_CHEST),
-			// GlobalChestShop.text.get(GlobalChestShop.text.GUI_CreateAdminShop_SubmitButton),GlobalChestShop.text.get(GlobalChestShop.text.GUI_CreateAdminShop_SubmitButton_DESC))
-			// {
-			//
-			// @Override
-			// public void onRefresh(InventoryGUI inventoryGUI, Player player)
-			// {}
-			//
-			// @Override
-			// public void onButtonClick(InventoryGUI inventoryGUI, Player
-			// player, ItemStack cursor, ItemStack current, ClickType type,
-			// InventoryClickEvent event) {
-			// if (presetAdminShopItem == null) {
-			// new GUI_AdminShopChooseItem(inventoryGUI,
-			// worldGroup).open(player);
-			// return;
-			// }
-			// Auction adminShop =
-			// GlobalChestShop.plugin.getAuctionController(worldGroup).getAdminShopFromItemStack(presetAdminShopItem);
-			// if (adminShop == null) {
-			// new GUI_AdminShopCreate(presetAdminShopItem, inventoryGUI,
-			// worldGroup).open(player);
-			// } else {
-			// new GUI_AdminShopEdit(adminShop, inventoryGUI,
-			// worldGroup).open(player);
-			// }
-			// }
-			// });
 		}
 
 		// Money Button
@@ -100,7 +73,7 @@ public abstract class GUI_AuctionPage extends GUI_PageView<Auction> {
 
 	@Override
 	public Button convertListObjectToButton(Auction obj, Player player) {
-		return new Button_Auction(obj, true, this.highlightAdminShops, this.worldGroup, this.showStatusLine);
+		return new Button_Auction(obj, multiplier, true, this.highlightAdminShops, this.worldGroup, this.showStatusLine);
 	}
 
 	@Override

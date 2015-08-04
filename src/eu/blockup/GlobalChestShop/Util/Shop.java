@@ -1,8 +1,14 @@
 package eu.blockup.GlobalChestShop.Util;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+
+import javax.management.RuntimeErrorException;
+import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,10 +37,10 @@ import eu.blockup.GlobalChestShop.Util.Statements.MainConfig;
 import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
 public class Shop {
-	private Integer			shopID = null;
+	private Integer			shopID					= null;
 	private Integer			owner;
 	private UUID			ownerUUID;
-	private final Location		signLocation;
+	private final Location	signLocation;
 	private Location		signHolder;
 	private Location		itemFrameHolder;
 	private Location		location2;
@@ -48,7 +54,7 @@ public class Shop {
 	private int				appearance;
 
 	private EShopTyp		eShopTyp;
-	private boolean			shopIsOnThisServer	= true;	// TODo
+	private boolean			shopIsOnThisServer		= true; // TODo
 	private ShopController	verwaltung;
 
 	private Location		skullEntityLocation;
@@ -57,9 +63,11 @@ public class Shop {
 	private HologramHolder	hologramHolder;
 	private boolean			newAuctions;
 	private boolean			sellAll;
+	private int				countWarningWasShown	= 0;
+	private double			multiplier;
 
-	public Shop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, ShopController verwaltung) {
-		this(owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, verwaltung);
+	public Shop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, ShopController verwaltung) {
+		this(owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, verwaltung);
 		this.setShopID(shopID);
 	}
 
@@ -67,7 +75,7 @@ public class Shop {
 		return holo;
 	}
 
-	public Shop(Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, ShopController verwaltung) {
+	public Shop(Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, ShopController verwaltung) {
 		super();
 		this.verwaltung = verwaltung;
 		this.owner = owner;
@@ -86,11 +94,14 @@ public class Shop {
 		this.signHolder = this.getSchildHalter(signLocation);
 		this.eShopTyp = this.getShopTyp();
 		this.sellAll = sellAll;
+		this.multiplier = multiplier;
+		if (this.eShopTyp == EShopTyp.LocalChestShop && multiplier != 1.0) {
+			throw new RuntimeException("Multiplier of LocalShop is not 1.0");
+		}
+
 		GlobalChestShop.plugin.getShopEventListener().registerShopToChunkManager(this);
 	}
-	
-	
-	
+
 	public synchronized void spawn() {
 		if (this.eShopTyp != EShopTyp.GlobalNpcShop && this.eShopTyp != EShopTyp.GlobalHoloShop) {
 			this.signLocation.getBlock().setMetadata(ShopEventListener.META_SHOP_KEY, new FixedMetadataValue(GlobalChestShop.plugin, this));
@@ -149,6 +160,20 @@ public class Shop {
 	}
 
 	private void inconsitenceWarning(int i) {
+		countWarningWasShown++;
+
+		if (GlobalChestShop.plugin.mainConfig.deleteLocalShopsWhenUnableToFindChest && this.eShopTyp == EShopTyp.LocalChestShop) {
+			GlobalChestShop.plugin.getLogger().log(Level.INFO, "Was not able to find the Chest of a LocalShop");
+			GlobalChestShop.plugin.getLogger().log(Level.INFO, "The ID of the damaged shop is : " + shopID + ", Owned by: " + GlobalChestShop.plugin.getPlayerController().getPlayersName(this.getOwner()));
+			GlobalChestShop.plugin.getLogger().log(Level.INFO, "The Location of the damaged shop is : " + this.getSignLocationString());
+			GlobalChestShop.plugin.getLogger().log(Level.INFO, "It will be deleted to suppress further warnings.");
+			GlobalChestShop.plugin.getLogger().log(Level.INFO, "In case you don’t want to have shops be deleted automatically, change the config.yml file under Other.deleteLocalShopsWhenUnableToFindTheChest");
+			this.delete();
+			return;
+		}
+		if (countWarningWasShown > 1) {
+			return;
+		}
 		GlobalChestShop.plugin.getLogger().log(Level.WARNING, "**********************************************************");
 		GlobalChestShop.plugin.getLogger().log(Level.WARNING, "[ERROR] " + "An error occurred while loading a shop from the database");
 		if (i == 1) {
@@ -173,15 +198,16 @@ public class Shop {
 		}
 		List<Shop> brokenShopList = GlobalChestShop.plugin.getShopVerwaltung().getBrokenShopList();
 		synchronized (brokenShopList) {
-			brokenShopList.add(this);
+			if (!brokenShopList.contains(this)) {
+				brokenShopList.add(this);
+			}
 		}
-		
-		
+
 	}
 
 	public void setShopID(Integer shopID) {
 		this.shopID = shopID;
-		
+
 	}
 
 	public Integer getCategoryID() {
@@ -301,6 +327,10 @@ public class Shop {
 
 	public void delete() {
 		GlobalChestShop.plugin.getShopEventListener().deleteShopFromChunkManager(this);
+		List<Shop> brokenShopList = GlobalChestShop.plugin.getShopVerwaltung().getBrokenShopList();
+		synchronized (brokenShopList) {
+			brokenShopList.remove(this);
+		}
 		this.verwaltung.deleteShop(this);
 		this.breakBlocks();
 	}
@@ -314,7 +344,7 @@ public class Shop {
 	}
 
 	public void onInteractLeftClick(Player player, InventoryGUI previousGUI) {
-		if (player.getUniqueId().compareTo(getOwnerUUID())== 0 || GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
+		if (player.getUniqueId().compareTo(getOwnerUUID()) == 0 || GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
 			GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_ShopDelete(this, previousGUI));
 		} else {
 			this.onInteractRightClick(player, previousGUI);
@@ -369,7 +399,7 @@ public class Shop {
 							}
 						}
 						playOpenShopSound(player, Sound.ENDERMAN_TELEPORT);
-						GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_LocalChestShop(self, previousGUI, worldGroup));
+						GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_LocalChestShop(getOwnerUUID(), previousGUI, worldGroup));
 					} else {
 						if (adminShopOnly) {
 							// AMDINSHOP
@@ -387,19 +417,19 @@ public class Shop {
 						playOpenShopSound(player, Sound.ENDERMAN_TELEPORT);
 						if (getItemStack() != null) {
 							if (adminShopOnly) {
-								GlobalChestShop.plugin.openAdminShopOnlyGUI(null, player, itemStack, worldGroup);
+								GlobalChestShop.plugin.openAdminShopOnlyGUI(null, player, itemStack, worldGroup, multiplier);
 							} else {
-								GlobalChestShop.plugin.openNormalAuctionGUI(null, player, itemStack, worldGroup, newAuctions, adminShopOnly);
+								GlobalChestShop.plugin.openNormalAuctionGUI(null, player, itemStack, worldGroup, newAuctions, adminShopOnly, multiplier);
 							}
 						} else if (categoryID != null) {
-							GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_CustomCategoryPage(new CustomCategory(categoryID), previousGUI, adminShopOnly, worldGroup, newAuctions));
+							GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_CustomCategoryPage(new CustomCategory(categoryID), previousGUI, adminShopOnly, worldGroup, newAuctions, multiplier, player));
 						} else {
 							if (appearance == 1) {
-								new GUI_GlobalShopByPlayers(worldGroup, newAuctions, previousGUI).open(player);
+								new GUI_GlobalShopByPlayers(worldGroup, newAuctions, previousGUI, multiplier).open(player);
 							} else if (appearance == 2) {
-								new GUI_GlobalShopByAuctions(worldGroup, adminShopOnly, newAuctions, previousGUI).open(player);
+								new GUI_GlobalShopByAuctions(worldGroup, adminShopOnly, newAuctions, multiplier, previousGUI).open(player);
 							} else {
-								GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_DefaultCategoryCollection(previousGUI, adminShopOnly, worldGroup, newAuctions));
+								GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_DefaultCategoryCollection(previousGUI, adminShopOnly, worldGroup, newAuctions, multiplier));
 							}
 						}
 					}
@@ -498,6 +528,39 @@ public class Shop {
 		return color + GlobalChestShop.plugin.getMainConfig().secondLineAllItems;
 	}
 
+	public double getMultiplier() {
+		if (multiplier <= 0) {
+			throw new RuntimeException("multiplier is null");
+		}
+		return multiplier;
+	}
+
+	public void setMultiplier(double multiplier) {
+		if (this.eShopTyp == EShopTyp.LocalChestShop) {
+			throw new RuntimeException("LocalShops can not have multipliers");
+		}
+		this.multiplier = multiplier;
+
+		Connection conn = null;
+		try {
+			conn = GlobalChestShop.plugin.getMysql().getConnection();
+		} catch (Exception e) {
+			GlobalChestShop.plugin.handleFatalException(e);
+		}
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("UPDATE  " + MySqlConnector.table_shops + " SET `multiplier` = ? WHERE `shopID` = ?");
+			st.setDouble(1, this.multiplier);
+			st.setInt(2, shopID);
+			st.executeUpdate();
+		} catch (SQLException e) {
+			GlobalChestShop.plugin.handleFatalException(e);
+		} finally {
+			GlobalChestShop.plugin.getMysql().closeRessources(conn, null, st);
+			GlobalChestShop.plugin.getMysql().returnConnection(conn);
+		}
+	}
+
 	public Integer getOwner() {
 		return owner;
 	}
@@ -531,7 +594,7 @@ public class Shop {
 	}
 
 	public Integer getItemStackID() {
-		return GlobalChestShop.plugin.itemControler.getInteralIdOfItemStack(itemStack);
+		return GlobalChestShop.plugin.getItemController().getInteralIdOfItemStack(itemStack);
 	}
 
 	public Boolean getAdminShopOnly() {
@@ -597,6 +660,10 @@ public class Shop {
 
 	public int getAppearance() {
 		return appearance;
+	}
+
+	public boolean isGlobalShop() {
+		return this.eShopTyp != EShopTyp.LocalChestShop;
 	}
 
 }

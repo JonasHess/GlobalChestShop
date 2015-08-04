@@ -24,18 +24,20 @@ public abstract class GUI_Shop extends InventoryGUI {
 	private Button				displayButton;
 	private Button				sellButton;
 	private Button				sellAllButton;
+	private double				multiplier;
 
-	public GUI_Shop(String title, ItemStack displayItem, InventoryGUI parentInventoryGUI, BuyAbleInterface buyItem, Economy economy, boolean buy, boolean sell, boolean sellAll) {
-		this(title, displayItem, parentInventoryGUI, buyItem, economy, buy, sell, sellAll, 1);
+	public GUI_Shop(String title, ItemStack displayItem, InventoryGUI parentInventoryGUI, BuyAbleInterface buyItem, Economy economy, boolean buy, boolean sell, boolean sellAll, double multiplier) {
+		this(title, displayItem, parentInventoryGUI, buyItem, economy, buy, sell, sellAll, 1, multiplier);
 	}
 
-	public GUI_Shop(String title, ItemStack displayItem, InventoryGUI parentInventoryGUI, final BuyAbleInterface buyItem, Economy economy, boolean buy, boolean sell, boolean sellAll, int startAmount) {
+	public GUI_Shop(String title, ItemStack displayItem, InventoryGUI parentInventoryGUI, final BuyAbleInterface buyItem, Economy economy, boolean buy, boolean sell, boolean sellAll, int startAmount, double multiplier) {
 		super(title, 6, displayItem, parentInventoryGUI);
 		this.buyItem = buyItem;
 		this.economy = economy;
 		this.buy = buy;
 		this.sell = sell;
 		this.sellAll = sellAll;
+		this.multiplier = multiplier;
 
 		this.amountButton = new Button_AmountChanger(startAmount, this.getAmountButton(buyItem, economy)) {
 
@@ -105,9 +107,9 @@ public abstract class GUI_Shop extends InventoryGUI {
 	@Override
 	protected void drawButtons(Player player) {
 		this.displayButton.setAppearance(this.buyItem.getItemStackAsButton());
-		this.buyButton.setAppearance(this.buyItem.getBuyButton(this.getAmount(), player));
-		this.sellButton.setAppearance(this.buyItem.getSellButton( this.getAmount(), player));
-		this.sellAllButton.setAppearance(this.buyItem.getSellAllButton(player));
+		this.buyButton.setAppearance(this.buyItem.getBuyButton(this.getAmount(), player, multiplier));
+		this.sellButton.setAppearance(this.buyItem.getSellButton( this.getAmount(), player, multiplier));
+		this.sellAllButton.setAppearance(this.buyItem.getSellAllButton(player, multiplier));
 		this.layout(displayButton, amountButton, buyButton, sellButton, sellAllButton);
 	}
 
@@ -175,21 +177,21 @@ public abstract class GUI_Shop extends InventoryGUI {
 	}
 
 	protected void buy(Player player) {
-		this.buyItem.buy(player, economy, this.getAmount());
+		this.buyItem.buy(player, economy, this.getAmount(), multiplier);
 		this.afterBuy(player);
 		// this.resetAllButtons(player); // TODO
 		// this.refresh(player);
 	}
 
 	protected void sell(Player player) {
-		this.buyItem.sell(player, economy, this.getAmount());
+		this.buyItem.sell(player, economy, this.getAmount(), multiplier);
 		this.resetAllButtons(player);
 		// this.afterSell(player); // TODO
 		// this.refresh(player);
 	}
 
 	protected void sellAll(Player player, int sellAllAmount) {
-		this.buyItem.sellAll(player, economy, sellAllAmount);
+		this.buyItem.sellAll(player, economy, sellAllAmount, multiplier);
 		this.resetAllButtons(player);
 		// this.afterSell(player); // TODO
 		// this.refresh(player);

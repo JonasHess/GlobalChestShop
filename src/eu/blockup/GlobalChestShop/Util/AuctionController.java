@@ -46,19 +46,20 @@ public class AuctionController {
 		});
 	}
 
-	public synchronized void buyAuction(int amount, Auction	auction, InventoryGUI inventoryGUI, Player player) {
-		if (auction.isEndent()) {
+	public synchronized void buyAuction(int amount, Auction	auction, double multiplier, InventoryGUI inventoryGUI, Player player ) {
+		if (auction.isEndent() || auction.isExpired()) {
 			player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitBuy_TooSlow_Auction_Ended));
 			return;
 		}
+		
 		try {
-			Double priceBeforeTax = auction.getShopToPlayerPrice(amount);
+			Double priceBeforeTax = auction.getShopToPlayerPrice(amount, multiplier);
 			Double priceTax = priceBeforeTax * GlobalChestShop.plugin.getMainConfig().taxDecimal.doubleValue();
 			Double priceAfterTax = priceBeforeTax - priceTax;
 			GlobalChestShop.plugin.validateBuyConditions(player, priceBeforeTax);
 			player.getInventory().addItem(auction.getItemStack(amount));
 			if (auction.isAdminshop()) {
-				auction.createAdminShopHistoryEntry(auction, true, amount, player.getUniqueId());
+				auction.createAdminShopHistoryEntry(auction, true, amount, multiplier, player.getUniqueId());
 			} else {
 				auction.markAsEnded(player.getUniqueId());
 			}
@@ -81,8 +82,12 @@ public class AuctionController {
 			} catch (Exception e) {
 				// Player was not found...
 			}
-
-			String broadcastMessage = GlobalChestShop.text.get(GlobalChestShop.text.Message_broadcastSell, player.getName(), String.valueOf(auction.getAmount()) + " " + GlobalChestShop.plugin.getItemStackDisplayName(auction.getItemStack(1)), GlobalChestShop.plugin.formatPrice(priceBeforeTax, false), GlobalChestShop.plugin.getNameOfPlayer(auction.getPlayerStarter()));
+			Double priceEachBeforeTax = 0.0;
+			if (amount > 0) {
+				priceEachBeforeTax = priceBeforeTax / amount;
+			}
+			String broadcastMessage = GlobalChestShop.text.get(GlobalChestShop.text.Message_broadcastSell, player.getName(), String.valueOf(amount) + " " + GlobalChestShop.plugin.getItemStackDisplayName(auction.getItemStack(1)), GlobalChestShop.plugin.formatPrice(priceEachBeforeTax, false), GlobalChestShop.plugin.getNameOfPlayer(auction.getPlayerStarter()));
+			GlobalChestShop.plugin.logToTradeLogger(player.getName(), player.getUniqueId(),  broadcastMessage);
 			GlobalChestShop.plugin.getLogger().log(Level.INFO, ChatColor.stripColor(broadcastMessage));
 			if (GlobalChestShop.plugin.getMainConfig().broadcastSells) {
 				for (Player p : GlobalChestShop.plugin.getServer().getOnlinePlayers()) {
@@ -152,7 +157,8 @@ public class AuctionController {
 				boolean adminShopCache = rs.getBoolean("adminshop");
 				int playerStarterCache = rs.getInt("playerStarter");
 				int worldGroupCache = rs.getInt("worldGroup");
-				Auction auction = new Auction(auctionID, itemIdCache, amountCache, startDateCache, startTimeCache, adminShopCache, playerStarterCache, worldGroupCache);
+				double multiplierCache = rs.getDouble("multiplier");
+				Auction auction = new Auction(auctionID, itemIdCache, amountCache, startDateCache, startTimeCache, adminShopCache, playerStarterCache, worldGroupCache, multiplierCache);
 				this.hashMap_Auctions.put(auctionID, auction);
 			}
 		} catch (SQLException e) {
@@ -164,7 +170,7 @@ public class AuctionController {
 	}
 
 	public Double getLastPriceForPlayersAuction(Player player, ItemStack item) {
-		int itemID = GlobalChestShop.plugin.itemControler.getInteralIdOfItemStack(item);
+		int itemID = GlobalChestShop.plugin.itemController.getInteralIdOfItemStack(item);
 		int playerID = GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(player.getUniqueId());
 		Double result = null;
 		Connection conn = null;
@@ -195,6 +201,24 @@ public class AuctionController {
 		return result;
 	}
 
+	private List<Auction> filterExpiredAuctions(List<Auction> list) {
+		for (int i = list.size() -1; i >= 0; i--) {
+			if (list.get(i).isExpired()) {
+				list.remove(i);
+			}
+		}
+		return list;
+	}
+	private List<Auction> filterNoneExpiredAuctions(List<Auction> list) {
+		for (int i = list.size() -1; i >= 0; i--) {
+			if (! list.get(i).isExpired()) {
+				list.remove(i);
+			}
+		}
+		return list;
+	}
+	
+	
 	public List<Auction> getAllSoldAuctionsByPlayer(UUID playersUUID) {
 		List<Auction> resultList = new ArrayList<Auction>();
 		Connection conn = null;
@@ -278,8 +302,38 @@ public class AuctionController {
 			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
-		return resultList;
+		return filterExpiredAuctions(resultList);
 	}
+	
+	public List<Auction> getAllExpiredAuctionsFromPlayer(UUID playersUUID) {
+		List<Auction> resultList = new ArrayList<Auction>();
+		Connection conn = null;
+		try {
+			conn = GlobalChestShop.plugin.getMysql().getConnection();
+		} catch (Exception e) {
+			GlobalChestShop.plugin.handleFatalException(e);
+		}
+		ResultSet rs = null;
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("SELECT auctionID FROM " + MySqlConnector.table_auctions + " WHERE ended = ? AND playerStarter = ? AND worldGroup = ? ORDER BY startDate DESC, startTime DESC");
+			st.setBoolean(1, false);
+			st.setInt(2, GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(playersUUID));
+			st.setInt(3, this.worldGroup);
+			rs = st.executeQuery();
+			while (rs.next()) {
+				resultList.add(getAuction(rs.getInt(1)));
+			}
+		} catch (SQLException e) {
+			GlobalChestShop.plugin.handleFatalException(e);
+		} finally {
+			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
+			GlobalChestShop.plugin.getMysql().returnConnection(conn);
+		}
+		return filterNoneExpiredAuctions(resultList);
+	}
+	
+	
 
 	public int getCountOfActiveAuctionsFromPlayer(UUID playersUUID) {
 		int playerID = GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(playersUUID);
@@ -401,7 +455,7 @@ public class AuctionController {
 
 	public List<Auction> getAllActiveAuctionForItemStack(ItemStack item, boolean onlyAdminShops) {
 		boolean includeAdminShop = GlobalChestShop.plugin.getMainConfig().showAdminshopsInsideGlobalShops;
-		int itemID = GlobalChestShop.plugin.itemControler.getInteralIdOfItemStack(item);
+		int itemID = GlobalChestShop.plugin.itemController.getInteralIdOfItemStack(item);
 		List<Auction> resultList = new ArrayList<Auction>();
 		Connection conn = null;
 		try {
@@ -432,7 +486,7 @@ public class AuctionController {
 			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
-		return resultList;
+		return filterExpiredAuctions(resultList);
 	}
 
 	public List<Auction> getAllActiveAuction(boolean onlyAdminShops) {
@@ -466,11 +520,11 @@ public class AuctionController {
 			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
-		return resultList;
+		return filterExpiredAuctions(resultList);
 	}
 
 	public Auction getAdminShopFromItemStack(ItemStack item) {
-		int itemID = GlobalChestShop.plugin.itemControler.getInteralIdOfItemStack(item);
+		int itemID = GlobalChestShop.plugin.itemController.getInteralIdOfItemStack(item);
 		Auction result = null;
 		Connection conn = null;
 		try {
@@ -506,7 +560,7 @@ public class AuctionController {
 		adminshop.enableAdminShop();
 	}
 
-	public List<Integer> getAllActiveItems() {
+	public List<Integer> getAllActiveItems() { //TODO filter expired auctions
 		List<Integer> resultList = new LinkedList<Integer>();
 		Connection conn = null;
 		try {

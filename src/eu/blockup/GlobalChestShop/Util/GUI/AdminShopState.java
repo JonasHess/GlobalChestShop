@@ -26,7 +26,6 @@ public class AdminShopState extends StateKeeper<Boolean> {
 
 	@Override
 	protected void onMofiyState(Boolean offsetValue, Player player) {
-		// TODO Auto-generated method stub
 
 	}
 

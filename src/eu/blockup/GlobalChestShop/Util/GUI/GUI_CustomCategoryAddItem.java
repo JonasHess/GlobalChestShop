@@ -86,7 +86,7 @@ public class GUI_CustomCategoryAddItem extends SimpleIInventoryGUI{
         public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
           GUI_CustomCategoryAddItem gui = (GUI_CustomCategoryAddItem) inventoryGUI;
           if (gui.itemStack != null) {
-            Integer itemID = GlobalChestShop.plugin.itemControler.getInteralIdOfItemStack(gui.itemStack);
+            Integer itemID = GlobalChestShop.plugin.itemController.getInteralIdOfItemStack(gui.itemStack);
             gui.categroy.addItem(itemID);
             inventoryGUI.returnToParentGUI(player);
           }

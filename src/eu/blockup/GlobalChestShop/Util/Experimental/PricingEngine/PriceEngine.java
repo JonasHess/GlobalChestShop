@@ -80,7 +80,7 @@ public class PriceEngine {
 				new GUI_PriceChanger(itemStack, new PriceTupple(100.0, 1.0), 1, parentGUI, worldGroup).open(player);
 				System.out.println("No Admin Auction "); // TODO
 			} else {
-				new GUI_PriceChanger(itemStack, new PriceTupple(adminAuction.getShopToPlayerPrice(1), adminAuction.getPlayerToShopPrice(1)), 1, parentGUI, worldGroup).open(player);
+				new GUI_PriceChanger(itemStack, new PriceTupple(adminAuction.getShopToPlayerPrice(1, 1.0), adminAuction.getPlayerToShopPrice(1, 1.0)), 1, parentGUI, worldGroup).open(player);
 			}
 		} else {
 			new GUI_IngedientList(itemStack, parentGUI, worldGroup).open(player);

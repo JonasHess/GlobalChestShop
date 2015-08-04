@@ -24,7 +24,7 @@ public class GUI_CustomCategoryDelete extends SimpleIInventoryGUI{
   @Override
   protected void drawButtons(Player player) {
     
-    this.addButton(4, 1, new Button_Bare(GlobalChestShop.plugin.itemControler.formatInternalItemIdToItemStack(this.customCategory.getIconID()), this.customCategory.getName()));
+    this.addButton(4, 1, new Button_Bare(GlobalChestShop.plugin.itemController.formatInternalItemIdToItemStack(this.customCategory.getIconID()), this.customCategory.getName()));
     this.drawButton(4, 3, new Button(new ItemStack(Material.WOOL, 1, (short) 14), "DELETE") { 
       @Override
       public void onRefresh(InventoryGUI inventoryGUI, Player player) {

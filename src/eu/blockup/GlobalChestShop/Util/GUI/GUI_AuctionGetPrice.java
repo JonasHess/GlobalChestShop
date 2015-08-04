@@ -19,7 +19,7 @@ public class GUI_AuctionGetPrice extends GUI_StateCangerDouble{
 	private AuctionPrepare auctionPrepare;
 
 	public GUI_AuctionGetPrice(AuctionPrepare auctionPrepare, int worldGroup,  InventoryGUI parentGUI) {
-		super(auctionPrepare.getPriceObject(), GlobalChestShop.text.get(GlobalChestShop.text.GUI_CreateAuction_PriceChange_Menu_Title), new ItemStack(Material.PAPER), parentGUI, 6, auctionPrepare.getTotalAmount());
+		super(auctionPrepare.getPriceObject(), GlobalChestShop.text.get(GlobalChestShop.text.GUI_CreateAuction_PriceChange_Menu_Title), new ItemStack(Material.PAPER), parentGUI, 6, auctionPrepare.getTotalAmount(), GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1);
 		this.worldGroup = worldGroup;
 		this.auctionPrepare = auctionPrepare;
 	}

@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,10 +24,18 @@ public class Button_Auction extends Button {
   private Integer worldGroup;
   private boolean active = true;
   private boolean showStatus;
-  public Button_Auction(Auction auction, boolean active, boolean highlightAdminShops, Integer worldGroup, boolean showStatus) {
+  private double multiplier;
+  public Button_Auction(Auction auction, double multiplier,  boolean active, boolean highlightAdminShops, Integer worldGroup, boolean showStatus) {
     super(auction.getItemStack(auction.getAmount()));
     this.worldGroup = worldGroup;
     this.showStatus = showStatus;
+    this.multiplier = multiplier;
+    if (! auction.isAdminshop()) {
+    	this.multiplier = 1.0;
+    }
+    if (multiplier < 0) {
+		throw new RuntimeException("multiplier is less that zero");
+	}
     this.active = active;
     if (highlightAdminShops) {
       if (auction.isAdminshop()) {
@@ -42,15 +52,22 @@ public class Button_Auction extends Button {
     
     if (type == ClickType.SHIFT_LEFT) {
     	if (GlobalChestShop.plugin.getMainConfig().allowShiftClicksForQuickBuy && ! auction.isAdminshop() && ! auction.isEndent() && auction.getPlayerStarter().compareTo(player.getUniqueId()) != 0) {
-    		GlobalChestShop.plugin.getAuctionController(worldGroup).buyAuction(auction.getAmount(), auction, inventoryGUI, player);
+    		GlobalChestShop.plugin.getAuctionController(worldGroup).buyAuction(auction.getAmount(), auction, multiplier, inventoryGUI, player);
     	}
     	return;
     }
     
-    
     boolean DEBUG = false;   // TODO debug modus
     if (DEBUG) {
       player.sendMessage("Debug Modus is activce! please inform the Developer!!!");
+    }
+    if (DEBUG && !GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)){
+    	DEBUG = false;
+    	player.sendMessage("Debug Modus disabled. Missing permissions");
+    }
+    if (DEBUG && !auction.isAdminshop()) {
+    	new GUI_AuctionBuy(auction, inventoryGUI, this.worldGroup, multiplier).open(player);
+    	return;
     }
     if (auction.isEndent()) {
       if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN) && auction.isAdminshop()) {
@@ -59,17 +76,13 @@ public class Button_Auction extends Button {
         new GUI_AuctionEnded(auction, inventoryGUI, this.worldGroup).open(player);
       }
     } else if (auction.getPlayerStarter().compareTo(player.getUniqueId()) == 0) {
-//      if (DEBUG && type == ClickType.SHIFT_LEFT && !auction.isAdminshop()) {
-//        new GUI_AuctionBuy(auction, inventoryGUI, this.worldGroup).open(player);
-//        return;
-//      }
       // Player is the Owner
-     new GUI_AuctionDelete(auction, inventoryGUI, this.worldGroup).open(player);
+     new GUI_AuctionDelete(auction, inventoryGUI, this.worldGroup, multiplier).open(player);
      return;
     } else if (auction.isAdminshop()) {
-     new GUI_AdminShopBuy(auction, inventoryGUI, this.worldGroup).open(player);
+     new GUI_AdminShopBuy(auction, multiplier,inventoryGUI, this.worldGroup).open(player);
     } else {
-     new GUI_AuctionBuy(auction, inventoryGUI, this.worldGroup).open(player);
+     new GUI_AuctionBuy(auction, inventoryGUI, this.worldGroup, multiplier).open(player);
     }
   }
 
@@ -91,6 +104,7 @@ public class Button_Auction extends Button {
     boolean auctionAdminShop = auction.isAdminshop();
     int auctionAmount = auction.getAmount();
     this.setAmount(auctionAmount);
+    double effectiveMultiplier = ended ? auction.getMultiplier() : this.multiplier;
     
  // Set Title
     if (auctionAdminShop) {
@@ -113,6 +127,8 @@ public class Button_Auction extends Button {
       } else {
         desc.add(GlobalChestShop.text.get(GlobalChestShop.text.Auction_Status_Ended));
       }
+    } else if (auction.isExpired()){
+    	desc.add(GlobalChestShop.text.get(GlobalChestShop.text.Auction_Status_Expired));
     } else {
       desc.add(GlobalChestShop.text.get(GlobalChestShop.text.Auction_Status_Active));
     }
@@ -128,7 +144,7 @@ public class Button_Auction extends Button {
     	
       if (!auctionAdminShop || ended) {
     	  //ShopToPlayerPrice
-    	  double shopToPlayerPriceEach = auction.getShopToPlayerPrice(1);
+    	  double shopToPlayerPriceEach = auction.getShopToPlayerPrice(1, effectiveMultiplier);
     	  if (shopToPlayerPriceEach >= 0) {
     		  // Price 1
     		  desc.add(GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(shopToPlayerPriceEach, true)));
@@ -138,14 +154,14 @@ public class Button_Auction extends Button {
     	  }
       } else {
     	//ShopToPlayerPrice
-    	  double shopToPlayerPriceEach = auction.getShopToPlayerPrice(1);
+    	  double shopToPlayerPriceEach = auction.getShopToPlayerPrice(1, effectiveMultiplier);
     	  if (shopToPlayerPriceEach >= 0) {
     		  // Price 1
     		  desc.add(GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_BuyPriceEach, GlobalChestShop.plugin.formatPrice(shopToPlayerPriceEach, true)));
     	  }
     	  
           //ShopToPlayerPrice
-          double playerToShopPriceEach = auction.getPlayerToShopPrice(1);
+          double playerToShopPriceEach = auction.getPlayerToShopPrice(1, effectiveMultiplier);
           if (auctionAdminShop && playerToShopPriceEach >= 0) {
             // Price 1
             desc.add(GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_SellPriceEach, GlobalChestShop.plugin.formatPrice(playerToShopPriceEach, true)));

@@ -19,13 +19,15 @@ public class GUI_Search extends GUI_PageView<ItemStack>{
   private Integer worldGroup;
   private boolean adminShopsOnly;
   private boolean newAuctions;
+  private double multiplier;
   
-  public GUI_Search(String searchedItemString, InventoryGUI parentGUI, Integer worldGorup, boolean adminShopsOnly, boolean newAuctions) {
-    super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_Title_GUI_Search,searchedItemString), new ItemStack(Material.COMPASS), 1, parentGUI);
+  public GUI_Search(String searchedItemString, InventoryGUI parentGUI, Integer worldGorup, boolean adminShopsOnly, boolean newAuctions, double multiplier) {
+    super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_Title_GUI_Search,searchedItemString), new ItemStack(Material.HOPPER), 1, parentGUI);
     this.worldGroup = worldGorup;
     this.searchedItemString = searchedItemString;
     this.adminShopsOnly = adminShopsOnly;
     this.newAuctions = newAuctions;
+    this.multiplier = multiplier;
   }
 
   @Override
@@ -45,7 +47,7 @@ public class GUI_Search extends GUI_PageView<ItemStack>{
 
   @Override
   public Button convertListObjectToButton(ItemStack obj, Player player) {
-    return new Button_AuctionList(obj, this.adminShopsOnly, this.worldGroup, this.newAuctions, false);
+    return new Button_AuctionList(obj, this.adminShopsOnly, this.worldGroup, this.newAuctions, false, multiplier);
   }
 
 

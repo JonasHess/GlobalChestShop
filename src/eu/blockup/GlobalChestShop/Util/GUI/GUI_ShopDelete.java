@@ -12,6 +12,7 @@ import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Shop;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button_Bare;
+import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button.ClickType;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.SimpleIInventoryGUI;
 import eu.blockup.GlobalChestShop.Util.Statements.EShopTyp;
@@ -22,7 +23,7 @@ public class GUI_ShopDelete extends SimpleIInventoryGUI{
   
   public  Shop shop;
   public GUI_ShopDelete(Shop shop, InventoryGUI parentInventoryGUI) {
-    super(GlobalChestShop.text.get(GlobalChestShop.text.Button_DeleteShop), 6, new ItemStack(Material.SIGN), parentInventoryGUI);
+    super(shop.isGlobalShop() ? GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAdminShop_Title) : GlobalChestShop.text.get(GlobalChestShop.text.Button_DeleteShop), 6, new ItemStack(Material.SIGN), parentInventoryGUI);
     this.shop = shop;
   }
 
@@ -34,7 +35,8 @@ public class GUI_ShopDelete extends SimpleIInventoryGUI{
   
   @Override
   protected void drawButtons(Player player) {
-    this.addButton(4, 1, new Button_Bare(new ItemStack(Material.SIGN), GlobalChestShop.text.get(GlobalChestShop.text.Button_DeleteShop)));
+	  
+	  // Delete Shop Button
     this.addButton(4, 3, new Button(new ItemStack(Material.WOOL, 1, (short) 14), GlobalChestShop.text.get(GlobalChestShop.text.Button_DeleteShop)) {
       
       @Override
@@ -63,8 +65,28 @@ public class GUI_ShopDelete extends SimpleIInventoryGUI{
       }
     });
     
+    // Discount button
+    if ((GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN))) {
+    	if (shop.isGlobalShop()) {
+    		this.addButton(2, 3, new Button(new ItemStack(Material.GOLDEN_APPLE), "Give discount for this shop") {
+				
+				@Override
+				public void onRefresh(InventoryGUI inventoryGUI, Player player) {
+					
+				}
+				
+				@Override
+				public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
+					new GUI_PriceMultiplierPicker(new PriceMultiplierStateKeeper(shop.getMultiplier()), inventoryGUI, shop).open(player);
+					
+				}
+			});
+    	}
+    }
+    
+    // Remove ItemFrame Button
     if (shop.getShopTyp() == EShopTyp.GlobalItemframeShop) {
-      this.addButton(0, this.getHeight() -1 , new Button(new ItemStack(Material.SIGN), "Only remove the sign") {
+      this.addButton(6, 3 , new Button(new ItemStack(Material.SIGN), "Remove the sign, but keep the ItemFrame") {
         
         @Override
         public void onRefresh(InventoryGUI inventoryGUI, Player player) {

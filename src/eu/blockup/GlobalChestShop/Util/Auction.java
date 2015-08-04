@@ -6,10 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.UUID;
 
 import net.milkbowl.vault.economy.Economy;
 
+import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang.NullArgumentException;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,13 +33,14 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 	private Boolean	adminShopCache		= null;
 	private int		playerStarterCache	= -1;
 	private int		worldGroupCache		= -1;
+	private Double 	multiplierCache		= null;
 
 	public Auction(int auctionID) {
 		super();
 		this.auctionID = auctionID;
 	}
 
-	public Auction(int auctionID, int itemIdCache, int amountCache, Date startDateCache, Time startTimeCache, Boolean adminShopCache, int playerStarterCache, int worldGroup) {
+	public Auction(int auctionID, int itemIdCache, int amountCache, Date startDateCache, Time startTimeCache, Boolean adminShopCache, int playerStarterCache, int worldGroup, Double multiplier) {
 		super();
 		this.auctionID = auctionID;
 		this.itemIdCache = itemIdCache;
@@ -46,6 +50,52 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 		this.adminShopCache = adminShopCache;
 		this.playerStarterCache = playerStarterCache;
 		this.worldGroupCache = worldGroup;
+		this.multiplierCache = multiplier;
+	}
+
+
+	public Double getMultiplier() {
+		this.preChacheAttributes();
+		if (this.multiplierCache == null) {
+			throw new NullArgumentException("multiplier is null!");
+		}
+		return multiplierCache;
+	}
+
+	public static java.util.Date addDays(java.util.Date date, int days) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.DATE, days); // minus number would decrement the days
+		return cal.getTime();
+	}
+
+	private Boolean	expiredChache	= null;
+	
+	public boolean isExpired() {
+		if (expiredChache != null) {
+			return expiredChache;
+		}
+		if (this.isAdminshop()){
+			return false;
+		}
+		int auctionExpirationOffsetInDays = GlobalChestShop.plugin.getMainConfig().auctionExpirationOffsetInDays;
+		java.util.Date creationDate = GlobalChestShop.convertSqlDate(this.getStartDate(), this.getStartTime());
+		java.util.Date expirationDate = addDays(creationDate, auctionExpirationOffsetInDays);
+		java.util.Date today = new java.util.Date();
+
+		boolean result = today.after(expirationDate);
+		expiredChache = result;
+		return result;
+	}
+
+	public String toString(double multiplier) {
+		return "" + getAmount() + "x " + GlobalChestShop.plugin.getItemStackDisplayName(this.getItemStack(1)) + " for " + GlobalChestShop.plugin.formatPrice(getShopToPlayerPrice(1, multiplier), false) + " each." + " Created on " + getStartDate() + " by " + GlobalChestShop.plugin.getNameOfPlayer(getPlayerStarter());
+	}
+	
+	@Override
+	public String toString()  {
+		throw new NotImplementedException(); // TODO
+		//return "Error - please inform the developer about this.";
 	}
 
 	public int getworldGroup() {
@@ -107,6 +157,7 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 				this.adminShopCache = rs.getBoolean("adminshop");
 				this.playerStarterCache = rs.getInt("playerStarter");
 				this.worldGroupCache = rs.getInt("worldGroup");
+				this.multiplierCache = rs.getDouble("multiplier");
 			}
 		} catch (SQLException e) {
 			GlobalChestShop.plugin.handleFatalException(e);
@@ -173,7 +224,7 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 
 	public static void createNewAuction(ItemStack itemStack, int amount, double playerToShopPriceEach, double shopToPlayerPriceEach, UUID playerStarter, UUID playerEnder, boolean endent, Date startDate, Time startTime, Date endDate, Time endTime, boolean adminshop, int worldGroup) {
 
-		int itemIdInternal = GlobalChestShop.plugin.itemControler.getInteralIdOfItemStack(itemStack);
+		int itemIdInternal = GlobalChestShop.plugin.itemController.getInteralIdOfItemStack(itemStack);
 		String query = "INSERT INTO `" + MySqlConnector.table_auctions + "` ( `itemStackID`, `amount`, `playerToShopPriceEach`, `shopToPlayerPriceEach`, `playerStarter`, `playerEnder`, `ended`, `startDate`, `startTime`, `endDate`, `endTime`, `adminshop`, `worldGroup`) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 		Integer uuidStarter = GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(playerStarter);
@@ -275,11 +326,11 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 		return result;
 	}
 
-	public void createAdminShopHistoryEntry(Auction adminShop, boolean buy, int amount, UUID player) {
+	public void createAdminShopHistoryEntry(Auction adminShop, boolean buy, int amount, double multiplier, UUID player) {
 		if (!adminShop.isAdminshop())
 			throw new RuntimeException("This is not an Admin Shop!");
-		double ShopToPlayerPriceEach = adminShop.getShopToPlayerPrice(1);
-		double PlayerToShopPriceEach = adminShop.getPlayerToShopPrice(1);
+		double ShopToPlayerPriceEach = adminShop.getShopToPlayerPrice(1, multiplier);
+		double PlayerToShopPriceEach = adminShop.getPlayerToShopPrice(1, multiplier);
 		if (buy) {
 			PlayerToShopPriceEach = -1;
 		} else {
@@ -443,58 +494,58 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 	 */
 
 	@Override
-	public void buy(Player player, final Economy econ, int amount) {
+	public void buy(Player player, final Economy econ, int amount, double multiplier) {
 		InventoryGUI parent = GlobalChestShop.plugin.getGuiCore().getPlayersOpenedInventoryGui(player);
-		new GUI_SubmitBuy(this, amount, parent).open(player);
+		new GUI_SubmitBuy(this, amount, multiplier, parent).open(player);
 	}
 
 	@Override
-	public void sell(Player player, Economy econ, int amount) {
+	public void sell(Player player, Economy econ, int amount, double multiplier) {
 		if (!this.isAdminshop()) {
 			throw new RuntimeException("You can not sell to a normal auction!");
 		}
 		InventoryGUI parent = GlobalChestShop.plugin.getGuiCore().getPlayersOpenedInventoryGui(player);
-		new GUI_SubmitSell(this, amount, false, parent).open(player);
+		new GUI_SubmitSell(this, amount, multiplier, false, parent).open(player);
 
 	}
 
 	@Override
-	public void sellAll(Player player, Economy econ, int amount) {
+	public void sellAll(Player player, Economy econ, int amount, double multiplier) {
 
 		if (!this.isAdminshop()) {
 			throw new RuntimeException("You can not sellAll to a normal auction!");
 		}
 		InventoryGUI parent = GlobalChestShop.plugin.getGuiCore().getPlayersOpenedInventoryGui(player);
-		new GUI_SubmitSell(this, amount, true, parent).open(player);
+		new GUI_SubmitSell(this, amount, multiplier, true, parent).open(player);
 
 	}
 
 	@Override
-	public Button_Bare getBuyButton(int amountTmp, Player player) {
+	public Button_Bare getBuyButton(int amountTmp, Player player, double multiplier) {
 		if (player == null) {
 			throw new NullPointerException("Player was null");
 		}
-		return new Button_Bare(GlobalChestShop.plugin.getMainConfig().getBuyButton(), GlobalChestShop.text.get(GlobalChestShop.text.Auction_GetBuyButton_Title), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_Amount, String.valueOf(amountTmp)), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(this.getShopToPlayerPrice(1), true)),
-				GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(this.getShopToPlayerPrice(amountTmp), true)));
+		return new Button_Bare(GlobalChestShop.plugin.getMainConfig().getBuyButton(), GlobalChestShop.text.get(GlobalChestShop.text.Auction_GetBuyButton_Title), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_Amount, String.valueOf(amountTmp)), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(this.getShopToPlayerPrice(1, multiplier), true)),
+				GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(this.getShopToPlayerPrice(amountTmp, multiplier), true)));
 	}
 
 	@Override
-	public Button_Bare getSellButton(int amountTmp, Player player) {
+	public Button_Bare getSellButton(int amountTmp, Player player, double multiplier) {
 		if (player == null) {
 			throw new NullPointerException("Player was null");
 		}
 		return new Button_Bare(GlobalChestShop.plugin.getMainConfig().getSellButton(), GlobalChestShop.text.get(GlobalChestShop.text.Auction_GetSellButton_Title), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_Amount, String.valueOf(amountTmp)),
-				GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(this.getPlayerToShopPrice(1), true)), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(this.getPlayerToShopPrice(amountTmp), false)));
+				GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(this.getPlayerToShopPrice(1, multiplier), true)), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(this.getPlayerToShopPrice(amountTmp, multiplier), false)));
 	}
 
 	@Override
-	public Button_Bare getSellAllButton(Player player) {
+	public Button_Bare getSellAllButton(Player player, double multiplier) {
 		if (player == null) {
 			throw new NullPointerException("Player was null");
 		}
 		int amount = this.getAmountOfItemInInventory(player);
 		return new Button_Bare(GlobalChestShop.plugin.getMainConfig().getSellButton(), GlobalChestShop.text.get(GlobalChestShop.text.Auction_GetSellAllButton_Title), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_Amount, String.valueOf(amount)),
-				GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(this.getPlayerToShopPrice(1), true)), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(this.getPlayerToShopPrice(amount), false)));
+				GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(this.getPlayerToShopPrice(1, multiplier), true)), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(this.getPlayerToShopPrice(amount, multiplier), false)));
 	}
 
 	@Override
@@ -522,7 +573,11 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 		return this.getItemStack(1).getMaxStackSize();
 	}
 
-	public double getShopToPlayerPrice(int amount) {
+	public double getShopToPlayerPrice(int amount, double multiplier) {
+		if (multiplier <= 0) {
+			throw new RuntimeException("multiplier is null");
+		}
+		
 		double result = 99999;
 		Connection conn = null;
 		try {
@@ -548,11 +603,14 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
-		return result * amount;
+		return (result * amount) * multiplier;
 	}
 
 	@Override
-	public double getPlayerToShopPrice(int amount) {
+	public double getPlayerToShopPrice(int amount, double multiplier) {
+		if (multiplier <= 0) {
+			throw new RuntimeException("multiplier is null");
+		}
 		double result = 0;
 		Connection conn = null;
 		try {
@@ -577,7 +635,7 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
-		return result * amount;
+		return (result * amount) * multiplier;
 	}
 
 	/**
@@ -625,7 +683,7 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 		} else {
 			result = itemIdCache;
 		}
-		ItemStack resultItem = GlobalChestShop.plugin.itemControler.formatInternalItemIdToItemStack(result);
+		ItemStack resultItem = GlobalChestShop.plugin.itemController.formatInternalItemIdToItemStack(result);
 		resultItem.setAmount(amount);
 		return resultItem;
 	}

@@ -15,7 +15,7 @@ import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
 enum Visibility {
-	AllActive, AllSold, AllBought, AllCanceled;
+	AllActive, AllSold, AllBought, AllCanceled, AllExpired;
 	
     String getTitle(Visibility v) {
       String title;
@@ -25,7 +25,9 @@ enum Visibility {
           title = GlobalChestShop.text.get(GlobalChestShop.text.GUI_History_BoughtAuctions);
       } else if (v == Visibility.AllCanceled) {
         title = GlobalChestShop.text.get(GlobalChestShop.text.GUI_History_CanceledAuctions);
-      } else {
+      } else if (v == Visibility.AllExpired) {
+          title = GlobalChestShop.text.get(GlobalChestShop.text.GUI_History_Expired);
+        } else {
           title = GlobalChestShop.text.get(GlobalChestShop.text.GUI_History_SoldAuctions);
       }
       return title;
@@ -99,7 +101,7 @@ public class GUI_AuctionHistory extends GUI_AuctionPage {
   private Integer worldGroup;
   
   public GUI_AuctionHistory(InventoryGUI parentGUI, UUID playerUUID, Visibility visibility, boolean showActiveAuctions, boolean createNewAuctionButton, Integer worldGroup) {
-    super(visibility.getTitle(visibility), new ItemStack(Material.PAPER), parentGUI, false, worldGroup, true);
+    super(visibility.getTitle(visibility), new ItemStack(Material.PAPER), parentGUI, false, worldGroup, true, 1.0);
     this.playerUUID = playerUUID;
     this.visibility = visibility;
     this.showActiveAuctions = showActiveAuctions;
@@ -114,12 +116,16 @@ public class GUI_AuctionHistory extends GUI_AuctionPage {
   @Override
   public void drawAditionalButtons(Player player) {
     super.drawAditionalButtons(player);
+    
+    int i = 8;
+    this.drawButton(i--, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllCanceled, this.visibility, this));
+    this.drawButton(i--, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllBought, this.visibility, this));
+    this.drawButton(i--, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllSold, this.visibility, this));
+    this.drawButton(i--, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllExpired, this.visibility, this));
+    
     if (this.showActiveAuctions) {
-      this.drawButton(5, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllActive, this.visibility,this));
+      this.drawButton(i--, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllActive, this.visibility,this));
     }
-    this.drawButton(6, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllSold, this.visibility, this));
-    this.drawButton(7, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllBought, this.visibility, this));
-    this.drawButton(8, 1, new Button_SeeAllAuctionsOfPlayer(playerUUID, Visibility.AllCanceled, this.visibility, this));
 
     
     // Money Button
@@ -171,6 +177,8 @@ public class GUI_AuctionHistory extends GUI_AuctionPage {
       auctionList = GlobalChestShop.plugin.getAuctionController(this.worldGroup).getAllBoughtAuctionFromPlayer(this.playerUUID);
     } else if (visibility == Visibility.AllSold) {
       auctionList = GlobalChestShop.plugin.getAuctionController(this.worldGroup).getAllSoldAuctionsByPlayer(this.playerUUID);
+    } else if (visibility == Visibility.AllExpired) {
+        auctionList = GlobalChestShop.plugin.getAuctionController(this.worldGroup).getAllExpiredAuctionsFromPlayer(this.playerUUID);
     } else {
       auctionList = GlobalChestShop.plugin.getAuctionController(this.worldGroup).getAllCanceledAuctions(this.playerUUID);
     }

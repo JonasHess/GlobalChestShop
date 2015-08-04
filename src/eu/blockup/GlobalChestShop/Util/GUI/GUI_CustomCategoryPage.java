@@ -25,20 +25,22 @@ class Button_CustomCategoryItem extends Button{
   private CustomCategory customCategory;
   private boolean adminShopOnly;
   private boolean newAuctions;
+  private double multiplier;
   
-  public Button_CustomCategoryItem(ItemStack itemStack, CustomCategory customCategory, boolean adminShopOnly, Integer worldGroup, boolean newAuctions) {
+  public Button_CustomCategoryItem(ItemStack itemStack, CustomCategory customCategory, boolean adminShopOnly, Integer worldGroup, boolean newAuctions, double multiplier) {
     super(itemStack.clone());
     this.worldGroup = worldGroup;
     this.itemStack = itemStack.clone();
     this.customCategory = customCategory;
     this.adminShopOnly = adminShopOnly;
     this.newAuctions = newAuctions;
+    this.multiplier = multiplier;
   }
 
   @Override
   public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
     if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
-      Integer itemID = GlobalChestShop.plugin.itemControler.getInteralIdOfItemStack(this.itemStack);
+      Integer itemID = GlobalChestShop.plugin.itemController.getInteralIdOfItemStack(this.itemStack);
       if (type == ClickType.SHIFT_LEFT) {
        this.customCategory.swapLeft(itemID);
        inventoryGUI.onPlayerReturnsToThisGUI(player, null);
@@ -57,10 +59,10 @@ class Button_CustomCategoryItem extends Button{
       }
     }
     if (this.adminShopOnly) {
-      GlobalChestShop.plugin.openAdminShopOnlyGUI(inventoryGUI, player, itemStack, worldGroup);
+      GlobalChestShop.plugin.openAdminShopOnlyGUI(inventoryGUI, player, itemStack, worldGroup, multiplier);
     } else {
       
-      GlobalChestShop.plugin.openNormalAuctionGUI(inventoryGUI, player, itemStack, worldGroup, newAuctions, this.adminShopOnly);
+      GlobalChestShop.plugin.openNormalAuctionGUI(inventoryGUI, player, itemStack, worldGroup, newAuctions, this.adminShopOnly, multiplier);
     }
   }
 
@@ -81,13 +83,18 @@ public class GUI_CustomCategoryPage extends GUI_PageView<Integer> {
   private boolean onlyAdminShops;
   private Integer worldGroup;
   private boolean newAuctions;
+  private double multiplier;
+  private Player player;
   
-  public GUI_CustomCategoryPage(CustomCategory customCategory, InventoryGUI parentGUI, Boolean onlyAdminShops, Integer worldGroup, boolean newAuctions) {
+  public GUI_CustomCategoryPage(CustomCategory customCategory, InventoryGUI parentGUI, Boolean onlyAdminShops, Integer worldGroup, boolean newAuctions, double multiplier, Player player) {
     super(customCategory.getName(), customCategory.getIconItemStack(), 1, parentGUI);
     this.customCategory = customCategory;
     this.onlyAdminShops = onlyAdminShops;
     this.worldGroup = worldGroup;
     this.newAuctions = newAuctions;
+    this.multiplier = multiplier;
+    this.player = player;
+    		
   }
 
 
@@ -96,8 +103,8 @@ public class GUI_CustomCategoryPage extends GUI_PageView<Integer> {
 
   @Override
   public Button convertListObjectToButton(Integer obj, Player player) {
-    return new Button_CustomCategoryItem(GlobalChestShop.plugin.itemControler.formatInternalItemIdToItemStack(obj), this.customCategory, this.onlyAdminShops,
-        this.worldGroup, newAuctions);
+    return new Button_CustomCategoryItem(GlobalChestShop.plugin.itemController.formatInternalItemIdToItemStack(obj), this.customCategory, this.onlyAdminShops,
+        this.worldGroup, newAuctions, multiplier);
   }
 
 
@@ -128,11 +135,10 @@ public class GUI_CustomCategoryPage extends GUI_PageView<Integer> {
       });
       if (customCategory.isShownInCreativeMenu() > 0) {
     	  // Is in shown in creative
-    	  this.drawButton(getWidth() - 2, getHeight() - 1, new Button(new ItemStack(Material.WOOL, 1, (short) 14), ChatColor.RED + "Hide from the CreateMenu") {
+    	  this.drawButton(getWidth() - 2, getHeight() - 1, new Button(new ItemStack(Material.WOOL, 1, (short) 14), ChatColor.RED + "Hide from the CreativeMenu") {
 			
 			@Override
 			public void onRefresh(InventoryGUI inventoryGUI, Player player) {
-				// TODO Auto-generated method stub
 				
 			}
 			
@@ -146,11 +152,10 @@ public class GUI_CustomCategoryPage extends GUI_PageView<Integer> {
 		});    	  
       } else {
     	  // Is not shown in creative
-    	  this.drawButton(getWidth() - 2, getHeight() - 1, new Button(new ItemStack(Material.WOOL, 1, (short) 5), ChatColor.GREEN + "Show in the CreateMenu") {
+    	  this.drawButton(getWidth() - 2, getHeight() - 1, new Button(new ItemStack(Material.WOOL, 1, (short) 5), ChatColor.GREEN + "Show in the CreativeMenu") {
 			
 			@Override
 			public void onRefresh(InventoryGUI inventoryGUI, Player player) {
-				// TODO Auto-generated method stub
 				
 			}
 			
@@ -169,7 +174,7 @@ public class GUI_CustomCategoryPage extends GUI_PageView<Integer> {
 
   @Override
   public List<Integer> getRefreshedObjectList() {
-    return this.customCategory.getAllItems();
+    return this.customCategory.getAllItems(GlobalChestShop.plugin.mainConfig.hideCategoryItemsNotContainingAuctions && ! GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN), worldGroup, onlyAdminShops);
   }
   @Override
   public boolean shouldObjectListBeRefreshedAutomatically() {

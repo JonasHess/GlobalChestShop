@@ -19,7 +19,7 @@ class Button_CategoryChoos extends Button {
   private CustomCategory customCategory;
 
   public Button_CategoryChoos(CustomCategory customCategory) {
-    super(GlobalChestShop.plugin.itemControler.formatInternalItemIdToItemStack(customCategory.getIconID()), customCategory.getName());
+    super(GlobalChestShop.plugin.itemController.formatInternalItemIdToItemStack(customCategory.getIconID()), customCategory.getName());
     this.customCategory = customCategory;
   }
 

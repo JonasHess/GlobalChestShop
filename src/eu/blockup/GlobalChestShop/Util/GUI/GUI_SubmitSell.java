@@ -2,7 +2,6 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -21,12 +20,14 @@ public class GUI_SubmitSell extends GUI_PolarQuestion {
 	private Auction	auction;
 	private int		amount;
 	private boolean	sellAll;
+	private double	multiplier;
 
-	public GUI_SubmitSell(Auction auction, int amount, boolean sellAll, InventoryGUI parentGUI) {
+	public GUI_SubmitSell(Auction auction, int amount, double multiplier,  boolean sellAll, InventoryGUI parentGUI) {
 		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitSell_Question), parentGUI);
 		this.auction = auction;
 		this.amount = amount;
 		this.sellAll = sellAll;
+		this.multiplier = multiplier;
 	}
 
 	@Override
@@ -36,35 +37,6 @@ public class GUI_SubmitSell extends GUI_PolarQuestion {
 
 	@Override
 	protected void onYesButtonClick(InventoryGUI inventoryGUI, Player player) {
-		// synchronized (player.getInventory()) {
-		// try {
-		// GlobalChestShop.plugin.validatePlayerIsItemOwner(player,
-		// auction.getItemStack(amount));
-		// player.getInventory().removeItem(auction.getItemStack(amount));
-		// player.updateInventory();
-		// if (auction.isAdminshop()) {
-		// auction.createAdminShopHistoryEntry(auction, false, this.amount,
-		// player.getUniqueId());
-		// } else {
-		// auction.markAsEnded(player.getUniqueId());
-		// }
-		// Double priceTotal = auction.getPlayerToShopPrice(amount);
-		// GlobalChestShop.plugin.getEconomy().depositPlayer(player,
-		// player.getLocation().getWorld().getName(), priceTotal);
-		// player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitSell_Item_Sold_SUccses));
-		// if (priceTotal > 0) {
-		// player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Message_deposit_Adminshop,
-		// GlobalChestShop.plugin.formatPrice(priceTotal)));
-		// }
-		//
-		// inventoryGUI.returnToParentGUI(player);
-		// } catch (PlayerDoesNotOwnClaimedItemException e1) {
-		// player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Inventory_NoItem));
-		// InventoryGUI.warning(GlobalChestShop.text.get(GlobalChestShop.text.Inventory_NoItem),
-		// false, player, inventoryGUI.getParentGUI());
-		// }
-		// }
-
 		List<ItemStack> itemStackList = new ArrayList<ItemStack>(sellAll ? 5 : 1);
 		List<Double> priceList = new ArrayList<Double>(sellAll ? 5 : 1);
 		if (sellAll) {
@@ -77,26 +49,27 @@ public class GUI_SubmitSell extends GUI_PolarQuestion {
 						continue;
 					this.amount += itemInPlayersInv.getAmount();
 					itemStackList.add(itemInPlayersInv);
-					priceList.add(auction.getPlayerToShopPrice(itemInPlayersInv.getAmount()));
+					priceList.add(auction.getPlayerToShopPrice(itemInPlayersInv.getAmount(), multiplier));
 				}
 			}
 		} else {
 			itemStackList.add(auction.getItemStack(amount));
-			priceList.add(auction.getPlayerToShopPrice(amount));
+			priceList.add(auction.getPlayerToShopPrice(amount, multiplier));
 		}
 		try {
 			// double priceTotal = sellItem(, , player);
-			if (amount == 0) throw new PlayerDoesNotOwnClaimedItemException();
-				double priceTotal = sellItem(itemStackList, priceList, player);
-				if (auction.isAdminshop()) {
-					auction.createAdminShopHistoryEntry(auction, false, this.amount, player.getUniqueId());
-				} else {
-					auction.markAsEnded(player.getUniqueId());
-				}
-				player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitSell_Item_Sold_SUccses));
-				if (priceTotal > 0) {
-					player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Message_deposit_Adminshop, GlobalChestShop.plugin.formatPrice(priceTotal, false)));
-				}
+			if (amount == 0)
+				throw new PlayerDoesNotOwnClaimedItemException();
+			double priceTotal = sellItem(itemStackList, priceList, player);
+			if (auction.isAdminshop()) {
+				auction.createAdminShopHistoryEntry(auction, false, this.amount, multiplier, player.getUniqueId());
+			} else {
+				auction.markAsEnded(player.getUniqueId());
+			}
+			player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitSell_Item_Sold_SUccses));
+			if (priceTotal > 0) {
+				player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Message_deposit_Adminshop, GlobalChestShop.plugin.formatPrice(priceTotal, false)));
+			}
 			inventoryGUI.returnToParentGUI(player);
 		} catch (PlayerDoesNotOwnClaimedItemException e1) {
 			player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Inventory_NoItem));
@@ -125,6 +98,10 @@ public class GUI_SubmitSell extends GUI_PolarQuestion {
 			for (int i = 0; i < itemStackList.size(); i++) {
 				ItemStack itemStack = itemStackList.get(i);
 				Double price = priceList.get(i);
+				Double priceEach = 0.0;
+				if (itemStack.getAmount() > 0) {
+					priceEach = price / itemStack.getAmount();
+				}
 				if (itemStack == null || price == null || price < 0) {
 					throw new RuntimeException("itemStack == null || price == null || price < 0");
 				}
@@ -136,8 +113,10 @@ public class GUI_SubmitSell extends GUI_PolarQuestion {
 					GlobalChestShop.plugin.getDefaultCategoryController(GlobalChestShop.plugin.getworldGroup(player.getUniqueId())).addItemToProtfolio(itemStack);
 				} catch (WorldHasNoWorldGroupException e) {
 				}
+				GlobalChestShop.plugin.logToTradeLogger(player.getName(), player.getUniqueId(), player.getName() + " has sold " + itemStack.getAmount() + "x" + " " + GlobalChestShop.plugin.getItemStackDisplayName(itemStack) + " for " + GlobalChestShop.plugin.formatPrice(priceEach, false) + " each to an AdminShop.");
 			}
 		}
+
 		return priceTotal;
 	}
 
@@ -168,8 +147,8 @@ public class GUI_SubmitSell extends GUI_PolarQuestion {
 
 	@Override
 	public Button_Bare get_the_Question_Button() {
-		return new Button_Bare(auction.getItemStack(1), GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitSell_Question), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_Amount, String.valueOf(amount)) , GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(auction.getPlayerToShopPrice(1), false)), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(auction
-				.getPlayerToShopPrice(this.amount), false)));
+		return new Button_Bare(auction.getItemStack(1), GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitSell_Question), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_Amount, String.valueOf(amount)), GlobalChestShop.text.get(GlobalChestShop.text.Auction_Info_PriceEach, GlobalChestShop.plugin.formatPrice(auction.getPlayerToShopPrice(1, multiplier), false)), GlobalChestShop.text.get(
+				GlobalChestShop.text.Auction_Info_PriceTotal, GlobalChestShop.plugin.formatPrice(auction.getPlayerToShopPrice(this.amount, multiplier), false)));
 	}
 
 	@Override

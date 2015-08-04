@@ -109,6 +109,9 @@ public class MySqlConnector {
 		this.addColumToTable("ALTER TABLE `" + MySqlConnector.table_bannedItems + "` ADD `inLocalShop` tinyint(1) NOT NULL DEFAULT 1;");
 
 		this.addColumToTable("ALTER TABLE `" + MySqlConnector.table_categories + "` ADD `showInCreativeMenu` INT NOT NULL DEFAULT '0' ;");
+		
+		this.addColumToTable("ALTER TABLE `" + MySqlConnector.table_shops + "` ADD `multiplier` double NOT NULL DEFAULT 1;");
+		this.addColumToTable("ALTER TABLE `" + MySqlConnector.table_auctions + "` ADD `multiplier` double NOT NULL DEFAULT 1;");
 	}
 
 	public MySqlConnector() throws ClassNotFoundException, SQLException {
@@ -137,7 +140,11 @@ public class MySqlConnector {
 
 	private synchronized Connection openConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.user, this.password);
+		Connection conn = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + "?useUnicode=true&characterEncoding=utf-8", this.user, this.password);
+	
+		
+		
+		
 		return conn;
 	}
 

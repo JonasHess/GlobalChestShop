@@ -54,20 +54,23 @@ public class MainConfig {
 	public boolean		hideCategoryItemsNotContainingAuctions;
 
 	public boolean		indicateAuctionAmount;
-	public double 		defaultInitialAuctionPrice;
-	public double 		maximalPriceAnAuctionCanSellFor;
+	public double		defaultInitialAuctionPrice;
+	public double		maximalPriceAnAuctionCanSellFor;
 	public BigDecimal	taxDecimal;
 	public String		taxString;
 	public boolean		showAdminshopsInsideGlobalShops;
 	public int			amountOfLocalChestShopsPerPlayer;
-//	public int			amountOfMaximumAuctionsPerPlayer;
+	// public int amountOfMaximumAuctionsPerPlayer;
 
 	public boolean		buyCommandShowsOnlyAdminShops;
 	public boolean		whenSearchFindsNoItemsShowAllItems;
 	public boolean		escButtonLeadsToPreviousWindow;
 	public boolean		playersCanDeleteShopThatStillContainAuctions;
 	public int			defaultShopTypForTheGlobalShopCommand;
-	
+	public boolean		deleteLocalShopsWhenUnableToFindChest;
+	public boolean		logTransactionsToFile;
+	public int			auctionExpirationOffsetInDays;
+
 	public boolean		allowShiftClicksForQuickBuy;
 
 	public MainConfig() throws FileNotFoundException, IOException, InvalidConfigurationException {
@@ -105,7 +108,7 @@ public class MainConfig {
 			return new ItemStack(Material.SIGN);
 		}
 	}
-	
+
 	public ItemStack getSellAllButton() {
 		try {
 			return GlobalChestShop.convertRandomStringToItemStack(this.sellAllButton, null);
@@ -131,6 +134,9 @@ public class MainConfig {
 	}
 
 	public ItemStack getBackground() {
+		if (background.length() == 0 || background == " " || background == "0" || background == "0:0" || background.equalsIgnoreCase("none") || background.equalsIgnoreCase("disabled") || background.equalsIgnoreCase("null") || background.equalsIgnoreCase("air")) {
+			return new ItemStack(Material.AIR);
+		}
 		try {
 			return GlobalChestShop.convertRandomStringToItemStack(this.background, null);
 		} catch (ItemStackNotFoundException e) {
@@ -177,9 +183,10 @@ public class MainConfig {
 		cfg.addDefault("Appearance.defaultShopTypForTheGlobalShopCommand", 1);
 
 		// Other
+		cfg.addDefault("Other.deleteLocalShopsWhenUnableToFindChest", false);
 		cfg.addDefault("Other.showAdminshopsInsideGlobalShops", true);
 		cfg.addDefault("Other.amountOfLocalChestShopsPerPlayer", 1);
-//		cfg.addDefault("Other.amountOfMaximumAuctionsPerPlayer", 60);
+		// cfg.addDefault("Other.amountOfMaximumAuctionsPerPlayer", 60);
 		cfg.addDefault("Other.buyCommandShowsOnlyAdminShops", false);
 		cfg.addDefault("Other.whenSearchFindsNoItemsShowAllItems", true);
 		cfg.addDefault("Other.escButtonLeadsToPreviousWindow", true);
@@ -188,7 +195,9 @@ public class MainConfig {
 		cfg.addDefault("Other.broadcastSells", true);
 		cfg.addDefault("Other.broadcastCreationOfNewAuctions", false);
 		cfg.addDefault("Other.allowShiftClicksForQuickBuy", false);
-		
+		cfg.addDefault("Other.logTransactionsToFile", true);
+		cfg.addDefault("Other.auctionExpirationOffsetInDays", 365);
+
 		// Money
 		cfg.addDefault("Money.tax", "5.0%");
 		cfg.addDefault("Money.defaultInitialAuctionPrice", 100.0);
@@ -236,7 +245,8 @@ public class MainConfig {
 		// Other
 		this.showAdminshopsInsideGlobalShops = cfg.getBoolean("Other.showAdminshopsInsideGlobalShops");
 		this.amountOfLocalChestShopsPerPlayer = cfg.getInt("Other.amountOfLocalChestShopsPerPlayer");
-//		this.amountOfMaximumAuctionsPerPlayer = cfg.getInt("Other.amountOfMaximumAuctionsPerPlayer");
+		// this.amountOfMaximumAuctionsPerPlayer =
+		// cfg.getInt("Other.amountOfMaximumAuctionsPerPlayer");
 		this.buyCommandShowsOnlyAdminShops = cfg.getBoolean("Other.buyCommandShowsOnlyAdminShops");
 		this.whenSearchFindsNoItemsShowAllItems = cfg.getBoolean("Other.whenSearchFindsNoItemsShowAllItems");
 		this.escButtonLeadsToPreviousWindow = cfg.getBoolean("Other.escButtonLeadsToPreviousWindow");
@@ -245,26 +255,27 @@ public class MainConfig {
 		this.broadcastSells = cfg.getBoolean("Other.broadcastSells");
 		this.broadcastCreationOfNewAuctions = cfg.getBoolean("Other.broadcastCreationOfNewAuctions");
 		this.allowShiftClicksForQuickBuy = cfg.getBoolean("Other.allowShiftClicksForQuickBuy");
+		this.deleteLocalShopsWhenUnableToFindChest = cfg.getBoolean("Other.deleteLocalShopsWhenUnableToFindChest");
+		this.logTransactionsToFile = cfg.getBoolean("Other.logTransactionsToFile");
+		this.auctionExpirationOffsetInDays = cfg.getInt("Other.auctionExpirationOffsetInDays");
 
 		// Money
 		this.taxDecimal = new BigDecimal(cfg.getString("Money.tax").trim().replace("%", "")).divide(BigDecimal.valueOf(100));
 		this.taxString = cfg.getString("Money.tax");
 		this.defaultInitialAuctionPrice = cfg.getDouble("Money.defaultInitialAuctionPrice");
 		this.maximalPriceAnAuctionCanSellFor = cfg.getDouble("Money.maximalPriceAnAuctionCanSellFor");
-		
-		
-		
+
 		this.validateConfigs();
 	}
 
 	private void validateConfigs() {
-		if(this.pricePickerMultiplier <= 0) {
+		if (this.pricePickerMultiplier <= 0) {
 			pricePickerMultiplier = 1;
 		}
-		if(this.pricePickerMultiplier % 10 > 1) {
+		if (this.pricePickerMultiplier % 10 > 1) {
 			pricePickerMultiplier = 1;
 		}
-		
+
 	}
 
 }

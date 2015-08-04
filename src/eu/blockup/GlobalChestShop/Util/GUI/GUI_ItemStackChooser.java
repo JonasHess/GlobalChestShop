@@ -12,7 +12,6 @@ import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button.ClickType;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.SimpleIInventoryGUI;
 
-// TODO Ausarbeiten und in AuctionCreate einbinden!
 
 public class GUI_ItemStackChooser extends SimpleIInventoryGUI{
   private ItemStack itemStack;

@@ -37,8 +37,8 @@ public class Button_PriceChangerAdminShop extends Button{
 			this.addDescriptionLine(ChatColor.RED + "No price defined"); // TODO
 		} else {
 			this.setAmount(1);
-			this.addDescriptionLine(ChatColor.GRAY + "BuyPrice: " + GlobalChestShop.plugin.formatPrice(adminAuction.getShopToPlayerPrice(1), true)); // TODO
-			this.addDescriptionLine(ChatColor.GRAY + "SellPrice: " + GlobalChestShop.plugin.formatPrice(adminAuction.getPlayerToShopPrice(1), true)); // TODO
+			this.addDescriptionLine(ChatColor.GRAY + "BuyPrice: " + GlobalChestShop.plugin.formatPrice(adminAuction.getShopToPlayerPrice(1, 1.0), true)); // TODO
+			this.addDescriptionLine(ChatColor.GRAY + "SellPrice: " + GlobalChestShop.plugin.formatPrice(adminAuction.getPlayerToShopPrice(1, 1.0), true)); // TODO
 		}
 		
 	}

@@ -15,10 +15,12 @@ public class Button_CustomCategory extends Button{
 	
 	private CustomCategory customCategory;
 	private int worldGroup;
-	public Button_CustomCategory(CustomCategory customCategory, int worldGroup) {
+	private double multiplier;
+	public Button_CustomCategory(CustomCategory customCategory, int worldGroup, double multiplier) {
 		super(customCategory.getIconItemStack(), customCategory.getName());
 		this.customCategory = customCategory;
 		this.worldGroup = worldGroup;
+		this.multiplier = multiplier;
 	}
 
 	@Override
@@ -38,12 +40,11 @@ public class Button_CustomCategory extends Button{
 				return;
 			}
 		}
-		new GUI_CustomCategoryPage(customCategory, inventoryGUI, true, worldGroup, false).open(player);
+		new GUI_CustomCategoryPage(customCategory, inventoryGUI, true, worldGroup, false, multiplier, player).open(player);
 	}
 
 	@Override
 	public void onRefresh(InventoryGUI inventoryGUI, Player player) {
-		// TODO Auto-generated method stub
 		
 	}
 	

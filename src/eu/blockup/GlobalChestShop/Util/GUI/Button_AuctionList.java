@@ -15,14 +15,16 @@ public class Button_AuctionList extends Button {
 	private ItemStack	auctionItem;
 	private boolean		newAuctions;
 	private boolean		inDefaultCategory;
+	private double multiplier;
 
-	public Button_AuctionList(ItemStack actionItem, boolean onlyAdminShops, Integer worldGroup, boolean newAuctions, boolean inDefaultCategory) {
+	public Button_AuctionList(ItemStack actionItem, boolean onlyAdminShops, Integer worldGroup, boolean newAuctions, boolean inDefaultCategory, double multiplier) {
 		super(actionItem.clone(), "");
 		this.worldGroup = worldGroup;
 		this.auctionItem = actionItem.clone();
 		this.adminShopsOnly = onlyAdminShops;
 		this.newAuctions = newAuctions;
 		this.inDefaultCategory = inDefaultCategory;
+		this.multiplier = multiplier;
 		// this.auctionItem = actionItem;
 	}
 
@@ -37,9 +39,9 @@ public class Button_AuctionList extends Button {
 		}
 
 		if (this.adminShopsOnly) {
-			GlobalChestShop.plugin.openAdminShopOnlyGUI(inventoryGUI, player, auctionItem, worldGroup);
+			GlobalChestShop.plugin.openAdminShopOnlyGUI(inventoryGUI, player, auctionItem, worldGroup, multiplier);
 		} else {
-			GlobalChestShop.plugin.openNormalAuctionGUI(inventoryGUI, player, auctionItem, worldGroup, this.newAuctions, this.adminShopsOnly);
+			GlobalChestShop.plugin.openNormalAuctionGUI(inventoryGUI, player, auctionItem, worldGroup, this.newAuctions, this.adminShopsOnly, multiplier);
 		}
 	}
 

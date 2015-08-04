@@ -1,8 +1,8 @@
 name: GlobalChestShop
-version: 1.2.049
+version: 1.2.056
 authors: [EDMAN_93]
 depend: [Vault]
-softdepend: [HolographicDisplays, Citizens, MoreTNTs]
+softdepend: [HolographicDisplays, Citizens, MoreTNTs, ED-Core]
 description: Shop plugin
 main: eu.blockup.GlobalChestShop.GlobalChestShop
 database: false

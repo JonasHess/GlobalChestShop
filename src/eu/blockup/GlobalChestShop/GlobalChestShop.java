@@ -2,9 +2,13 @@ package eu.blockup.GlobalChestShop;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.sql.Time;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -38,7 +42,7 @@ import eu.blockup.GlobalChestShop.Util.Auction;
 import eu.blockup.GlobalChestShop.Util.AuctionController;
 import eu.blockup.GlobalChestShop.Util.CustomCategoryController;
 import eu.blockup.GlobalChestShop.Util.DefaultCategoryController;
-import eu.blockup.GlobalChestShop.Util.ItemControler;
+import eu.blockup.GlobalChestShop.Util.ItemController;
 import eu.blockup.GlobalChestShop.Util.MySqlConnector;
 import eu.blockup.GlobalChestShop.Util.PlayerController;
 import eu.blockup.GlobalChestShop.Util.ShopCommandExecutor;
@@ -54,7 +58,6 @@ import eu.blockup.GlobalChestShop.Util.GUI.GUI_AdminShopEdit;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_AuctionPage;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GuiCore;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
-import eu.blockup.GlobalChestShop.Util.Metrics.CollectStatistics;
 import eu.blockup.GlobalChestShop.Util.Metrics.Metrics;
 import eu.blockup.GlobalChestShop.Util.SoftDependecies.MoreTntController;
 import eu.blockup.GlobalChestShop.Util.SoftDependecies.NPC_Listener;
@@ -66,7 +69,7 @@ import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
 public class GlobalChestShop extends JavaPlugin {
 
-	public ItemControler							itemControler;
+	public ItemController							itemController;
 	private PlayerController						playerController;
 	private Map<Integer, AuctionController>			hashMapAuctionController;
 	private Map<Integer, DefaultCategoryController>	hashMapDefaultCategoryControllers;
@@ -88,7 +91,7 @@ public class GlobalChestShop extends JavaPlugin {
 	private NPC_Listener							nPC_Listener;
 	private PriceEngine								priceEngine;
 	private AuctionLimitController					auctionLimitController;
-	private ShopEventListener shopEventListener;
+	private ShopEventListener						shopEventListener;
 
 	public long										debugTickStartTime;
 
@@ -98,6 +101,7 @@ public class GlobalChestShop extends JavaPlugin {
 		this.getServer().getPluginManager().disablePlugin(this);
 		this.getServer().getPluginManager().enablePlugin(this);
 	}
+
 
 	@Override
 	public void onEnable() {
@@ -195,16 +199,16 @@ public class GlobalChestShop extends JavaPlugin {
 		}
 
 		// Initialize utilities
-		
+
 		// EventListener
 		this.shopEventListener = new ShopEventListener();
 		this.getServer().getPluginManager().registerEvents(shopEventListener, this);
-		
+
 		// Command Executor
 		ShopCommandExecutor ce = new ShopCommandExecutor();
 		this.getCommand("globalchestshop").setExecutor(ce);
-		
-		this.itemControler = new ItemControler();
+
+		this.itemController = new ItemController();
 		this.playerController = new PlayerController();
 		this.playerController.getPlayerIdFromUUID(adminShopUUID);
 		this.worldGroupController = new WorldGroupController();
@@ -216,8 +220,6 @@ public class GlobalChestShop extends JavaPlugin {
 
 		this.getAuctionController(1); // Starts caching for more performance.
 		this.getAuctionController(2);
-
-
 
 		// Citizens
 		if (this.isCitezensEnabled()) {
@@ -243,7 +245,6 @@ public class GlobalChestShop extends JavaPlugin {
 			// Failed to submit the stats :-(
 			e.printStackTrace();
 		}
-		CollectStatistics.startCollectionsTask();
 
 	}
 
@@ -258,7 +259,7 @@ public class GlobalChestShop extends JavaPlugin {
 		this.shopController.disable();
 		this.shopController = null;
 		this.customCategoryController = null;
-		this.itemControler = null;
+		this.itemController = null;
 		this.hashMapAuctionController.clear();
 		this.hashMapAuctionController = null;
 		this.hashMapDefaultCategoryControllers.clear();
@@ -326,7 +327,7 @@ public class GlobalChestShop extends JavaPlugin {
 		in.close();
 	}
 
-	public void openAdminShopOnlyGUI(InventoryGUI previousGUI, Player player, ItemStack item, int worldGroup) {
+	public void openAdminShopOnlyGUI(InventoryGUI previousGUI, Player player, ItemStack item, int worldGroup, double multiplier) {
 		Auction adminShop = this.getAuctionController(worldGroup).getAdminShopFromItemStack(item);
 		if (adminShop == null || adminShop.isEndent()) {
 			if (validatePermissionCheck(player, Permissions.ADMIN)) {
@@ -341,7 +342,7 @@ public class GlobalChestShop extends JavaPlugin {
 				return;
 			}
 		} else {
-			new GUI_AdminShopBuy(adminShop, previousGUI, worldGroup).open(player);
+			new GUI_AdminShopBuy(adminShop, multiplier, previousGUI, worldGroup).open(player);
 		}
 	}
 
@@ -368,15 +369,15 @@ public class GlobalChestShop extends JavaPlugin {
 		GlobalChestShop.plugin.getServer().getScheduler().runTask(GlobalChestShop.plugin, runnable);
 	}
 
-	public void openNormalAuctionGUI(InventoryGUI previousGUI, Player player, ItemStack item, int worldGroup, boolean newAuctions, boolean adminShopOnly) {
+	public void openNormalAuctionGUI(InventoryGUI previousGUI, Player player, ItemStack item, int worldGroup, boolean newAuctions, boolean adminShopOnly, double multiplier) {
 
 		class NormalAuction extends GUI_AuctionPage {
 			private ItemStack	item;
 			private boolean		newAuctions;
 			private boolean		adminShopOnly;
 
-			public NormalAuction(String title, ItemStack displayItem, InventoryGUI parentGUI, boolean highlightAdminShops, Integer worldGroup, ItemStack item, boolean newAuctions, boolean adminShopOnly) {
-				super(title, displayItem, parentGUI, highlightAdminShops, worldGroup, false);
+			public NormalAuction(String title, ItemStack displayItem, InventoryGUI parentGUI, boolean highlightAdminShops, Integer worldGroup, ItemStack item, boolean newAuctions, boolean adminShopOnly, double multiplier) {
+				super(title, displayItem, parentGUI, highlightAdminShops, worldGroup, false, multiplier);
 				this.item = item;
 				this.newAuctions = newAuctions;
 				this.adminShopOnly = adminShopOnly;
@@ -422,7 +423,7 @@ public class GlobalChestShop extends JavaPlugin {
 				return true;
 			}
 		}
-		new NormalAuction(this.getItemStackDisplayName(item), item, previousGUI, true, worldGroup, item, newAuctions, adminShopOnly).open(player);
+		new NormalAuction(this.getItemStackDisplayName(item), item, previousGUI, true, worldGroup, item, newAuctions, adminShopOnly, multiplier).open(player);
 		;
 	}
 
@@ -617,6 +618,11 @@ public class GlobalChestShop extends JavaPlugin {
 
 	private Map<Integer, ItemStack>	playHeadChache;
 
+	
+	public ItemStack getPlayerHead(UUID uuid, boolean removeFromInventoryWhenPickedUp) {
+		return this.getPlayerHead(GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(uuid), removeFromInventoryWhenPickedUp);
+		
+	}
 	public ItemStack getPlayerHead(Integer playerID, boolean removeFromInventoryWhenPickedUp) {
 
 		if (playerID == null)
@@ -667,14 +673,18 @@ public class GlobalChestShop extends JavaPlugin {
 		return this.getNameOfPlayer(this.playerController.getUuidFromPlayerID(playerID));
 	}
 
+	
+	public String formatPriceWithoutColor(double price, boolean showZeroAsFree) {
+		return ChatColor.stripColor(formatPrice(price, showZeroAsFree));
+	}
 	public String formatPrice(double price, boolean showZeroAsFree) {
 		if (showZeroAsFree && price == 0) {
 			return GlobalChestShop.text.get(GlobalChestShop.text.Button_Free);
 		}
 		if (price < 0) {
-			return ChatColor.RED + "DISABLED";
+			return "DISABLED";
 		}
-		return ChatColor.GOLD + this.getEconomy().format(price);
+		return this.getEconomy().format(price);
 	}
 
 	public String formatDate(Date d, Time t) {
@@ -694,7 +704,7 @@ public class GlobalChestShop extends JavaPlugin {
 		return result;
 	}
 
-	private Date convertSqlDate(Date date, Time time) {
+	public static Date convertSqlDate(Date date, Time time) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(date);
 		Calendar calendar1 = Calendar.getInstance();
@@ -781,7 +791,7 @@ public class GlobalChestShop extends JavaPlugin {
 		if (itemID == null) {
 			return "null";
 		} else {
-			return this.getItemStackDisplayName(this.itemControler.formatInternalItemIdToItemStack(itemID));
+			return this.getItemStackDisplayName(this.itemController.formatInternalItemIdToItemStack(itemID));
 		}
 	}
 
@@ -820,6 +830,67 @@ public class GlobalChestShop extends JavaPlugin {
 		}
 		return result;
 	}
+	
+	private static final String	newLine	= System.getProperty("line.separator");
+
+	public synchronized void logToTradeLogger(String playername, UUID uuid, String msg) {
+		
+		if (! this.mainConfig.logTransactionsToFile) {
+			return;
+		}
+		try {
+			
+			Format dayFormatter = new SimpleDateFormat("yyyy-MM-dd");
+			String day = dayFormatter.format(new Date());
+			
+			Format timeformatter = new SimpleDateFormat("HH:mm:ss");
+			String time = timeformatter.format(new Date());
+			
+			String message = day + " " + time + "\t " + playername + ": \t" + ChatColor.stripColor(msg) + newLine;
+			
+			// By Date
+			String fileName = getDataFolder() + "/" + "Logs" + "/ByDate/" + day + ".txt";
+			PrintWriter printWriter = null;
+			File file = new File(fileName);
+			file.getParentFile().mkdirs();
+			try {
+				if (!file.exists())
+					file.createNewFile();
+				printWriter = new PrintWriter(new FileOutputStream(fileName, true));
+				printWriter.write(message);
+			} catch (IOException ioex) {
+				ioex.printStackTrace();
+			} finally {
+				if (printWriter != null) {
+					printWriter.flush();
+					printWriter.close();
+				}
+			}
+			
+			// By Player
+			fileName = getDataFolder() + "/" + "Logs" + "/ByPlayer/" + playername + "_" + uuid + ".txt";
+			printWriter = null;
+			file = new File(fileName);
+			file.getParentFile().mkdirs();
+			try {
+				if (!file.exists())
+					file.createNewFile();
+				printWriter = new PrintWriter(new FileOutputStream(fileName, true));
+				printWriter.write(message);
+			} catch (IOException ioex) {
+				ioex.printStackTrace();
+			} finally {
+				if (printWriter != null) {
+					printWriter.flush();
+					printWriter.close();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 
 	/*
 	 * Getter & Setter
@@ -833,8 +904,8 @@ public class GlobalChestShop extends JavaPlugin {
 		return this.customCategoryController;
 	}
 
-	public ItemControler getItemController() {
-		return itemControler;
+	public ItemController getItemController() {
+		return itemController;
 	}
 
 	public PlayerController getPlayerController() {

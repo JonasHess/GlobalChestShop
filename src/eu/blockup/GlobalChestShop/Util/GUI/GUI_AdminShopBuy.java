@@ -24,15 +24,15 @@ public class GUI_AdminShopBuy extends GUI_Shop{
 		return auction;
 	}
 
-	public GUI_AdminShopBuy(Auction auction, InventoryGUI parentInventoryGUI, Integer worldGroup) {
-		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_Title_AdminShop), auction.getItemStack(1), parentInventoryGUI, auction, GlobalChestShop.plugin.getEconomy(), true, true, true, 1);
+	public GUI_AdminShopBuy(Auction auction, double multiplier,  InventoryGUI parentInventoryGUI, Integer worldGroup) {
+		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_Title_AdminShop), auction.getItemStack(1), parentInventoryGUI, auction, GlobalChestShop.plugin.getEconomy(), true, true, true, multiplier);
 		this.auction = auction;
 		this.worldGroup = worldGroup;
-		if (auction.getPlayerToShopPrice(1) < 0) {
+		if (auction.getPlayerToShopPrice(1, multiplier) < 0) {
 		  this.setSell(false);
 		  this.setSellAll(false);
 		}
-		if (auction.getShopToPlayerPrice(1) < 0) {
+		if (auction.getShopToPlayerPrice(1, multiplier) < 0) {
 		  this.setBuy(false);
 		}
 	}
@@ -77,7 +77,6 @@ public class GUI_AdminShopBuy extends GUI_Shop{
             
             @Override
             public void onRefresh(InventoryGUI inventoryGUI, Player player) {
-              // TODO Auto-generated method stub
               
             }
             

@@ -23,6 +23,7 @@ public class ShopInfoPack {
   private boolean newAuctions = false;
   private boolean sellAll = false;
   private int appearance = 0;
+  private double multiplier = 1.0;
 
 
 
@@ -40,27 +41,42 @@ public class ShopInfoPack {
 
 
 
-  public ShopInfoPack(Integer worldGroup, Location playerLocatioin, Location signLocation, Location chestLocation, Location itemFrameLocation, CustomCategory customCategory, ItemStack itemStack, Integer npcID, Boolean adminShopOnly, EShopTyp eShopTyp, Boolean holo, boolean newAuctions, boolean sellAll, int appearance) {
-    super();
-    this.worldGroup = worldGroup;
-    this.playerLocatioin = playerLocatioin;
-    this.signLocation = signLocation;
-    this.chestLocation = chestLocation;
-    this.itemFrameLocation = itemFrameLocation;
-    this.customCategory = customCategory;
-    this.itemStack = itemStack;
-    this.npcID = npcID;
-    this.adminShopOnly = adminShopOnly;
-    this.eShopTyp = eShopTyp;
-    this.holo = holo;
-    this.newAuctions = newAuctions;
-    this.sellAll = sellAll;
-    this.appearance = appearance;
-  }
 
 
   
-  public int getAppearance() {
+  public ShopInfoPack(Integer worldGroup, Location playerLocatioin, Location signLocation, Location chestLocation, Location itemFrameLocation, CustomCategory customCategory, ItemStack itemStack, Integer npcID, Boolean adminShopOnly, EShopTyp eShopTyp, Boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier) {
+	super();
+	this.worldGroup = worldGroup;
+	this.playerLocatioin = playerLocatioin;
+	this.signLocation = signLocation;
+	this.chestLocation = chestLocation;
+	this.itemFrameLocation = itemFrameLocation;
+	this.customCategory = customCategory;
+	this.itemStack = itemStack;
+	this.npcID = npcID;
+	this.adminShopOnly = adminShopOnly;
+	this.eShopTyp = eShopTyp;
+	this.holo = holo;
+	this.newAuctions = newAuctions;
+	this.sellAll = sellAll;
+	this.appearance = appearance;
+	this.multiplier = multiplier;
+}
+
+
+
+
+public double getMultiplier() {
+	return multiplier;
+}
+
+
+public void setMultiplier(double multiplier) {
+	this.multiplier = multiplier;
+}
+
+
+public int getAppearance() {
     return appearance;
   }
 
@@ -81,7 +97,7 @@ public class ShopInfoPack {
 
   public ShopInfoPack clone() {
     return new ShopInfoPack(worldGroup, playerLocatioin, signLocation, chestLocation, itemFrameLocation, customCategory, itemStack, npcID,
-        adminShopOnly, eShopTyp, holo, newAuctions, sellAll, appearance);
+        adminShopOnly, eShopTyp, holo, newAuctions, sellAll, appearance, multiplier);
   }
 
   

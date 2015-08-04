@@ -18,11 +18,13 @@ public class GUI_GlobalShopByPlayers extends GUI_PageView<UUID> {
 
 	private int		worldGroup;
 	private boolean	newAuctions;
+	private double multiplier;
 
-	public GUI_GlobalShopByPlayers(int worldGroup, boolean newAuctions, InventoryGUI parentGUI) {
+	public GUI_GlobalShopByPlayers(int worldGroup, boolean newAuctions, InventoryGUI parentGUI, double multiplier) {
 		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_Title_AllLocalChestShop), GlobalChestShop.plugin.mainConfig.getDisplayItemAllLocalShops(), 1, parentGUI);
 		this.worldGroup = worldGroup;
 		this.newAuctions = newAuctions;
+		this.multiplier = multiplier;
 	}
 
 	@Override
@@ -46,6 +48,9 @@ public class GUI_GlobalShopByPlayers extends GUI_PageView<UUID> {
 			this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_AuctionCreate(this.worldGroup));
 			this.drawButton(0, this.getHeight() - 1, new Button_AuctionHistory(true, this.worldGroup, true));
 		}
+		
+		//Search
+		this.drawButton(0, 1, new Button_SearchAuctions(worldGroup, multiplier));
 
 	}
 

@@ -156,7 +156,7 @@ public class CustomCategory {
 	}
 
 	public ItemStack getIconItemStack() {
-		return GlobalChestShop.plugin.itemControler.formatInternalItemIdToItemStack(getIconID());
+		return GlobalChestShop.plugin.itemController.formatInternalItemIdToItemStack(getIconID());
 	}
 
 	public Integer getIconID() {
@@ -318,7 +318,7 @@ public class CustomCategory {
 		}
 	}
 
-	public List<Integer> getAllItems() {
+	public List<Integer> getAllItems(boolean filterItemsWithNoAuctions, int worldGroup, boolean onlyAdminShops) {
 		List<Integer> resultList = new LinkedList<Integer>();
 		Connection conn = null;
 		try {
@@ -333,6 +333,9 @@ public class CustomCategory {
 			st.setInt(1, getCategoryID());
 			rs = st.executeQuery();
 			while (rs.next()) {
+				if (filterItemsWithNoAuctions && GlobalChestShop.plugin.getAuctionController(worldGroup).getAllActiveAuctionForItemStack(GlobalChestShop.plugin.getItemController().formatInternalItemIdToItemStack(rs.getInt(1)), onlyAdminShops).size() == 0) {
+					continue;
+				}
 				resultList.add(rs.getInt(1));
 			}
 		} catch (SQLException e) {

@@ -69,9 +69,9 @@ public class TreeAnalyser {
 				throw new PriceNotInitializedException();
 			}
 			if (buy) {
-				result += adminAuction.getShopToPlayerPrice(worldGroup) * r.amount;
+				result += adminAuction.getShopToPlayerPrice(worldGroup, 1.0) * r.amount;
 			} else {
-				result += adminAuction.getPlayerToShopPrice(worldGroup) * r.amount;
+				result += adminAuction.getPlayerToShopPrice(worldGroup, 1.0) * r.amount;
 			}
 		}
 		return result;

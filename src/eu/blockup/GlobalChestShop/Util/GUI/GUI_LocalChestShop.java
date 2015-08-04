@@ -1,26 +1,26 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Auction;
-import eu.blockup.GlobalChestShop.Util.Shop;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 
 public class GUI_LocalChestShop extends GUI_AuctionPage {
 
-  private Shop shop;
+  private UUID owner;
   
-  public GUI_LocalChestShop(Shop shop, InventoryGUI parentGUI, Integer worldGroup) {
-    super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_Title_LocalChestShop), shop.getShopEntityIcon(), parentGUI, false, worldGroup, false);
-    this.shop = shop;
+  public GUI_LocalChestShop(UUID owner, InventoryGUI parentGUI, Integer worldGroup) {
+    super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_Title_LocalChestShop), GlobalChestShop.plugin.getPlayerHead(owner, false), parentGUI, false, worldGroup, false, 1.0);
+    this.owner = owner;
   }
 
   private boolean isPlayerTheOwner(Player player) {
-    return (GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(player.getUniqueId()) == shop.getOwner());
+    return (player.getUniqueId().compareTo(owner) == 0);
   }
 
   @Override
@@ -49,7 +49,7 @@ public class GUI_LocalChestShop extends GUI_AuctionPage {
   @Override
   public List<Auction> getRefreshedObjectList() {
 
-    return GlobalChestShop.plugin.getAuctionController(this.worldGroup).getAllActiveAuctionsFromPlayer(this.shop.getOwnerUUID());
+    return GlobalChestShop.plugin.getAuctionController(this.worldGroup).getAllActiveAuctionsFromPlayer(owner);
   }
 
   @Override

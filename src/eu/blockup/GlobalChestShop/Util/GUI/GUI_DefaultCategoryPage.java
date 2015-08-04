@@ -22,13 +22,15 @@ public class GUI_DefaultCategoryPage extends GUI_PageView<ItemStack> {
   private boolean adminShopsOnly;
   private Integer worldGroup;
   private boolean newAuctions;
+  private double multiplier;
 
-  public GUI_DefaultCategoryPage(DefaultCategory category, InventoryGUI parentGUI, boolean onlyAdminShops, Integer worldGroup, boolean newAuctions) {
+  public GUI_DefaultCategoryPage(DefaultCategory category, InventoryGUI parentGUI, boolean onlyAdminShops, Integer worldGroup, boolean newAuctions, double multiplier) {
     super(category.getTitle(), category.getDisplayItem(), 1, parentGUI);
     this.category = category;
     this.adminShopsOnly = onlyAdminShops;
     this.worldGroup = worldGroup;
     this.newAuctions = newAuctions;
+    this.multiplier = multiplier;
   }
 
   @Override
@@ -52,7 +54,7 @@ public class GUI_DefaultCategoryPage extends GUI_PageView<ItemStack> {
 
   @Override
   public Button convertListObjectToButton(ItemStack obj, Player player) {
-    return new Button_AuctionList(obj, this.adminShopsOnly, this.worldGroup, this.newAuctions, true);
+    return new Button_AuctionList(obj, this.adminShopsOnly, this.worldGroup, this.newAuctions, true, multiplier);
   }
 
   @Override
@@ -99,9 +101,9 @@ public class GUI_DefaultCategoryPage extends GUI_PageView<ItemStack> {
   public void onClickInLowerInventory(Player player, ItemStack clicked, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
     if (type == ClickType.SHIFT_LEFT) {
       if (this.adminShopsOnly) {
-        GlobalChestShop.plugin.openAdminShopOnlyGUI(this, player, clicked, worldGroup);
+        GlobalChestShop.plugin.openAdminShopOnlyGUI(this, player, clicked, worldGroup, multiplier);
       } else {
-        GlobalChestShop.plugin.openNormalAuctionGUI(this, player, clicked, worldGroup, true, this.adminShopsOnly);
+        GlobalChestShop.plugin.openNormalAuctionGUI(this, player, clicked, worldGroup, true, this.adminShopsOnly, multiplier);
       }
     }
   }

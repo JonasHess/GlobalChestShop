@@ -74,6 +74,7 @@ public class LanguageController {
 	public String					Auction_Status_Active										= "Buttons.AuctionInfo.Status.Active";
 	public String					Auction_Status_Canceled										= "Buttons.AuctionInfo.Status.Canceled";
 	public String					Auction_Status_Ended										= "Buttons.AuctionInfo.Status.Ended";
+	public String					Auction_Status_Expired										= "Buttons.AuctionInfo.Status.Expired";
 	public String					Auction_Info_Seller											= "Buttons.AuctionInfo.Seller";
 	public String					Auction_Info_Buyer											= "Buttons.AuctionInfo.Buyer";
 	public String					Auction_Info_Amount											= "Buttons.AuctionInfo.Amount";
@@ -130,10 +131,14 @@ public class LanguageController {
 	public String					GUI_History_RunningAuctions									= "GuiTitles.History.RunningAuctions";
 	public String					GUI_History_BoughtAuctions									= "GuiTitles.History.BoughtAuctions";
 	public String					GUI_History_SoldAuctions									= "GuiTitles.History.SoldAuctions";
+	public String					GUI_History_Expired									= "GuiTitles.History.Expired";
 	public String					GUI_History_CanceledAuctions								= "GuiTitles.History.CanceledAuctions";
 	public String					GUI_SubmitBuy_Title											= "Buttons.PolarQuestion.SubmitBuy";
 	public String					GUI_SubmitBuy_Sure_to_Buy									= "Buttons.PolarQuestion.SuretoBuy";
 	public String					GUI_SubmitBuy_TooSlow_Auction_Ended							= "Messages.TooSlowAuctionEnded";
+	
+	public String					Chat_SearchInstructions							= "Messages.SearchInstructions";
+	
 	public String					GUI_SubmitBuy_ItemBoughtSuccsses							= "Messages.ItemBought";
 	public String					GUI_SubmitCreateAuction_Question							= "Buttons.PolarQuestion.CreateAuction";
 	public String					GUI_SubmitCreateAuction_Succsess							= "Messages.CreatedAuction";
@@ -150,6 +155,11 @@ public class LanguageController {
 	public String					BackButton_DESC												= "Buttons.BackButtons.Description";
 	public String					CloseButton_Title											= "Buttons.CloseButtons.Title";
 	public String					CloseButton_DESC											= "Buttons.CloseButtons.Description";
+	
+	public String					SearchButton_Title											= "Buttons.SearchButton.Title";
+	public String					SearchButton_DESC												= "Buttons.SearchButton.Description";
+	
+	
 	public String					PageView_SinglePage											= "Buttons.PageView.SinglePage";
 	public String					PageView_FirstPage											= "Buttons.PageView.FirstPage";
 	public String					PageView_LastPage											= "Buttons.PageView.LastPage";
@@ -263,8 +273,13 @@ public class LanguageController {
 		this.hashMap_Messages.put(this.PageView_FirstPage, "First Page");
 		this.hashMap_Messages.put(this.PageView_LastPage, "Last Page");
 		this.hashMap_Messages.put(this.PageView_CurrentPage, "Page: %arg0");
+		
 		this.hashMap_Messages.put(this.CloseButton_Title, "EXIT");
 		this.hashMap_Messages.put(this.CloseButton_DESC, "close this inventory");
+		
+		this.hashMap_Messages.put(this.SearchButton_Title, "&bSearch for an auction");
+		this.hashMap_Messages.put(this.SearchButton_DESC, "");
+		
 		this.hashMap_Messages.put(this.BackButton_Title, "RETURN");
 		this.hashMap_Messages.put(this.BackButton_DESC, "go back to previous inventory");
 		this.hashMap_Messages.put(this.Category1, "Building Blocks");
@@ -289,6 +304,7 @@ public class LanguageController {
 		this.hashMap_Messages.put(this.Auction_Status_Active, "&7Status: &2active");
 		this.hashMap_Messages.put(this.Auction_Status_Canceled, "&7Status: &4canceled");
 		this.hashMap_Messages.put(this.Auction_Status_Ended, "&7Status: &cended");
+		this.hashMap_Messages.put(this.Auction_Status_Expired, "&7Status: &cexpired");
 		this.hashMap_Messages.put(this.Auction_Info_Seller, "&7Seller:  &9%arg0");
 		this.hashMap_Messages.put(this.Auction_Info_Buyer, "&7Buyer:  &9%arg0");
 		this.hashMap_Messages.put(this.Auction_Info_Amount, "&7Amount: &6%arg0");
@@ -340,6 +356,7 @@ public class LanguageController {
 		this.hashMap_Messages.put(this.GUI_History_RunningAuctions, "&aRunning Auctions");
 		this.hashMap_Messages.put(this.GUI_History_BoughtAuctions, "&9Bought auction");
 		this.hashMap_Messages.put(this.GUI_History_SoldAuctions, "&bSold auctions");
+		this.hashMap_Messages.put(this.GUI_History_Expired, "&cExpired auctions");
 		this.hashMap_Messages.put(this.GUI_History_CanceledAuctions, "&6Canceled Auctions");
 		this.hashMap_Messages.put(this.GUI_SubmitBuy_Title, "&cAre you sure to buy?");
 		this.hashMap_Messages.put(this.GUI_SubmitBuy_Sure_to_Buy, "&cAre you sure to buy?");
@@ -393,6 +410,8 @@ public class LanguageController {
 		this.hashMap_Messages.put(this.Button_SellSingle, "&aSell this item stack");
 		this.hashMap_Messages.put(this.Button_DeleteShop, "&cDelete Shop");
 		this.hashMap_Messages.put(this.Button_SellAll, "&aSell as many stacks I own");
+		
+		this.hashMap_Messages.put(this.Chat_SearchInstructions, "&aType the name of the item you are looking for into the chat");
 	}
 	// ////// CHINA
 	//

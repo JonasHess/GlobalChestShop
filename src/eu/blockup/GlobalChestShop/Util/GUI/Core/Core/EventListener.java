@@ -82,6 +82,10 @@ public class EventListener implements Listener {
 			} else {
 				type = ClickType.UNKNOWN;
 			}
+			if (event.getClick() == org.bukkit.event.inventory.ClickType.DOUBLE_CLICK ) {
+				event.setCancelled(true);
+			}
+			
 
 			// What items was the player holding while he clicked?
 			ItemStack cursor = event.getCursor();

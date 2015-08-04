@@ -20,12 +20,14 @@ public class GUI_DefaultCategoryCollection extends SimpleIInventoryGUI {
 	private boolean	adminShopsOnly;
 	private Integer	worldGroup;
 	private boolean	newAuctions;
+	private double multiplier;
 
-	public GUI_DefaultCategoryCollection(InventoryGUI parentInventoryGUI, boolean onlyAdminShops, Integer worldGroup, boolean newAuctions) {
+	public GUI_DefaultCategoryCollection(InventoryGUI parentInventoryGUI, boolean onlyAdminShops, Integer worldGroup, boolean newAuctions, double multiplier) {
 		super(GlobalChestShop.text.get(GlobalChestShop.text.GUI_MainWindos_GUI_Title), 6, GlobalChestShop.plugin.mainConfig.getDisplayItemAllItems(), parentInventoryGUI);
 		this.adminShopsOnly = onlyAdminShops;
 		this.worldGroup = worldGroup;
 		this.newAuctions = newAuctions;
+		this.multiplier = multiplier;
 	}
 
 	@Override
@@ -48,10 +50,13 @@ public class GUI_DefaultCategoryCollection extends SimpleIInventoryGUI {
 			@Override
 			public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
 				GUI_DefaultCategoryCollection gui = (GUI_DefaultCategoryCollection) inventoryGUI;
-				GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_DefaultCategoryPage(category, inventoryGUI, gui.adminShopsOnly, gui.worldGroup, gui.newAuctions));
+				GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_DefaultCategoryPage(category, inventoryGUI, gui.adminShopsOnly, gui.worldGroup, gui.newAuctions, multiplier));
 			}
 
 		}
+		
+		//Search
+		this.drawButton(0, 1, new Button_SearchAuctions(worldGroup, multiplier));
 
 		// Display Item
 		this.drawButton(4, 0, new Button_Bare(this.getDisplayIcon(), this.getTitle()));
@@ -81,7 +86,7 @@ public class GUI_DefaultCategoryCollection extends SimpleIInventoryGUI {
 
 		List<CustomCategory> customCategoryList = GlobalChestShop.plugin.getCustomCategoryController().getAllCategoriesShownInCreativeMenu();
 		for (CustomCategory c : customCategoryList) {
-			this.drawButton(c.isShownInCreativeMenu() + 1, 3, new Button_CustomCategory(c, worldGroup));
+			this.drawButton(c.isShownInCreativeMenu() + 1, 3, new Button_CustomCategory(c, worldGroup, multiplier));
 		}
 		
 		
@@ -97,16 +102,15 @@ public class GUI_DefaultCategoryCollection extends SimpleIInventoryGUI {
 
 	public GUI_DefaultCategoryCollection(String title, int lines, ItemStack displayIcon, InventoryGUI parentInventoryGUI) {
 		super(title, lines, displayIcon, parentInventoryGUI);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void onClickInLowerInventory(Player player, ItemStack clicked, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
 		if (type == ClickType.SHIFT_LEFT) {
 			if (this.adminShopsOnly) {
-				GlobalChestShop.plugin.openAdminShopOnlyGUI(this, player, clicked, worldGroup);
+				GlobalChestShop.plugin.openAdminShopOnlyGUI(this, player, clicked, worldGroup, multiplier);
 			} else {
-				GlobalChestShop.plugin.openNormalAuctionGUI(this, player, clicked, worldGroup, false, adminShopsOnly);
+				GlobalChestShop.plugin.openNormalAuctionGUI(this, player, clicked, worldGroup, false, adminShopsOnly, multiplier);
 			}
 		}
 	}

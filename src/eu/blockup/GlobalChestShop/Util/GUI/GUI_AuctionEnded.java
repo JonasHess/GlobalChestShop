@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
+
 import org.bukkit.entity.Player;
 
 import eu.blockup.GlobalChestShop.GlobalChestShop;
@@ -19,8 +20,10 @@ public class GUI_AuctionEnded extends SimpleIInventoryGUI{
 
 	@Override
 	protected void drawButtons(Player player) {
-	
-		this.addButton(4, 2, new Button_Auction(auction, false, false, this.worldGroup, true));
+		if (! auction.isEndent()){
+			throw new RuntimeException("Auction is not ended!");
+		}
+		this.addButton(4, 2, new Button_Auction(auction, auction.getMultiplier(), false, false, this.worldGroup, true));
 //		this.addButton(0, this.getHeight()-1, new Button_VergleicheMitAnderen(auction.getItemStack(1)));
 	}
 
