@@ -317,8 +317,13 @@ public class GuiCore implements Listener {
 
 	@EventHandler
 	public void playerChat(AsyncPlayerChatEvent e) {
-
-		StringInput u = this.hashMap_String_Input_Awaiting.get(e.getPlayer().getUniqueId());
+		if (this.hashMap_String_Input_Awaiting.isEmpty()) {
+			return;
+		}
+		StringInput u;
+		synchronized (hashMap_String_Input_Awaiting) {
+			u = this.hashMap_String_Input_Awaiting.get(e.getPlayer().getUniqueId());
+		}
 		if (u != null) {
 			u.onPlayerChatEvent(e);
 			;
@@ -327,6 +332,9 @@ public class GuiCore implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
+		if (this.hashMap_String_Input_Awaiting.isEmpty()) {
+			return;
+		}
 		StringInput u;
 		synchronized (hashMap_String_Input_Awaiting) {
 			u = this.hashMap_String_Input_Awaiting.get(e.getPlayer().getUniqueId());

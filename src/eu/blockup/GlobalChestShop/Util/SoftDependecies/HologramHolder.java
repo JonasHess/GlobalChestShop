@@ -74,5 +74,11 @@ public class HologramHolder {
 			this.hologram.delete();
 		}
 	}
+	
+	public void disableAll() {
+		for (Hologram hologram : HologramsAPI.getHolograms(GlobalChestShop.plugin)) {
+            hologram.delete();
+        }
+	}
 
 }

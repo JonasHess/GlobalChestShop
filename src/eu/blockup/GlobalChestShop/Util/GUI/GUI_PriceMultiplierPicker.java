@@ -1,6 +1,5 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
-import net.milkbowl.vault.chat.plugins.Chat_bPermissions;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

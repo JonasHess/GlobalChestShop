@@ -112,6 +112,8 @@ public class MySqlConnector {
 		
 		this.addColumToTable("ALTER TABLE `" + MySqlConnector.table_shops + "` ADD `multiplier` double NOT NULL DEFAULT 1;");
 		this.addColumToTable("ALTER TABLE `" + MySqlConnector.table_auctions + "` ADD `multiplier` double NOT NULL DEFAULT 1;");
+		
+		this.addColumToTable("ALTER TABLE `" + MySqlConnector.table_shops + "` ADD `defaultCategory` int NOT NULL DEFAULT -1;");
 	}
 
 	public MySqlConnector() throws ClassNotFoundException, SQLException {

@@ -256,14 +256,14 @@ public class Metrics {
                 if (debug) {
                     Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
-                return true;
+                return false;
             } catch (InvalidConfigurationException ex) {
                 if (debug) {
                     Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
                 }
-                return true;
+                return false;
             }
-            return configuration.getBoolean("opt-out", false);
+            return false;
         }
     }
 

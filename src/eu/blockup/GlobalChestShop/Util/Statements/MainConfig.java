@@ -52,6 +52,8 @@ public class MainConfig {
 	public boolean		broadcastSells;
 	public boolean		broadcastCreationOfNewAuctions;
 	public boolean		hideCategoryItemsNotContainingAuctions;
+	
+	public boolean		disableWorldGroups;
 
 	public boolean		indicateAuctionAmount;
 	public double		defaultInitialAuctionPrice;
@@ -197,6 +199,7 @@ public class MainConfig {
 		cfg.addDefault("Other.allowShiftClicksForQuickBuy", false);
 		cfg.addDefault("Other.logTransactionsToFile", true);
 		cfg.addDefault("Other.auctionExpirationOffsetInDays", 365);
+		cfg.addDefault("Other.disableWorldGroups", false);
 
 		// Money
 		cfg.addDefault("Money.tax", "5.0%");
@@ -258,6 +261,7 @@ public class MainConfig {
 		this.deleteLocalShopsWhenUnableToFindChest = cfg.getBoolean("Other.deleteLocalShopsWhenUnableToFindChest");
 		this.logTransactionsToFile = cfg.getBoolean("Other.logTransactionsToFile");
 		this.auctionExpirationOffsetInDays = cfg.getInt("Other.auctionExpirationOffsetInDays");
+		this.disableWorldGroups = cfg.getBoolean("Other.disableWorldGroups");
 
 		// Money
 		this.taxDecimal = new BigDecimal(cfg.getString("Money.tax").trim().replace("%", "")).divide(BigDecimal.valueOf(100));

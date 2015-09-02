@@ -30,18 +30,18 @@ public class DefaultCategoryController {
 		this.hashMap_Categories = java.util.Collections.synchronizedMap(new HashMap<Integer, DefaultCategory>());
 		this.allItemList = java.util.Collections.synchronizedList(new LinkedList<ItemStack>());
 
-		this.hashMap_Categories.put(1, new DefaultCategory(new ItemStack(Material.BRICK), GlobalChestShop.text.get(GlobalChestShop.text.Category1), false));
-		this.hashMap_Categories.put(2, new DefaultCategory(new ItemStack(Material.DOUBLE_PLANT, 1, (short) 5), GlobalChestShop.text.get(GlobalChestShop.text.Category2), false));
-		this.hashMap_Categories.put(3, new DefaultCategory(new ItemStack(Material.REDSTONE), GlobalChestShop.text.get(GlobalChestShop.text.Category3), false));
-		this.hashMap_Categories.put(4, new DefaultCategory(new ItemStack(Material.RAILS), GlobalChestShop.text.get(GlobalChestShop.text.Category4), false));
-		this.hashMap_Categories.put(5, new DefaultCategory(new ItemStack(Material.LAVA_BUCKET), GlobalChestShop.text.get(GlobalChestShop.text.Category5), false));
-		this.hashMap_Categories.put(6, new DefaultCategory(new ItemStack(Material.APPLE), GlobalChestShop.text.get(GlobalChestShop.text.Category6), false));
-		this.hashMap_Categories.put(7, new DefaultCategory(new ItemStack(Material.IRON_AXE), GlobalChestShop.text.get(GlobalChestShop.text.Category7), false));
-		this.hashMap_Categories.put(8, new DefaultCategory(new ItemStack(Material.GOLD_SWORD), GlobalChestShop.text.get(GlobalChestShop.text.Category8), false));
-		this.hashMap_Categories.put(9, new DefaultCategory(new ItemStack(Material.POTION), GlobalChestShop.text.get(GlobalChestShop.text.Category9), false));
-		this.hashMap_Categories.put(10, new DefaultCategory(new ItemStack(Material.STICK), GlobalChestShop.text.get(GlobalChestShop.text.Category10), false));
-		this.hashMap_Categories.put(-1, new DefaultCategory(new ItemStack(Material.COAL), "DEBUG", true));
-		this.hashMap_Categories.put(-2, new DefaultCategory(new ItemStack(Material.COAL), "HIDDEN", true));
+		this.hashMap_Categories.put(1, new DefaultCategory(new ItemStack(Material.BRICK), GlobalChestShop.text.get(GlobalChestShop.text.Category1), false, 1));
+		this.hashMap_Categories.put(2, new DefaultCategory(new ItemStack(Material.DOUBLE_PLANT, 1, (short) 5), GlobalChestShop.text.get(GlobalChestShop.text.Category2), false, 2));
+		this.hashMap_Categories.put(3, new DefaultCategory(new ItemStack(Material.REDSTONE), GlobalChestShop.text.get(GlobalChestShop.text.Category3), false, 3));
+		this.hashMap_Categories.put(4, new DefaultCategory(new ItemStack(Material.RAILS), GlobalChestShop.text.get(GlobalChestShop.text.Category4), false, 4));
+		this.hashMap_Categories.put(5, new DefaultCategory(new ItemStack(Material.LAVA_BUCKET), GlobalChestShop.text.get(GlobalChestShop.text.Category5), false, 5));
+		this.hashMap_Categories.put(6, new DefaultCategory(new ItemStack(Material.APPLE), GlobalChestShop.text.get(GlobalChestShop.text.Category6), false, 6));
+		this.hashMap_Categories.put(7, new DefaultCategory(new ItemStack(Material.IRON_AXE), GlobalChestShop.text.get(GlobalChestShop.text.Category7), false, 7));
+		this.hashMap_Categories.put(8, new DefaultCategory(new ItemStack(Material.GOLD_SWORD), GlobalChestShop.text.get(GlobalChestShop.text.Category8), false, 8));
+		this.hashMap_Categories.put(9, new DefaultCategory(new ItemStack(Material.POTION), GlobalChestShop.text.get(GlobalChestShop.text.Category9), false, 9));
+		this.hashMap_Categories.put(10, new DefaultCategory(new ItemStack(Material.STICK), GlobalChestShop.text.get(GlobalChestShop.text.Category10), false, 10));
+		this.hashMap_Categories.put(-1, new DefaultCategory(new ItemStack(Material.COAL), "DEBUG", true, 11));
+		this.hashMap_Categories.put(-2, new DefaultCategory(new ItemStack(Material.COAL), "HIDDEN", true, 12));
 		this.generateAllItemList();
 		fillCustomCategories();
 	}

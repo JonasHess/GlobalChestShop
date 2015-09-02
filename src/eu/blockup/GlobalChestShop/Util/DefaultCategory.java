@@ -17,13 +17,23 @@ public class DefaultCategory {
 	private String			title;
 	private List<ItemStack>	itemList;
 	private boolean			allwaysShowAllItems;
+	private int id;
 
-	public DefaultCategory(ItemStack displayItem, String title, boolean allwaysShowAllItems) {
+	
+	
+	
+	public int getId() {
+		return id;
+	}
+
+
+	public DefaultCategory(ItemStack displayItem, String title, boolean allwaysShowAllItems, int id) {
 		super();
 		this.allwaysShowAllItems = allwaysShowAllItems;
 		this.displayItem = displayItem;
 		this.title = title;
 		this.itemList = new LinkedList<ItemStack>();
+		this.id = id;
 	}
 
 	public Button_Bare toDisplayButton() {

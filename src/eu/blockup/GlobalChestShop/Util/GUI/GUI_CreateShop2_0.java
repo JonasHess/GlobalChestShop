@@ -50,7 +50,7 @@ public class GUI_CreateShop2_0  extends SimpleIInventoryGUI{
       @Override
       public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
         ShopInfoPack infoPack = ((GUI_CreateShop2_0)inventoryGUI).infoPack.clone();
-        GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_CustomCategoryMain(infoPack, inventoryGUI));
+        new GUI_CreateShop2_2(infoPack, inventoryGUI).open(player);;
       }
     });
     //ItemStack

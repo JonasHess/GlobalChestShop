@@ -24,6 +24,7 @@ public class ShopInfoPack {
   private boolean sellAll = false;
   private int appearance = 0;
   private double multiplier = 1.0;
+  private int defaultShop = -1;
 
 
 
@@ -43,8 +44,12 @@ public class ShopInfoPack {
 
 
 
-  
-  public ShopInfoPack(Integer worldGroup, Location playerLocatioin, Location signLocation, Location chestLocation, Location itemFrameLocation, CustomCategory customCategory, ItemStack itemStack, Integer npcID, Boolean adminShopOnly, EShopTyp eShopTyp, Boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier) {
+
+
+
+
+
+public ShopInfoPack(Integer worldGroup, Location playerLocatioin, Location signLocation, Location chestLocation, Location itemFrameLocation, CustomCategory customCategory, ItemStack itemStack, Integer npcID, Boolean adminShopOnly, EShopTyp eShopTyp, Boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
 	super();
 	this.worldGroup = worldGroup;
 	this.playerLocatioin = playerLocatioin;
@@ -61,7 +66,15 @@ public class ShopInfoPack {
 	this.sellAll = sellAll;
 	this.appearance = appearance;
 	this.multiplier = multiplier;
+	this.defaultShop = defaultShop;
 }
+
+
+
+
+
+
+
 
 
 
@@ -97,7 +110,7 @@ public int getAppearance() {
 
   public ShopInfoPack clone() {
     return new ShopInfoPack(worldGroup, playerLocatioin, signLocation, chestLocation, itemFrameLocation, customCategory, itemStack, npcID,
-        adminShopOnly, eShopTyp, holo, newAuctions, sellAll, appearance, multiplier);
+        adminShopOnly, eShopTyp, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
   }
 
   
@@ -207,7 +220,17 @@ public int getAppearance() {
   public void setAdminShopOnly(Boolean adminShopOnly) {
     this.adminShopOnly = adminShopOnly;
   }
+  
+public int getDefaultShop() {
+	return defaultShop;
+}
 
+
+public void setDefaultShop(int defaultShop) {
+	this.defaultShop = defaultShop;
+}
+
+  
 
 
 }

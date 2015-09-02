@@ -60,6 +60,40 @@ public class EventListener implements Listener {
 				return;
 			}
 
+			
+			
+			
+			
+			
+			if (event.getClick() == org.bukkit.event.inventory.ClickType.NUMBER_KEY ) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (event.getClick() == org.bukkit.event.inventory.ClickType.MIDDLE ) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (event.getClick() == org.bukkit.event.inventory.ClickType.UNKNOWN ) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (event.getClick() == org.bukkit.event.inventory.ClickType.DOUBLE_CLICK ) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (event.getClick() == org.bukkit.event.inventory.ClickType.WINDOW_BORDER_LEFT ) {
+				event.setCancelled(true);
+				return;
+			}
+			
+			if (event.getClick() == org.bukkit.event.inventory.ClickType.WINDOW_BORDER_RIGHT ) {
+				event.setCancelled(true);
+				return;
+			}
 			// // Prevent Player from loosing Items inside the GUI
 			// if (event.getAction() == InventoryAction.SWAP_WITH_CURSOR ||
 			// event.getAction() == InventoryAction.NOTHING) {
@@ -82,9 +116,7 @@ public class EventListener implements Listener {
 			} else {
 				type = ClickType.UNKNOWN;
 			}
-			if (event.getClick() == org.bukkit.event.inventory.ClickType.DOUBLE_CLICK ) {
-				event.setCancelled(true);
-			}
+			
 			
 
 			// What items was the player holding while he clicked?
@@ -237,16 +269,6 @@ public class EventListener implements Listener {
 			// }
 		}
 		// ///////////// TEST END
-	}
-
-	public void onMiddleClick(InventoryClickEvent event) {
-		HumanEntity he = event.getWhoClicked();
-		if (he instanceof Player) {
-			Player player = (Player) he;
-			if (GlobalChestShop.plugin.getGuiCore().has_Player_opened_InventoyGUI(player)) {
-				event.setCancelled(true);
-			}
-		}
 	}
 
 	@EventHandler

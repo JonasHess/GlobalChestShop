@@ -1,6 +1,7 @@
 package eu.blockup.GlobalChestShop.Util.SoftDependecies;
 
 import java.util.Collection;
+import java.util.List;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.NPCLeftClickEvent;
@@ -15,6 +16,7 @@ import org.bukkit.event.Listener;
 import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Shop;
 import eu.blockup.GlobalChestShop.Util.Exceptions.WorldHasNoWorldGroupException;
+import eu.blockup.GlobalChestShop.Util.GUI.PriceBuilding.GUI_NpcShopList;
 
 public class NPC_Listener implements Listener {
 
@@ -41,51 +43,71 @@ public class NPC_Listener implements Listener {
 		}
 	}
 
-	private Shop getNpcShop(Integer npcID, Player player) throws WorldHasNoWorldGroupException {
+	private List<Shop> getNpcShops(Integer npcID, Player player) throws WorldHasNoWorldGroupException {
 		Location loc = player.getLocation();
 		String worldName = loc.getWorld().getName();
 		Integer worldGroup = GlobalChestShop.plugin.getworldGroup(loc);
-		return GlobalChestShop.plugin.getShopVerwaltung().getNPCShop(npcID, worldGroup, worldName);
+		return GlobalChestShop.plugin.getShopVerwaltung().getNPCShops(npcID, worldGroup, worldName);
 	}
 
 	@EventHandler
 	public void onNPCLeftClickEvent(NPCLeftClickEvent event) {
 		Integer npcID = event.getNPC().getId();
-		Shop s;
+		List<Shop> s;
 		try {
-			s = this.getNpcShop(npcID, event.getClicker());
+			s = this.getNpcShops(npcID, event.getClicker());
 		} catch (WorldHasNoWorldGroupException e) {
 			return;
 		}
-		if (s == null) {
+		if (s == null || s.isEmpty()) {
 			return;
 		}
 		event.getNPC().setProtected(true);
 		event.setCancelled(true);
 		Player player = event.getClicker();
-		s.onInteractLeftClick(player, null);
+		
+		if (s.size() > 1) {
+			new GUI_NpcShopList(event.getNPC().getFullName(), s, null).open(player);
+		} else {
+			s.get(0).onInteractLeftClick(player, null);
+		}
+		
 		event.getNPC().faceLocation(event.getClicker().getLocation());
 	}
 
 	@EventHandler
 	public void onNPCRightClickEvent(NPCRightClickEvent event) {
 		Integer npcID = event.getNPC().getId();
-		Shop s;
+		List<Shop> s;
 		try {
-			s = this.getNpcShop(npcID, event.getClicker());
+			s = this.getNpcShops(npcID, event.getClicker());
 		} catch (WorldHasNoWorldGroupException e) {
 			return;
 		}
-		if (s == null) {
+		if (s == null || s.isEmpty()) {
 			return;
 		}
 		event.getNPC().setProtected(true);
 		Player player = event.getClicker();
-		if (player.isSneaking()) {
-			s.onInteractLeftClick(player, null);
+		
+		if (s.size() >= 2) {
+			String npcName = "Shop";
+			try {
+				npcName = event.getNPC().getFullName();
+			} catch (Exception e) {
+			}
+			new GUI_NpcShopList(npcName, s, null).open(player);
+		} else if (s.size() == 1){
+			if (player.isSneaking()) {
+				s.get(0).onInteractLeftClick(player, null);
+			} else {
+				s.get(0).onInteractRightClick(player, null);
+			}
 		} else {
-			s.onInteractRightClick(player, null);
+			return;
 		}
+		
+		
 		event.getNPC().faceLocation(event.getClicker().getLocation());
 	}
 }

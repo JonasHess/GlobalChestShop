@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -11,8 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Shop;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button;
-import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button_Bare;
-import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button.ClickType;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.SimpleIInventoryGUI;
 import eu.blockup.GlobalChestShop.Util.Statements.EShopTyp;

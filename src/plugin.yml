@@ -1,5 +1,5 @@
 name: GlobalChestShop
-version: 1.2.056
+version: 1.2.061
 authors: [EDMAN_93]
 depend: [Vault]
 softdepend: [HolographicDisplays, Citizens, MoreTNTs, ED-Core]

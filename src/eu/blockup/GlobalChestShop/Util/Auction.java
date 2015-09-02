@@ -69,23 +69,25 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 		return cal.getTime();
 	}
 
-	private Boolean	expiredChache	= null;
+	private java.util.Date	expiredChache = null;
+	
 	
 	public boolean isExpired() {
-		if (expiredChache != null) {
-			return expiredChache;
-		}
+		
 		if (this.isAdminshop()){
 			return false;
 		}
-		int auctionExpirationOffsetInDays = GlobalChestShop.plugin.getMainConfig().auctionExpirationOffsetInDays;
-		java.util.Date creationDate = GlobalChestShop.convertSqlDate(this.getStartDate(), this.getStartTime());
-		java.util.Date expirationDate = addDays(creationDate, auctionExpirationOffsetInDays);
+		
+		if (expiredChache == null) {
+			int auctionExpirationOffsetInDays = GlobalChestShop.plugin.getMainConfig().auctionExpirationOffsetInDays;
+			java.util.Date creationDate = GlobalChestShop.convertSqlDate(this.getStartDate(), this.getStartTime());
+			java.util.Date expirationDate = addDays(creationDate, auctionExpirationOffsetInDays);
+			this.expiredChache = expirationDate;
+		}
+		
 		java.util.Date today = new java.util.Date();
 
-		boolean result = today.after(expirationDate);
-		expiredChache = result;
-		return result;
+		return  today.after(expiredChache);
 	}
 
 	public String toString(double multiplier) {
@@ -95,7 +97,6 @@ public class Auction implements BuyAbleInterface, Comparable<Auction> {
 	@Override
 	public String toString()  {
 		throw new NotImplementedException(); // TODO
-		//return "Error - please inform the developer about this.";
 	}
 
 	public int getworldGroup() {

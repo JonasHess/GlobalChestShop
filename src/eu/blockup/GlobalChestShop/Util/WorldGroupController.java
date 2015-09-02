@@ -32,6 +32,9 @@ public class WorldGroupController {
 }
   
   public synchronized Integer getworldGroup(String worldName) {
+	  if (GlobalChestShop.plugin.mainConfig.disableWorldGroups) {
+		  return 1;
+	  }
     if (worldName == null) return null;
     return this.hashMap_WorldGroup.get(worldName);
     
