@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Openable;
 
 import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Exceptions.WorldHasNoWorldGroupException;
@@ -17,6 +18,7 @@ import eu.blockup.GlobalChestShop.Util.GUI.GUI_DefaultCategoryCollection;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_DeleteAllPlayerShops;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_GlobalShopByAuctions;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_GlobalShopByPlayers;
+import eu.blockup.GlobalChestShop.Util.GUI.GUI_RemoveAllAuctionOfPlayer;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_Search;
 import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
@@ -159,7 +161,17 @@ public class ShopCommandExecutor implements CommandExecutor {
 			// Test
 			if (args[0].equalsIgnoreCase("test")) {
 				if (GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.ADMIN)) {
-					
+					return true;
+				} else {
+					player.sendMessage("No Permission");
+					return true;
+				}
+			}
+			
+			// Remove Player
+			if (args[0].equalsIgnoreCase("RemovePlayer")) {
+				if (GlobalChestShop.plugin.validatePermissionCheck(cs, Permissions.MODERATOR_DELETE_AUCTIONS)) {
+					new GUI_RemoveAllAuctionOfPlayer(null, worldGroup).open(player);
 					return true;
 				} else {
 					player.sendMessage("No Permission");

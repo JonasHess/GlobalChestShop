@@ -28,7 +28,7 @@ public class  Permissions{
 	//<-------------------- Moderator -------------------->
 	
 	public final static String MODERATOR_SEE_PLAYERS_SHOPS = "GLOBALCHESTSHOP.MODERATOR.SEE_PLAYERS_SHOPS";
-	
+	public final static String MODERATOR_DELETE_AUCTIONS = "GLOBALCHESTSHOP.MODERATOR.DELETE_AUCTIONS";
 	
 	
 	//<-------------------- Admin -------------------->

@@ -37,6 +37,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.omg.CORBA.NVList;
 
 import eu.blockup.GlobalChestShop.Util.Auction;
 import eu.blockup.GlobalChestShop.Util.AuctionController;
@@ -59,6 +60,7 @@ import eu.blockup.GlobalChestShop.Util.GUI.GUI_AuctionPage;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GuiCore;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 import eu.blockup.GlobalChestShop.Util.Metrics.Metrics;
+import eu.blockup.GlobalChestShop.Util.SoftDependecies.MVdWPlaceholderController;
 import eu.blockup.GlobalChestShop.Util.SoftDependecies.MoreTntController;
 import eu.blockup.GlobalChestShop.Util.SoftDependecies.NPC_Listener;
 import eu.blockup.GlobalChestShop.Util.Statements.AuctionLimitController;
@@ -92,6 +94,7 @@ public class GlobalChestShop extends JavaPlugin {
 	private PriceEngine								priceEngine;
 	private AuctionLimitController					auctionLimitController;
 	private ShopEventListener						shopEventListener;
+	private MVdWPlaceholderController placeHolderController;
 
 	public long										debugTickStartTime;
 
@@ -237,6 +240,10 @@ public class GlobalChestShop extends JavaPlugin {
 		this.guiCore = new GuiCore();
 		this.guiCore.onEnable();
 
+		// PlaceholderApi
+		if (Bukkit.getPluginManager().isPluginEnabled("MVdWPlaceholderAPI")) {
+			this.placeHolderController = new MVdWPlaceholderController();
+		}
 		// Metrics
 		try {
 			Metrics metrics = new Metrics(this);
@@ -269,6 +276,7 @@ public class GlobalChestShop extends JavaPlugin {
 		GlobalChestShop.text = null;
 		this.worldGroupController = null;
 		this.mysql.closeAllConnections();
+		this.placeHolderController = null;
 		this.mysql = null;
 		this.mainConfig = null;
 		GlobalChestShop.plugin = null;

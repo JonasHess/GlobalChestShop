@@ -21,6 +21,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.mysql.jdbc.Statement;
+
 import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Exceptions.RequiredPluginNotFoundException;
 import eu.blockup.GlobalChestShop.Util.Exceptions.WorldHasNoWorldGroupException;
@@ -169,19 +171,20 @@ public class ShopController {
 		return returnLocation;
 	}
 
-	private synchronized void wirteShopToDatabase(Shop s) {
+	private synchronized Shop wirteShopToDatabase(Shop s) {
 		String query = "INSERT INTO `" + MySqlConnector.table_shops + "` (`ownerID`, `signLocation`, `location2`, `adminshopOnly`, `itemFrame`, `itemStack`, `worldGroup`, `npcID`, `categoryID`, `holo`, `newAuctions`, `sellAll`, `appearance`, `defaultCategory`) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+		int shopId = -1;
 
 		Connection conn = null;
 		try {
 			conn = GlobalChestShop.plugin.getMysql().getConnection();
 		} catch (Exception e) {
 			GlobalChestShop.plugin.handleFatalException(e);
-			return;
+			return -1;
 		}
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement(query);
+			st = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			st.setInt(1, s.getOwner());
 			st.setString(2, s.getSignLocationString());
 			st.setString(3, s.getLocation2String());
@@ -211,13 +214,16 @@ public class ShopController {
 			st.setBoolean(12, s.isSellAll());
 			st.setInt(13, s.getAppearance());
 			st.setInt(14, s.getDefaultCategory());
-			st.executeUpdate();
+			shopId =  st.executeUpdate();
 		} catch (SQLException e) {
 			GlobalChestShop.plugin.handleFatalException(e);
 		} finally {
 			GlobalChestShop.plugin.getMysql().closeRessources(conn, null, st);
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
+		
+		Shop shop = addShop(shopId, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
+		return shop;
 
 	}
 
@@ -254,6 +260,8 @@ public class ShopController {
 		return result;
 	}
 
+
+	
 	public Shop createNewGlobalShop(ShopInfoPack infoPack) {
 
 		if (infoPack.getShopTyp() == EShopTyp.GlobalChestShop) {
@@ -265,7 +273,9 @@ public class ShopController {
 		} else if (infoPack.getShopTyp() == EShopTyp.GlobalItemframeShop) {
 			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), true, null, infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier(), infoPack.getDefaultShop());
 		} else if (infoPack.getShopTyp() == EShopTyp.GlobalHoloShop) {
-			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, null, infoPack.getCategoryID(), true, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier(), infoPack.getDefaultShop());
+			Location l = infoPack.getSignLocation();
+			l.add(0.5, 0, 0.5);
+			return this.createNewShop(this.adminShopPlayerID, l, infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, null, infoPack.getCategoryID(), true, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier(), infoPack.getDefaultShop());
 
 		} else if (infoPack.getShopTyp() == EShopTyp.GlobalNpcShop) {
 			return this.createNewShop(this.adminShopPlayerID, infoPack.getSignLocation(), infoPack.getItemFrameLocation(), infoPack.getworldGroup(), infoPack.getItemStack(), infoPack.getAdminShopOnly(), false, infoPack.getNpcID(), infoPack.getCategoryID(), false, infoPack.isNewAuctions(), infoPack.isSellAll(), infoPack.getAppearance(), infoPack.getMultiplier(), infoPack.getDefaultShop());
@@ -305,8 +315,8 @@ public class ShopController {
 		return this.createNewShop(GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(player.getUniqueId()), signLocation, chestLocation, worldGroup, null, false, false, null, null, false, false, false, 0, 1.0, -1);
 	}
 
-	private synchronized Shop createNewShop(Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
-		Shop shop = addShop(playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
+	private synchronized Shop createNewShop(Integer shopId, Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
+		Shop shop = addShop(shopId, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
 		this.wirteShopToDatabase(shop);
 		this.setShopID(shop);
 		return shop;
@@ -336,9 +346,6 @@ public class ShopController {
 		return this.addShop(shopID, owner, L_signLocation, L_location2, worldGroup, GlobalChestShop.plugin.itemController.formatInternalItemIdToItemStack(itemStack), adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
 	}
 
-	private Shop addShop(Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
-		return this.addShop(-1, owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
-	}
 
 	private Shop addShop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
 		Shop s = new Shop(shopID, owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop, this);
@@ -346,7 +353,11 @@ public class ShopController {
 			if (!this.hashMap_AllShops.containsKey(s.getOwner())) {
 				this.hashMap_AllShops.put(s.getOwner(), java.util.Collections.synchronizedList(new LinkedList<Shop>()));
 			}
-			this.hashMap_AllShops.get(s.getOwner()).add(s);
+			List<Shop> liste = this.hashMap_AllShops.get(s.getOwner());
+			synchronized (liste) {
+				liste.add(s); 
+				System.out.println("Shop added");
+			}
 		}
 		return s;
 	}
@@ -401,11 +412,20 @@ public class ShopController {
 				}
 			}
 		}
+		System.out.println("Shop ID not found!!" + shopID);
+		
 		return null;
 	}
 
-	public List<Shop> getNPCShops(Integer npcID, Integer worldGroup, String worldName) { // <---------
-		if (npcID == null) {
+	public List<Shop> getNpcShops(Integer npcId, Player player) throws WorldHasNoWorldGroupException {
+		Location loc = player.getLocation();
+		String worldName = loc.getWorld().getName();
+		Integer worldGroup = GlobalChestShop.plugin.getworldGroup(loc);
+		return this.getNPCShops(npcId, worldGroup, worldName);
+	}
+	
+	public List<Shop> getNPCShops(Integer npcId, Integer worldGroup, String worldName) { // <---------
+		if (npcId == null) {
 			return null;
 		}
 		List<Shop> resultList = null;
@@ -419,16 +439,15 @@ public class ShopController {
 		PreparedStatement st = null;
 		try { // ___________
 			st = conn.prepareStatement("SELECT shopID FROM " + MySqlConnector.table_shops + " WHERE npcID = ? AND worldGroup = ? AND signLocation like ? order by shopID asc");
-			st.setInt(1, (int)npcID);
+			st.setInt(1, (int)npcId);
 			st.setInt(2, worldGroup);
 			st.setString(3, worldName + ",%");
 			rs = st.executeQuery();
 			
-			
 			rs = st.executeQuery();
-			resultList = new ArrayList<Shop>(rs.getRow());
+			resultList = new ArrayList<Shop>();
 			while (rs.next()) {
-				resultList.add(this.getShop(rs.getInt(1)));
+				resultList.add(this.getShop(rs.getInt("shopID")));
 			}
 		} catch (SQLException e) {
 			GlobalChestShop.plugin.handleFatalException(e);
@@ -439,35 +458,35 @@ public class ShopController {
 		return resultList;
 	}
 
-	public void setShopID(Shop s) { // <---------
-		Integer result = -1;
-		Connection conn = null;
-		try {
-			conn = GlobalChestShop.plugin.getMysql().getConnection();
-		} catch (Exception e) {
-			GlobalChestShop.plugin.handleFatalException(e);
-		}
-		ResultSet rs = null;
-		PreparedStatement st = null;
-		try { // ___________
-			st = conn.prepareStatement("SELECT shopID FROM " + MySqlConnector.table_shops + " WHERE ownerID = ? AND signLocation = ? AND worldGroup = ?");
-			st.setInt(1, s.getOwner());
-			st.setString(2, s.getSignLocationString());
-			st.setInt(3, s.getworldGroup());
-			rs = st.executeQuery();
-			rs.last();
-			if (rs.getRow() != 0) {
-				rs.first();
-				result = rs.getInt(1); // <---------
-			}
-		} catch (SQLException e) {
-			GlobalChestShop.plugin.handleFatalException(e);
-		} finally {
-			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
-			GlobalChestShop.plugin.getMysql().returnConnection(conn);
-		}
-		s.setShopID(result);
-	}
+//	public void setShopID(Shop s) { // <---------
+//		Integer result = -1;
+//		Connection conn = null;
+//		try {
+//			conn = GlobalChestShop.plugin.getMysql().getConnection();
+//		} catch (Exception e) {
+//			GlobalChestShop.plugin.handleFatalException(e);
+//		}
+//		ResultSet rs = null;
+//		PreparedStatement st = null;
+//		try { // ___________
+//			st = conn.prepareStatement("SELECT shopID FROM " + MySqlConnector.table_shops + " WHERE ownerID = ? AND signLocation = ? AND worldGroup = ?");
+//			st.setInt(1, s.getOwner());
+//			st.setString(2, s.getSignLocationString());
+//			st.setInt(3, s.getworldGroup());
+//			rs = st.executeQuery();
+//			rs.last();
+//			if (rs.getRow() != 0) {
+//				rs.first();
+//				result = rs.getInt(1); // <---------
+//			}
+//		} catch (SQLException e) {
+//			GlobalChestShop.plugin.handleFatalException(e);
+//		} finally {
+//			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
+//			GlobalChestShop.plugin.getMysql().returnConnection(conn);
+//		}
+//		s.setShopID(result);
+//	}
 
 	public void ladeAlleShops() {
 		Connection conn = null;

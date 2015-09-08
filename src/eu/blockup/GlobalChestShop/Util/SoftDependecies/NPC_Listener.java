@@ -43,33 +43,43 @@ public class NPC_Listener implements Listener {
 		}
 	}
 
-	private List<Shop> getNpcShops(Integer npcID, Player player) throws WorldHasNoWorldGroupException {
-		Location loc = player.getLocation();
-		String worldName = loc.getWorld().getName();
-		Integer worldGroup = GlobalChestShop.plugin.getworldGroup(loc);
-		return GlobalChestShop.plugin.getShopVerwaltung().getNPCShops(npcID, worldGroup, worldName);
-	}
+
 
 	@EventHandler
 	public void onNPCLeftClickEvent(NPCLeftClickEvent event) {
+		Player player = event.getClicker();
 		Integer npcID = event.getNPC().getId();
-		List<Shop> s;
+		String npcName = "Shop";
 		try {
-			s = this.getNpcShops(npcID, event.getClicker());
+			npcName = event.getNPC().getFullName();
+		} catch (Exception e) {
+		}
+		Integer worldGroup;
+		try {
+			worldGroup = GlobalChestShop.plugin.getworldGroup(player.getLocation());
 		} catch (WorldHasNoWorldGroupException e) {
 			return;
 		}
-		if (s == null || s.isEmpty()) {
+		String worldName = player.getLocation().getWorld().getName();
+		
+		List<Shop> shopList;
+		try {
+			shopList = GlobalChestShop.plugin.getShopVerwaltung().getNpcShops(npcID, event.getClicker());
+		} catch (WorldHasNoWorldGroupException e) {
+			return;
+		}
+		if (shopList == null || shopList.isEmpty()) {
 			return;
 		}
 		event.getNPC().setProtected(true);
 		event.setCancelled(true);
-		Player player = event.getClicker();
 		
-		if (s.size() > 1) {
-			new GUI_NpcShopList(event.getNPC().getFullName(), s, null).open(player);
+		
+		
+		if (shopList.size() > 1) {
+			new GUI_NpcShopList(npcName, npcID, worldGroup, worldName, null).open(player);
 		} else {
-			s.get(0).onInteractLeftClick(player, null);
+			shopList.get(0).onInteractLeftClick(player, null);
 		}
 		
 		event.getNPC().faceLocation(event.getClicker().getLocation());
@@ -77,31 +87,41 @@ public class NPC_Listener implements Listener {
 
 	@EventHandler
 	public void onNPCRightClickEvent(NPCRightClickEvent event) {
+		Player player = event.getClicker();
 		Integer npcID = event.getNPC().getId();
-		List<Shop> s;
+		String npcName = "Shop";
 		try {
-			s = this.getNpcShops(npcID, event.getClicker());
+			npcName = event.getNPC().getFullName();
+		} catch (Exception e) {
+		}
+		Integer worldGroup;
+		try {
+			worldGroup = GlobalChestShop.plugin.getworldGroup(player.getLocation());
 		} catch (WorldHasNoWorldGroupException e) {
 			return;
 		}
-		if (s == null || s.isEmpty()) {
+		String worldName = player.getLocation().getWorld().getName();
+		
+		List<Shop> shopList;
+		try {
+			shopList = GlobalChestShop.plugin.getShopVerwaltung().getNpcShops(npcID, event.getClicker());
+		} catch (WorldHasNoWorldGroupException e) {
+			return;
+		}
+		if (shopList == null || shopList.isEmpty()) {
 			return;
 		}
 		event.getNPC().setProtected(true);
-		Player player = event.getClicker();
+		event.setCancelled(true);
 		
-		if (s.size() >= 2) {
-			String npcName = "Shop";
-			try {
-				npcName = event.getNPC().getFullName();
-			} catch (Exception e) {
-			}
-			new GUI_NpcShopList(npcName, s, null).open(player);
-		} else if (s.size() == 1){
+		if (shopList.size() >= 2) {
+			
+			new GUI_NpcShopList(npcName, npcID, worldGroup, worldName, null).open(player);
+		} else if (shopList.size() == 1){
 			if (player.isSneaking()) {
-				s.get(0).onInteractLeftClick(player, null);
+				shopList.get(0).onInteractLeftClick(player, null);
 			} else {
-				s.get(0).onInteractRightClick(player, null);
+				shopList.get(0).onInteractRightClick(player, null);
 			}
 		} else {
 			return;

@@ -1,11 +1,14 @@
 package eu.blockup.GlobalChestShop.Util;
 
+import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+
+
 
 
 
@@ -30,14 +33,17 @@ import eu.blockup.GlobalChestShop.Util.GUI.GUI_GlobalShopByAuctions;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_GlobalShopByPlayers;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_ShopDelete;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_LocalChestShop;
+import eu.blockup.GlobalChestShop.Util.GUI.ShopInfoPack;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 import eu.blockup.GlobalChestShop.Util.SoftDependecies.HologramHolder;
 import eu.blockup.GlobalChestShop.Util.Statements.EShopTyp;
 import eu.blockup.GlobalChestShop.Util.Statements.MainConfig;
 import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
+
 public class Shop {
-	private Integer			shopID					= null;
+	private ShopInfoPack shopInfo;
+	private Integer			shopID = null;
 	private Integer			owner;
 	private UUID			ownerUUID;
 	private final Location	signLocation;
@@ -68,17 +74,16 @@ public class Shop {
 	private int defaultCategory;
 
 
-	public Shop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop, ShopController verwaltung) {
-		this(owner, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop, verwaltung);
-		this.setShopID(shopID);
-	}
 
 	public Boolean getHolo() {
 		return holo;
 	}
 
-	public Shop(Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultCategorie, ShopController verwaltung) {
+	public Shop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultCategorie, ShopController verwaltung) {
 		super();
+		if (shopID == null || shopID <= 0) {
+			throw new InvalidParameterException("ShopId was not set!!");
+		}
 		this.verwaltung = verwaltung;
 		this.owner = owner;
 		this.ownerUUID = GlobalChestShop.plugin.getPlayerController().getUuidFromPlayerID(owner);
@@ -207,11 +212,6 @@ public class Shop {
 				brokenShopList.add(this);
 			}
 		}
-
-	}
-
-	public void setShopID(Integer shopID) {
-		this.shopID = shopID;
 
 	}
 
@@ -506,7 +506,6 @@ public class Shop {
 				throw new SignNotFoundException();
 			}
 		}
-
 	}
 
 	public String getFirstSignLine(boolean enabled) {

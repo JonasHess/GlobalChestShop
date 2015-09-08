@@ -61,12 +61,12 @@ public abstract class Button {
 
 
 	
-	public synchronized void onPreButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
-			Sound clickSound = this.getClickSound(type);
+	public synchronized void onPreButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType clickType, InventoryClickEvent event) {
+			Sound clickSound = this.getClickSound(clickType);
 			if (clickSound != null) {
-				player.getLocation().getWorld().playSound(player.getLocation(), this.getClickSound(type), 1, 1);
+				player.getLocation().getWorld().playSound(player.getLocation(), this.getClickSound(clickType), 1, 1);
 			}
-			this.onButtonClick(inventoryGUI, player, cursor, current, type, event);
+			this.onButtonClick(inventoryGUI, player, cursor, current, clickType, event);
 
 	}
 	
@@ -74,7 +74,7 @@ public abstract class Button {
 		return Sound.WOOD_CLICK;
 	}
 
-	public abstract void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event);
+	public abstract void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType clickType, InventoryClickEvent event);
 
 	public abstract void onRefresh(InventoryGUI inventoryGUI, Player player);
 

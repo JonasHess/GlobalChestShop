@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="E:/Dokumente/Minecaft Test-Server/dependencies/HolographicDisplays.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Jonas-PC/Desktop/Minecaft Test-Server/craftbukkit.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Jonas-PC/Desktop/Minecaft Test-Server/dependencies/MoreTNTs.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Jonas-PC/Desktop/Minecaft Test-Server/dependencies/MVdWPlaceholderAPI.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

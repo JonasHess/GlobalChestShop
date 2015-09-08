@@ -8,11 +8,14 @@ import org.bukkit.inventory.ItemStack;
 import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Auction;
 import eu.blockup.GlobalChestShop.Util.Exceptions.NoFreeSlotInInventoryException;
+import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button_Bare;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button_PolarQuestion;
+import eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Button.ClickType;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.SimpleIInventoryGUI;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.GUI_PolarQuestion.ButtonTypEnum;
+import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
 public class GUI_AuctionDelete extends SimpleIInventoryGUI {
 
@@ -29,7 +32,22 @@ public class GUI_AuctionDelete extends SimpleIInventoryGUI {
 
 	@Override
 	protected void drawButtons(Player player) {
-
+			if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.MODERATOR_DELETE_AUCTIONS)) {
+				// Remove ALl Auction of this player
+				this.drawButton(getWidth() -1, getHeight() -1 ,new Button(new ItemStack (Material.WOOL, 1, (short) 14), "Cancel all auctions of this player!") {
+					
+					@Override
+					public void onRefresh(InventoryGUI inventoryGUI, Player player) {
+						
+					}
+					
+					@Override
+					public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
+						new GUI_RemoveAllAuctionsOfPlayerPolarQuestion(inventoryGUI.getFirstGUI(),  auction.getPlayerStarter(), worldGroup).open(player);
+					}
+				});
+			}
+		
 		// Acution Display Item
 		this.drawButton(4, 1, new Button_Auction(auction, 1.0, true, false, this.worldGroup, true));
 
@@ -141,6 +159,7 @@ public class GUI_AuctionDelete extends SimpleIInventoryGUI {
 
 			@Override
 			protected void drawAdditionalButtons(Player player, InventoryGUI inventoryGUI) {
+				
 			}
 
 		});

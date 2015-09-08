@@ -93,8 +93,8 @@ public class GUI_AuctionBuy extends GUI_Shop {
 		// Money Button
 		this.drawButton(0, this.getHeight() - 1, new Button_Money(player.getUniqueId()));
 
-		// Amind delete Auction
-		if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
+		// Moderator delete Auction
+		if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.MODERATOR_DELETE_AUCTIONS)) {
 			this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button(new ItemStack(Material.REDSTONE), "Delete Auction", "Admins only", "WARNING:", "Players will not get", "their items back") {
 				@Override
 				public void onRefresh(InventoryGUI inventoryGUI, Player player) {
