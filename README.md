@@ -1,2 +1,2 @@
-Epicraftv3
+GlobalChestShop
 ==========
