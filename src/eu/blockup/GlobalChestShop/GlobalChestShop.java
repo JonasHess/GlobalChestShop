@@ -37,7 +37,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.omg.CORBA.NVList;
 
 import eu.blockup.GlobalChestShop.Util.Auction;
 import eu.blockup.GlobalChestShop.Util.AuctionController;
@@ -61,7 +60,6 @@ import eu.blockup.GlobalChestShop.Util.GUI.Core.GuiCore;
 import eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs.InventoryGUI;
 import eu.blockup.GlobalChestShop.Util.Metrics.Metrics;
 import eu.blockup.GlobalChestShop.Util.SoftDependecies.MVdWPlaceholderController;
-import eu.blockup.GlobalChestShop.Util.SoftDependecies.MoreTntController;
 import eu.blockup.GlobalChestShop.Util.SoftDependecies.NPC_Listener;
 import eu.blockup.GlobalChestShop.Util.Statements.AuctionLimitController;
 import eu.blockup.GlobalChestShop.Util.Statements.EMessageTyp;
@@ -87,8 +85,6 @@ public class GlobalChestShop extends JavaPlugin {
 	private CustomCategoryController				customCategoryController;
 	private WorldGroupController					worldGroupController;
 	private boolean									citezensEnabled;
-	public boolean									moreTntEnabled;
-	public MoreTntController						moreTntController;
 	private boolean									holographicDisplaysEnabled;
 	private NPC_Listener							nPC_Listener;
 	private PriceEngine								priceEngine;
@@ -167,13 +163,6 @@ public class GlobalChestShop extends JavaPlugin {
 			this.setEnabled(false);
 		}
 
-		// More TNTs Plugin
-		if (getServer().getPluginManager().getPlugin("MoreTNTs") == null || getServer().getPluginManager().getPlugin("MoreTNTs").isEnabled() == false) {
-			this.moreTntEnabled = false;
-		} else {
-			this.moreTntEnabled = true;
-			this.moreTntController = new MoreTntController();
-		}
 
 		// load mainConfig files
 

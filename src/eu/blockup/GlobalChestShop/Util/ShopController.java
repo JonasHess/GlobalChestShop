@@ -180,7 +180,7 @@ public class ShopController {
 			conn = GlobalChestShop.plugin.getMysql().getConnection();
 		} catch (Exception e) {
 			GlobalChestShop.plugin.handleFatalException(e);
-			return -1;
+			return null;
 		}
 		PreparedStatement st = null;
 		try {
@@ -222,7 +222,7 @@ public class ShopController {
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
 		
-		Shop shop = addShop(shopId, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
+		Shop shop = addShop(shopId, s.getOwner(), s.getSignLocation(), s.getLocation2(), s.getworldGroup(), s.getItemStack(), s.getAdminShopOnly(), s.getItemFrame(), s.getNpcID(), s.getCategoryID(), s.getHolo(), s.getNewAuctions(), s.isSellAll(), s.getAppearance(), s.getMultiplier(), s.getDefaultCategory());
 		return shop;
 
 	}
@@ -315,10 +315,9 @@ public class ShopController {
 		return this.createNewShop(GlobalChestShop.plugin.getPlayerController().getPlayerIdFromUUID(player.getUniqueId()), signLocation, chestLocation, worldGroup, null, false, false, null, null, false, false, false, 0, 1.0, -1);
 	}
 
-	private synchronized Shop createNewShop(Integer shopId, Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
-		Shop shop = addShop(shopId, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
+	private synchronized Shop createNewShop(Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
+		Shop shop = addShop(0, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
 		this.wirteShopToDatabase(shop);
-		this.setShopID(shop);
 		return shop;
 	}
 
@@ -458,35 +457,35 @@ public class ShopController {
 		return resultList;
 	}
 
-//	public void setShopID(Shop s) { // <---------
-//		Integer result = -1;
-//		Connection conn = null;
-//		try {
-//			conn = GlobalChestShop.plugin.getMysql().getConnection();
-//		} catch (Exception e) {
-//			GlobalChestShop.plugin.handleFatalException(e);
-//		}
-//		ResultSet rs = null;
-//		PreparedStatement st = null;
-//		try { // ___________
-//			st = conn.prepareStatement("SELECT shopID FROM " + MySqlConnector.table_shops + " WHERE ownerID = ? AND signLocation = ? AND worldGroup = ?");
-//			st.setInt(1, s.getOwner());
-//			st.setString(2, s.getSignLocationString());
-//			st.setInt(3, s.getworldGroup());
-//			rs = st.executeQuery();
-//			rs.last();
-//			if (rs.getRow() != 0) {
-//				rs.first();
-//				result = rs.getInt(1); // <---------
-//			}
-//		} catch (SQLException e) {
-//			GlobalChestShop.plugin.handleFatalException(e);
-//		} finally {
-//			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
-//			GlobalChestShop.plugin.getMysql().returnConnection(conn);
-//		}
-//		s.setShopID(result);
-//	}
+	public void setShopID(Shop s) { // <---------
+		Integer result = -1;
+		Connection conn = null;
+		try {
+			conn = GlobalChestShop.plugin.getMysql().getConnection();
+		} catch (Exception e) {
+			GlobalChestShop.plugin.handleFatalException(e);
+		}
+		ResultSet rs = null;
+		PreparedStatement st = null;
+		try { // ___________
+			st = conn.prepareStatement("SELECT shopID FROM " + MySqlConnector.table_shops + " WHERE ownerID = ? AND signLocation = ? AND worldGroup = ?");
+			st.setInt(1, s.getOwner());
+			st.setString(2, s.getSignLocationString());
+			st.setInt(3, s.getworldGroup());
+			rs = st.executeQuery();
+			rs.last();
+			if (rs.getRow() != 0) {
+				rs.first();
+				result = rs.getInt(1); // <---------
+			}
+		} catch (SQLException e) {
+			GlobalChestShop.plugin.handleFatalException(e);
+		} finally {
+			GlobalChestShop.plugin.getMysql().closeRessources(conn, rs, st);
+			GlobalChestShop.plugin.getMysql().returnConnection(conn);
+		}
+		s.setShopID(result);
+	}
 
 	public void ladeAlleShops() {
 		Connection conn = null;

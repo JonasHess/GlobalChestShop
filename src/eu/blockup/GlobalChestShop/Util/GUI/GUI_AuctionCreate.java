@@ -48,12 +48,6 @@ public class GUI_AuctionCreate extends InventoryGUI {
 				updateAfterChange(player);
 				throw new ItemIsDamagedException();
 			}
-			if (GlobalChestShop.plugin.moreTntEnabled) {
-				if (GlobalChestShop.plugin.moreTntController.isItemACustomTntBlock(item)) {
-					updateAfterChange(player);
-					throw new ItemIsNotAlloedInThisWorldGroupException();
-				}
-			}
 			if (GlobalChestShop.plugin.itemController.isItemBannedFromShops(item, worldGroup, true)) {
 				if (!(GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN))) {
 					updateAfterChange(player);

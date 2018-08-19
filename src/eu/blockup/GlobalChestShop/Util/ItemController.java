@@ -156,11 +156,6 @@ public class ItemController {
 	public Integer getInteralIdOfItemStack(ItemStack item) {
 		if (item == null)
 			return null;
-		if (GlobalChestShop.plugin.moreTntEnabled) {
-			if (GlobalChestShop.plugin.moreTntController.isItemACustomTntBlock(item)) {
-				throw new RuntimeErrorException(null, "\n#################################################\n\n   >>>  MoreTNTs plugin is not working with GlobalChestShop!  <<<   \n\n#################################################\n");
-			}
-		}
 		ItemContainer cache = this.getItemContainer(item);
 		if (cache != null) {
 			return cache.getItemID();
@@ -430,12 +425,7 @@ public class ItemController {
 	}
 
 	public boolean isItemBannedFromShops(ItemStack item, int worldGroup, boolean inLocalShop) { // <---------
-		
-		if (GlobalChestShop.plugin.moreTntEnabled) {
-			if (GlobalChestShop.plugin.moreTntController.isItemACustomTntBlock(item)) {
-				return true;
-			}
-		}
+
 		
 		int itemID = this.getInteralIdOfItemStack(item);
 		if (inLocalShop) {

@@ -79,12 +79,12 @@ public class Shop {
 		return holo;
 	}
 
-	public Shop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultCategorie, ShopController verwaltung) {
+	public Shop(Integer shopID, Integer owner, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultCategorie, ShopController controller) {
 		super();
 		if (shopID == null || shopID <= 0) {
 			throw new InvalidParameterException("ShopId was not set!!");
 		}
-		this.verwaltung = verwaltung;
+		this.verwaltung = controller;
 		this.owner = owner;
 		this.ownerUUID = GlobalChestShop.plugin.getPlayerController().getUuidFromPlayerID(owner);
 		this.signLocation = signLocation;
@@ -586,6 +586,10 @@ public class Shop {
 
 	public Integer getOwner() {
 		return owner;
+	}
+
+	void setShopID(Integer shopID) {
+		this.shopID = shopID;
 	}
 
 	public UUID getOwnerUUID() {
