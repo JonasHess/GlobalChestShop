@@ -316,7 +316,7 @@ public class ShopController {
 	}
 
 	private synchronized Shop createNewShop(Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
-		Shop shop = addShop(0, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
+		Shop shop = addShop(1, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
 		this.wirteShopToDatabase(shop);
 		return shop;
 	}
