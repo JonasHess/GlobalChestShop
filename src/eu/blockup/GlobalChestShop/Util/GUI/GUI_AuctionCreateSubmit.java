@@ -48,7 +48,7 @@ public class GUI_AuctionCreateSubmit extends InventoryGUI {
 
 			@Override
 			protected Sound getClickSound(ClickType type) {
-				return Sound.LEVEL_UP;
+				return Sound.ENTITY_PLAYER_LEVELUP;
 			}
 
 			@Override

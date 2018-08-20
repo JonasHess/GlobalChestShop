@@ -77,7 +77,7 @@ public class GUI_AuctionGetPrice extends GUI_StateCangerDouble{
 
 			@Override
 			protected Sound getClickSound(ClickType type) {
-				return Sound.ARROW_HIT;
+				return Sound.ENTITY_ARROW_HIT;
 			}
 
 			@Override

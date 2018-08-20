@@ -25,7 +25,7 @@ public class Button_AuctionGetPrice extends Button{
 
 	@Override
 	protected Sound getClickSound(ClickType type) {
-		return Sound.ARROW_HIT;
+		return Sound.ENTITY_ARROW_HIT;
 	}
 
 	@Override

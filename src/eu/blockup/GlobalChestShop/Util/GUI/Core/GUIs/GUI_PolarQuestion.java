@@ -41,7 +41,7 @@ public abstract class GUI_PolarQuestion extends InventoryGUI {
 
 			@Override
 			protected Sound getClickSound(ClickType type) {
-				return Sound.SHOOT_ARROW;
+				return Sound.ENTITY_ARROW_SHOOT;
 			}
 
 		};
@@ -60,7 +60,7 @@ public abstract class GUI_PolarQuestion extends InventoryGUI {
 
 			@Override
 			protected Sound getClickSound(ClickType type) {
-				return Sound.FALL_SMALL;
+				return Sound.ENTITY_PLAYER_SMALL_FALL;
 			}
 
 		};

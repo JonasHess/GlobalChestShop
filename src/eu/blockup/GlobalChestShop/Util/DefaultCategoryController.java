@@ -776,6 +776,19 @@ public class DefaultCategoryController {
 		if (itemText.matches("SULPHUR") && item.getDurability() == 5) {
 			categoryID = -1;
 		}
+		if (itemText.matches("PURPUR_DOUBLE_SLAB")){
+			categoryID = -1;
+		}
+		if (itemText.matches("BEETROOT_BLOCK")){
+			categoryID = -1;
+		}
+		if (itemText.matches("FROSTED_ICE")){
+			categoryID = -1;
+		}
+		if (itemText.matches("END_GATEWAY")){
+			categoryID = -1;
+		}
+
 		// if (itemText.contains("DOUBLE_STEP")) categoryID = -1;
 		return this.hashMap_Categories.get(categoryID);
 

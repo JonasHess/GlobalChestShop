@@ -27,7 +27,7 @@ public class GUI_ShopDelete extends SimpleIInventoryGUI{
 
   
   private void playSoundDeleteShop(Player player) {
-	  player.getLocation().getWorld().playSound(player.getLocation(), Sound.GHAST_SCREAM, 1, 1);
+	  player.getLocation().getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SCREAM, 1, 1);
   }
   
   

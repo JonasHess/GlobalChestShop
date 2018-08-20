@@ -47,9 +47,9 @@ public abstract class GUI_StateCangerDouble extends GUI_StateChangerNumeric<Doub
 		@Override
 		protected Sound getClickSound(ClickType type) {
 			if (this.value < 0)  {
-				return Sound.DRINK;
+				return Sound.ENTITY_GENERIC_DRINK;
 			} else {
-				return Sound.EAT;
+				return Sound.ENTITY_GENERIC_EAT;
 			}
 		}
 

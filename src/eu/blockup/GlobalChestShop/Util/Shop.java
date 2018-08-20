@@ -84,6 +84,7 @@ public class Shop {
 		if (shopID == null || shopID <= 0) {
 			throw new InvalidParameterException("ShopId was not set!!");
 		}
+		this.shopID = shopID;
 		this.verwaltung = controller;
 		this.owner = owner;
 		this.ownerUUID = GlobalChestShop.plugin.getPlayerController().getUuidFromPlayerID(owner);
@@ -109,7 +110,10 @@ public class Shop {
 			throw new RuntimeException("Multiplier of LocalShop is not 1.0");
 		}
 
+	}
+	public Shop init(){
 		GlobalChestShop.plugin.getShopEventListener().registerShopToChunkManager(this);
+		return this;
 	}
 
 	public synchronized void spawn() {
@@ -407,7 +411,7 @@ public class Shop {
 								return;
 							}
 						}
-						playOpenShopSound(player, Sound.ENDERMAN_TELEPORT);
+						playOpenShopSound(player, Sound.ENTITY_ENDERMEN_TELEPORT);
 						GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_LocalChestShop(getOwnerUUID(), previousGUI, worldGroup));
 					} else {
 						if (adminShopOnly) {
@@ -423,7 +427,7 @@ public class Shop {
 								return;
 							}
 						}
-						playOpenShopSound(player, Sound.ENDERMAN_TELEPORT);
+						playOpenShopSound(player, Sound.ENTITY_ENDERMEN_TELEPORT);
 						if (getItemStack() != null) {
 							if (adminShopOnly) {
 								GlobalChestShop.plugin.openAdminShopOnlyGUI(previousGUI, player, itemStack, worldGroup, multiplier);

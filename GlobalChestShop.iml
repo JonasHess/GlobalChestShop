@@ -82,8 +82,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="spigot1.8.8" level="project" />
+    <orderEntry type="library" name="spigot1.12" level="application" />
     <orderEntry type="library" name="Vault" level="project" />
-    <orderEntry type="library" name="AnvilApi" level="project" />
   </component>
 </module>

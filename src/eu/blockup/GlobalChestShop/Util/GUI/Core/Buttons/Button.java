@@ -71,7 +71,7 @@ public abstract class Button {
 	}
 	
 	protected Sound getClickSound(ClickType type) {
-		return Sound.WOOD_CLICK;
+		return Sound.BLOCK_WOOD_BUTTON_CLICK_ON;
 	}
 
 	public abstract void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType clickType, InventoryClickEvent event);
@@ -96,7 +96,6 @@ public abstract class Button {
 	 * player). The functional aspects of the Button stay untouched. If you want
 	 * the changes to be visible, don't forget to refresh() the InventoryGUI.
 	 * 
-	 * @param Button_Bare
 	 */
 	public void setAppearance(Button bareButton) {
 		this.setDisplayIcon(bareButton.getDisplayIcon());

@@ -254,7 +254,7 @@ public abstract class GUI_PageView<T> extends InventoryGUI {
   }
   
   private Sound getNextPageSound() {
-	  return Sound.ENDERDRAGON_WINGS;
+	  return Sound.ENTITY_ENDERDRAGON_FLAP;
   }
 
   

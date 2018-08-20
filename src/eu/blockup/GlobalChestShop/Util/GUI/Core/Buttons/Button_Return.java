@@ -59,7 +59,7 @@ public class Button_Return extends Button {
 
 	@Override
 	protected Sound getClickSound(ClickType type) {
-		return Sound.DOOR_OPEN;
+		return Sound.BLOCK_WOODEN_DOOR_OPEN;
 	}
 
 }

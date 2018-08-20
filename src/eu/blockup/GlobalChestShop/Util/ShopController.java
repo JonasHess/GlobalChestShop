@@ -221,8 +221,8 @@ public class ShopController {
 			GlobalChestShop.plugin.getMysql().closeRessources(conn, null, st);
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
-		
 		Shop shop = addShop(shopId, s.getOwner(), s.getSignLocation(), s.getLocation2(), s.getworldGroup(), s.getItemStack(), s.getAdminShopOnly(), s.getItemFrame(), s.getNpcID(), s.getCategoryID(), s.getHolo(), s.getNewAuctions(), s.isSellAll(), s.getAppearance(), s.getMultiplier(), s.getDefaultCategory());
+		shop.init();
 		return shop;
 
 	}
@@ -317,6 +317,7 @@ public class ShopController {
 
 	private synchronized Shop createNewShop(Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
 		Shop shop = addShop(1, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
+		this.setShopID(shop);
 		this.wirteShopToDatabase(shop);
 		return shop;
 	}
@@ -515,8 +516,12 @@ public class ShopController {
 				if (rs.wasNull()) {
 					itemStack = null;
 				}
+				int shopID = rs.getInt("shopID");
+				if (rs.wasNull()){
+					rs.next();
+				}
 				try {
-					this.loadShopFromDB(rs.getInt("shopID"), rs.getInt("ownerID"), rs.getString("signLocation"), rs.getString("location2"), rs.getInt("worldGroup"), itemStack, rs.getBoolean("adminshopOnly"), rs.getBoolean("itemFrame"), npcID, categoryID, rs.getBoolean("holo"), rs.getBoolean("newAuctions"), rs.getBoolean("sellAll"), rs.getInt("appearance"), rs.getDouble("multiplier"), rs.getInt("defaultCategory"));
+					this.loadShopFromDB(shopID, rs.getInt("ownerID"), rs.getString("signLocation"), rs.getString("location2"), rs.getInt("worldGroup"), itemStack, rs.getBoolean("adminshopOnly"), rs.getBoolean("itemFrame"), npcID, categoryID, rs.getBoolean("holo"), rs.getBoolean("newAuctions"), rs.getBoolean("sellAll"), rs.getInt("appearance"), rs.getDouble("multiplier"), rs.getInt("defaultCategory"));
 
 				
 				} catch (LocationNotFoundException e) {

@@ -34,7 +34,7 @@ public abstract class Button_CloseGUI extends Button {
 
   
   private void playSoundCloseSound(Player player) {
-	  player.getLocation().getWorld().playSound(player.getLocation(), Sound.DOOR_CLOSE, 1, 1);
+	  player.getLocation().getWorld().playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
   }
   
   
