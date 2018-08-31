@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.logging.Level;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -48,7 +49,7 @@ public class GUI_AuctionCreateSubmit extends InventoryGUI {
 
 			@Override
 			protected Sound getClickSound(ClickType type) {
-				return Sound.ENTITY_PLAYER_LEVELUP;
+				return Sounds.LEVEL_UP.bukkitSound();
 			}
 
 			@Override

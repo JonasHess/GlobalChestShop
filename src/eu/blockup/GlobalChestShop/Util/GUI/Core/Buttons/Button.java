@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -71,7 +72,7 @@ public abstract class Button {
 	}
 	
 	protected Sound getClickSound(ClickType type) {
-		return Sound.BLOCK_WOOD_BUTTON_CLICK_ON;
+		return Sounds.WOOD_CLICK.bukkitSound();
 	}
 
 	public abstract void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType clickType, InventoryClickEvent event);

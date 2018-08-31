@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ public class Button_AuctionGetPrice extends Button{
 
 	@Override
 	protected Sound getClickSound(ClickType type) {
-		return Sound.ENTITY_ARROW_HIT;
+		return Sounds.ARROW_HIT.bukkitSound();
 	}
 
 	@Override

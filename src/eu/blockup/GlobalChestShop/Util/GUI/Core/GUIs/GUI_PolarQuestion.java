@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -41,7 +42,7 @@ public abstract class GUI_PolarQuestion extends InventoryGUI {
 
 			@Override
 			protected Sound getClickSound(ClickType type) {
-				return Sound.ENTITY_ARROW_SHOOT;
+				return Sounds.SHOOT_ARROW.bukkitSound();
 			}
 
 		};
@@ -60,7 +61,7 @@ public abstract class GUI_PolarQuestion extends InventoryGUI {
 
 			@Override
 			protected Sound getClickSound(ClickType type) {
-				return Sound.ENTITY_PLAYER_SMALL_FALL;
+				return Sounds.FALL_SMALL.bukkitSound();
 			}
 
 		};

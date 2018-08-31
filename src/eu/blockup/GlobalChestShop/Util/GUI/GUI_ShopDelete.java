@@ -2,6 +2,7 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 
 import java.util.UUID;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -27,7 +28,7 @@ public class GUI_ShopDelete extends SimpleIInventoryGUI{
 
   
   private void playSoundDeleteShop(Player player) {
-	  player.getLocation().getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SCREAM, 1, 1);
+	  player.getLocation().getWorld().playSound(player.getLocation(), Sounds.GHAST_SCREAM.bukkitSound(), 1, 1);
   }
   
   

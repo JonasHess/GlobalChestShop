@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -34,7 +35,7 @@ public abstract class Button_CloseGUI extends Button {
 
   
   private void playSoundCloseSound(Player player) {
-	  player.getLocation().getWorld().playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
+	  player.getLocation().getWorld().playSound(player.getLocation(), Sounds.DOOR_CLOSE.bukkitSound(), 1, 1);
   }
   
   
