@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -254,7 +255,7 @@ public abstract class GUI_PageView<T> extends InventoryGUI {
   }
   
   private Sound getNextPageSound() {
-	  return Sound.ENTITY_ENDERDRAGON_FLAP;
+	  return Sounds.ENDERDRAGON_WINGS.bukkitSound();
   }
 
   

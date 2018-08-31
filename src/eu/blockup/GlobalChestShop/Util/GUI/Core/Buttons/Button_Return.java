@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -59,7 +60,7 @@ public class Button_Return extends Button {
 
 	@Override
 	protected Sound getClickSound(ClickType type) {
-		return Sound.BLOCK_WOODEN_DOOR_OPEN;
+		return Sounds.DOOR_OPEN.bukkitSound();
 	}
 
 }

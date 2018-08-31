@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI.Core.GUIs;
 
+import eu.blockup.GlobalChestShop.Util.Sounds;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -47,9 +48,9 @@ public abstract class GUI_StateCangerDouble extends GUI_StateChangerNumeric<Doub
 		@Override
 		protected Sound getClickSound(ClickType type) {
 			if (this.value < 0)  {
-				return Sound.ENTITY_GENERIC_DRINK;
+				return Sounds.DRINK.bukkitSound();
 			} else {
-				return Sound.ENTITY_GENERIC_EAT;
+				return Sounds.EAT.bukkitSound();
 			}
 		}
 

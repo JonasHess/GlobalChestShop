@@ -411,7 +411,7 @@ public class Shop {
 								return;
 							}
 						}
-						playOpenShopSound(player, Sound.ENTITY_ENDERMEN_TELEPORT);
+						playOpenShopSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound());
 						GlobalChestShop.plugin.getGuiCore().open_InventoyGUI(player, new GUI_LocalChestShop(getOwnerUUID(), previousGUI, worldGroup));
 					} else {
 						if (adminShopOnly) {
@@ -427,7 +427,7 @@ public class Shop {
 								return;
 							}
 						}
-						playOpenShopSound(player, Sound.ENTITY_ENDERMEN_TELEPORT);
+						playOpenShopSound(player, Sounds.ENDERMAN_TELEPORT.bukkitSound());
 						if (getItemStack() != null) {
 							if (adminShopOnly) {
 								GlobalChestShop.plugin.openAdminShopOnlyGUI(previousGUI, player, itemStack, worldGroup, multiplier);

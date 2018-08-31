@@ -356,7 +356,6 @@ public class ShopController {
 			List<Shop> liste = this.hashMap_AllShops.get(s.getOwner());
 			synchronized (liste) {
 				liste.add(s); 
-				System.out.println("Shop added");
 			}
 		}
 		return s;
