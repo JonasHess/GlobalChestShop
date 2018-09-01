@@ -1,6 +1,7 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,7 +32,7 @@ public class GUI_CreateShop4 extends SimpleIInventoryGUI {
 
 
     // Yes
-    this.drawButton(3, 3, new Button(new ItemStack(Material.WOOL, 1, (short) 5), "Yes") {
+    this.drawButton(3, 3, new Button(new ItemStack(XMaterial.LIME_WOOL.parseItem()), "Yes") {
 
       @Override
       public void onRefresh(InventoryGUI inventoryGUI, Player player) {
@@ -48,7 +49,7 @@ public class GUI_CreateShop4 extends SimpleIInventoryGUI {
     });
 
     // No
-    this.drawButton(5, 3, new Button(new ItemStack(Material.WOOL, 1, (short) 14), "No") {
+    this.drawButton(5, 3, new Button(new ItemStack(XMaterial.RED_WOOL.parseItem()), "No") {
 
       @Override
       public void onRefresh(InventoryGUI inventoryGUI, Player player) {

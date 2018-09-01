@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 import java.util.UUID;
 
 import eu.blockup.GlobalChestShop.Util.Sounds;
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -36,7 +37,7 @@ public class GUI_ShopDelete extends SimpleIInventoryGUI{
   protected void drawButtons(Player player) {
 	  
 	  // Delete Shop Button
-    this.addButton(4, 3, new Button(new ItemStack(Material.WOOL, 1, (short) 14), GlobalChestShop.text.get(GlobalChestShop.text.Button_DeleteShop)) {
+    this.addButton(4, 3, new Button(new ItemStack(XMaterial.RED_WOOL.parseItem()), GlobalChestShop.text.get(GlobalChestShop.text.Button_DeleteShop)) {
       
       @Override
       public void onRefresh(InventoryGUI inventoryGUI, Player player) {

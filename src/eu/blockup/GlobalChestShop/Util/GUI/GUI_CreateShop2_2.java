@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -31,7 +32,7 @@ public class GUI_CreateShop2_2 extends SimpleIInventoryGUI{
 	    
 	    
 	    // CustomCategory
-	    this.drawButton(3, 3, new Button(new ItemStack(Material.WORKBENCH),"Custom Categories") {
+	    this.drawButton(3, 3, new Button(new ItemStack(XMaterial.CRAFTING_TABLE.parseMaterial()),"Custom Categories") {
 	      
 	      @Override
 	      public void onRefresh(InventoryGUI inventoryGUI, Player player) {

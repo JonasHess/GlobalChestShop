@@ -2,6 +2,8 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 
 import java.util.List;
 import java.util.UUID;
+
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,7 +18,7 @@ public class Button_AllPlayers extends Button {
 	private final Integer	worldGroup;
 
 	public Button_AllPlayers(Integer worldGroup) {
-		super(new ItemStack(Material.IRON_FENCE, 1, (short) 3), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AllPlayerHistory_Title), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AllPlayerHistory_Description));
+		super(new ItemStack(XMaterial.IRON_BARS.parseMaterial(), 1, (short) 3), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AllPlayerHistory_Title), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AllPlayerHistory_Description));
 		this.worldGroup = worldGroup;
 	}
 

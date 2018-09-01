@@ -2,6 +2,7 @@ package eu.blockup.GlobalChestShop.Util.GUI.Core.Buttons.Effects;
 
 import java.awt.Point;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,7 +28,7 @@ public class ButtonEffect_FlashRed extends ButtonEffect{
 	@Override
 	public Button getAnimatedButton(int tickCount, Button button) {
 		if ((tickCount % 20) == 0) {
-			return new Button_Bare(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14), button.getTitle(), button.getDescription());
+			return new Button_Bare(new ItemStack(XMaterial.RED_STAINED_GLASS_PANE.parseItem()), button.getTitle(), button.getDescription());
 		}
 		return button;
 	}

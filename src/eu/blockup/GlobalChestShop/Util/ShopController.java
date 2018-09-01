@@ -59,7 +59,6 @@ class SkullTeleporter implements Runnable {
 		this.enabled = false;
 		this.shopController = null;
 	}
-
 }
 
 public class ShopController {
@@ -594,7 +593,5 @@ public class ShopController {
 		});
 		return resultList;
 	}
-
-
 
 }

@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -57,7 +58,7 @@ public class AuctionPrepare {
 	
 	public ItemStack getDisplayItem() {
 		if (this.itemStackList.isEmpty()) {
-			return new ItemStack (Material.STAINED_GLASS_PANE, 1, (short) 8);
+			return new ItemStack (XMaterial.GRAY_STAINED_GLASS_PANE.parseItem());
 		} else {
 			ItemStack item = this.itemStackList.get(0).clone();
 			item.setAmount(1);

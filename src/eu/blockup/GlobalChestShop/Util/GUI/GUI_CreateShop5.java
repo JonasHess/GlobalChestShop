@@ -1,6 +1,7 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -22,7 +23,7 @@ public class GUI_CreateShop5 extends SimpleIInventoryGUI{
 
   @Override
   protected void drawButtons(Player player) {
-    this.drawFrame(4, 3, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
+    this.drawFrame(4, 3, new ItemStack(XMaterial.LIME_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 5));
     this.drawButton(4, 3, new Button(new ItemStack(Material.NETHER_STAR),"Create Shop") {
       
       @Override

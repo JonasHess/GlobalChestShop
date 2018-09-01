@@ -1,6 +1,7 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -40,7 +41,7 @@ public class GUI_AdminShopChooseItem extends SimpleIInventoryGUI{
     ItemStack chousenItem;
     String title = "";
     if (this.itemStack == null) {
-      chousenItem = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 0);
+      chousenItem = new ItemStack(XMaterial.WHITE_STAINED_GLASS_PANE.parseItem());
       title = GlobalChestShop.text.get(GlobalChestShop.text.GUI_CreateAuction_Holding_Item_Title);
     } else {
       chousenItem = this.itemStack.clone();

@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -51,9 +52,9 @@ public class BannState extends StateKeeper<Boolean>  {
 	public Button_Bare formatToDisplayButton(Player player, int amount) {
 		ItemStack displayItem;
 		if (this.getCurrentState(player)) {
-			displayItem = new ItemStack(Material.WOOL, 1, (short) 14);
+			displayItem = new ItemStack(XMaterial.RED_WOOL.parseItem());
 		} else {
-			displayItem = new  ItemStack(Material.WOOL, 1, (short) 5);
+			displayItem = new ItemStack(XMaterial.LIME_WOOL.parseItem());
 		}
 		return  new Button_Bare(displayItem, (this.inLocalShop ? "Allow creating acutions?" : "Show in GlobalShop?" ), this.stateToString(1).get(0));
 	}

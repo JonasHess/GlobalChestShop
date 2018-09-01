@@ -3,7 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 import java.util.List;
 
 
-
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -135,7 +135,7 @@ public class GUI_CustomCategoryPage extends GUI_PageView<Integer> {
       });
       if (customCategory.isShownInCreativeMenu() > 0) {
     	  // Is in shown in creative
-    	  this.drawButton(getWidth() - 2, getHeight() - 1, new Button(new ItemStack(Material.WOOL, 1, (short) 14), ChatColor.RED + "Hide from the CreativeMenu") {
+    	  this.drawButton(getWidth() - 2, getHeight() - 1, new Button(new ItemStack(XMaterial.RED_WOOL.parseItem()), ChatColor.RED + "Hide from the CreativeMenu") {
 			
 			@Override
 			public void onRefresh(InventoryGUI inventoryGUI, Player player) {
@@ -152,7 +152,7 @@ public class GUI_CustomCategoryPage extends GUI_PageView<Integer> {
 		});    	  
       } else {
     	  // Is not shown in creative
-    	  this.drawButton(getWidth() - 2, getHeight() - 1, new Button(new ItemStack(Material.WOOL, 1, (short) 5), ChatColor.GREEN + "Show in the CreativeMenu") {
+    	  this.drawButton(getWidth() - 2, getHeight() - 1, new Button(new ItemStack(XMaterial.LIME_WOOL.parseItem()), ChatColor.GREEN + "Show in the CreativeMenu") {
 			
 			@Override
 			public void onRefresh(InventoryGUI inventoryGUI, Player player) {

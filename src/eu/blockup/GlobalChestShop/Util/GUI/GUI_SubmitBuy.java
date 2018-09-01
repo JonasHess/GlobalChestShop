@@ -1,4 +1,5 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -84,12 +85,12 @@ public class GUI_SubmitBuy extends GUI_PolarQuestion {
 
 	@Override
 	public Button_Bare get_YesButton() {
-		return new Button_Bare(new ItemStack(Material.WOOL, 1, (byte) 5), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_YES));
+		return new Button_Bare(new ItemStack(XMaterial.LIME_WOOL.parseMaterial(), 1, (byte) 5), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_YES));
 	}
 
 	@Override
 	public Button_Bare get_NoButton() {
-		return new Button_Bare(new ItemStack(Material.WOOL, 1, (byte) 14), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_NO));
+		return new Button_Bare(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 1, (byte) 14), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_NO));
 	}
 
 	@Override

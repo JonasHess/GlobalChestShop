@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 import java.util.List;
 import java.util.UUID;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -91,12 +92,12 @@ public class GUI_RemoveAllAuctionsOfPlayerPolarQuestion extends GUI_PolarQuestio
 
 	@Override
 	public Button_Bare get_YesButton() {
-		return new Button_Bare(new ItemStack(Material.WOOL, 1, (short) 5), ChatColor.RED + "YES, remove all auctions of player");
+		return new Button_Bare(new ItemStack(XMaterial.LIME_WOOL.parseItem()), ChatColor.RED + "YES, remove all auctions of player");
 	}
 
 	@Override
 	public Button_Bare get_NoButton() {
-		return new Button_Bare(new ItemStack(Material.WOOL, 1, (short) 14), ChatColor.GREEN + "NO, cancel");
+		return new Button_Bare(new ItemStack(XMaterial.RED_WOOL.parseItem()), ChatColor.GREEN + "NO, cancel");
 	}
 
 	@Override

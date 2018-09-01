@@ -20,6 +20,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
+import eu.blockup.GlobalChestShop.Util.*;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
@@ -38,18 +39,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import eu.blockup.GlobalChestShop.Util.Auction;
-import eu.blockup.GlobalChestShop.Util.AuctionController;
-import eu.blockup.GlobalChestShop.Util.CustomCategoryController;
-import eu.blockup.GlobalChestShop.Util.DefaultCategoryController;
-import eu.blockup.GlobalChestShop.Util.ItemController;
-import eu.blockup.GlobalChestShop.Util.MySqlConnector;
-import eu.blockup.GlobalChestShop.Util.PlayerController;
-import eu.blockup.GlobalChestShop.Util.ShopCommandExecutor;
-import eu.blockup.GlobalChestShop.Util.ShopController;
-import eu.blockup.GlobalChestShop.Util.ShopEventListener;
-import eu.blockup.GlobalChestShop.Util.TimeAgo;
-import eu.blockup.GlobalChestShop.Util.WorldGroupController;
 import eu.blockup.GlobalChestShop.Util.Exceptions.*;
 import eu.blockup.GlobalChestShop.Util.Experimental.PricingEngine.PriceEngine;
 import eu.blockup.GlobalChestShop.Util.GUI.GUI_AdminShopBuy;
@@ -463,23 +452,22 @@ public class GlobalChestShop extends JavaPlugin {
 				// id:data
 			} else if (input.contains(":")) {
 				String[] a = input.split(":");
-				int id = Integer.valueOf(a[0]);
+				String id = a[0];
 				int damage = 0;
 				if (a.length == 2) {
 					damage = Integer.valueOf(a[1]);
 					// ItemStack result = new ItemStack(id, amount, (short) 0,
 					// (byte) damage);
-					result = new ItemStack(id);
-					result.setDurability((short) damage);
+					result = XMaterial.requestXMaterial(id, (byte) damage).parseItem();
 					return result;
 				} else {
 					return null;
 				}
 
 				// id
-			} else if (isStringNumeric(input)) {
+			} else {
 				try {
-					result = new ItemStack(Integer.parseInt(input));
+					result = XMaterial.fromString(input).parseItem();
 				} catch (NumberFormatException e) {
 					result = null;
 				}
@@ -498,22 +486,7 @@ public class GlobalChestShop extends JavaPlugin {
 		return result;
 	}
 
-	public static ItemStack convertItemIdStringToItemstack(String itemIDString, int amount) {
-		String[] a = itemIDString.split(":");
-		int id = Integer.valueOf(a[0]);
-		int damage = 0;
-		if (a.length == 2) {
-			damage = Integer.valueOf(a[1]);
-			// ItemStack result = new ItemStack(id, amount, (short) 0, (byte)
-			// damage);
-			@SuppressWarnings("deprecation")
-			ItemStack result = new ItemStack(id, amount);
-			result.setDurability((short) damage);
-			return result;
-		} else {
-			return null;
-		}
-	}
+
 
 	public static boolean isStringNumeric(final String s) {
 		try {
@@ -623,13 +596,13 @@ public class GlobalChestShop extends JavaPlugin {
 	public ItemStack getPlayerHead(Integer playerID, boolean removeFromInventoryWhenPickedUp) {
 
 		if (playerID == null)
-			return new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+			return new ItemStack(XMaterial.SKELETON_SKULL.parseMaterial(), 1, (short) 3);
 		synchronized (playHeadChache) {
 			ItemStack item = playHeadChache.get(playerID);
 			if (item != null) {
 				return item;
 			}
-			item = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+			item = new ItemStack(XMaterial.SKELETON_SKULL.parseMaterial(), 1, (short) 3);
 			String playerName = GlobalChestShop.plugin.getNameOfPlayer(playerID);
 			try {
 				SkullMeta meta = (SkullMeta) item.getItemMeta();

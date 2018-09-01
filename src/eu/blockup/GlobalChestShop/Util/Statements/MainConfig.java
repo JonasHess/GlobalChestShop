@@ -12,6 +12,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -131,7 +132,7 @@ public class MainConfig {
 		try {
 			return GlobalChestShop.convertRandomStringToItemStack(this.closeButton, null);
 		} catch (ItemStackNotFoundException e) {
-			return new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14);
+			return new ItemStack(XMaterial.RED_STAINED_GLASS.parseMaterial(), 1, (short) 14);
 		}
 	}
 
@@ -142,7 +143,7 @@ public class MainConfig {
 		try {
 			return GlobalChestShop.convertRandomStringToItemStack(this.background, null);
 		} catch (ItemStackNotFoundException e) {
-			return new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15);
+			return new ItemStack(XMaterial.BLACK_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 15);
 		}
 	}
 

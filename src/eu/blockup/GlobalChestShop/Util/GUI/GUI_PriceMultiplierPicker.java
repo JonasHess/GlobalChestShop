@@ -1,6 +1,7 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -35,13 +36,13 @@ public class GUI_PriceMultiplierPicker extends GUI_StateCangerDouble {
 		if (this.getValueObject().getCurrentState(player) >= 50.0) {
 			this.removeAllAnimatedButtons();
 			for (int i = 2; i < this.getWidth() - 2; i++) {
-				this.addAnimatedButton(new ButtonEffect_FlashRed(i, this.getHeight() - 2), new Button_Bare(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 6), ChatColor.RED + "Warning!", "Be careful!", "You are about to give a lot of discount"));
+				this.addAnimatedButton(new ButtonEffect_FlashRed(i, this.getHeight() - 2), new Button_Bare(new ItemStack(XMaterial.PINK_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 6), ChatColor.RED + "Warning!", "Be careful!", "You are about to give a lot of discount"));
 			}
 		} else {
 			this.removeAllAnimatedButtons();
 		}
 
-		this.addButton(this.getWidth() - 1, this.getHeight() - 1, new Button(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5), "Save changes") {
+		this.addButton(this.getWidth() - 1, this.getHeight() - 1, new Button(new ItemStack(XMaterial.LIME_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 5), "Save changes") {
 
 			@Override
 			public void onRefresh(InventoryGUI inventoryGUI, Player player) {

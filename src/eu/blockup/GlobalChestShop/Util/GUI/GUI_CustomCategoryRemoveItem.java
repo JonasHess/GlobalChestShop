@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -28,7 +29,7 @@ public class GUI_CustomCategoryRemoveItem extends SimpleIInventoryGUI{
   protected void drawButtons(Player player) {
     
     this.addButton(4, 1, new Button_Bare(this.itemStack));
-    this.drawButton(4, 3, new Button(new ItemStack(Material.WOOL, 1, (short) 14), "DELETE") { 
+    this.drawButton(4, 3, new Button(new ItemStack(XMaterial.RED_WOOL.parseItem()), "DELETE") {
       @Override
       public void onRefresh(InventoryGUI inventoryGUI, Player player) {
         

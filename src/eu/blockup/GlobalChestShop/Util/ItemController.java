@@ -297,7 +297,7 @@ public class ItemController {
 		}
 		try {
 			@SuppressWarnings("deprecation")
-			int id = item.getTypeId();
+			int id = item.getType().getId();
 			int durability = item.getDurability();
 
 			result = id;

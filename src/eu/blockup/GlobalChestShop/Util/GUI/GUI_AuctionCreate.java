@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -109,7 +110,7 @@ public class GUI_AuctionCreate extends InventoryGUI {
 		String desc = "";
 
 		if (this.itemStack == null) {
-			chousenItem = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 0);
+			chousenItem = new ItemStack(XMaterial.WHITE_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 0);
 			title = GlobalChestShop.text.get(GlobalChestShop.text.GUI_CreateAuction_Holding_Item_Title);
 			desc = GlobalChestShop.text.get(GlobalChestShop.text.GUI_CreateAuction_Holding_Item_DESC);
 		} else {
@@ -117,9 +118,9 @@ public class GUI_AuctionCreate extends InventoryGUI {
 			chousenItem.setAmount(this.amount);
 		}
 		if (this.itemStack == null) {
-			this.drawFrame(4, 2, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 11));
+			this.drawFrame(4, 2, new ItemStack(XMaterial.BLUE_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 11));
 		} else {
-			this.drawFrame(4, 2, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
+			this.drawFrame(4, 2, new ItemStack(XMaterial.LIME_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 5));
 		}
 		this.addButton(4, 2, new Button(chousenItem, title, desc) {
 
@@ -177,7 +178,7 @@ public class GUI_AuctionCreate extends InventoryGUI {
 
 			// Ban Item
 			if (this.itemStack != null && GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.ADMIN)) {
-				this.addButton(0, 2, new Button(new ItemStack(Material.REDSTONE_TORCH_ON), ChatColor.RED + "Administrate this item") {
+				this.addButton(0, 2, new Button(new ItemStack(XMaterial.REDSTONE_TORCH.parseMaterial()), ChatColor.RED + "Administrate this item") {
 
 					@Override
 					public void onRefresh(InventoryGUI inventoryGUI, Player player) {

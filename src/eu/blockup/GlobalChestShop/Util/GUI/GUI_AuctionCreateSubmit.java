@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.util.logging.Level;
 
 import eu.blockup.GlobalChestShop.Util.Sounds;
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -36,7 +37,7 @@ public class GUI_AuctionCreateSubmit extends InventoryGUI {
 	@Override
 	protected void drawButtons(Player player) {
 		// Frame
-		this.drawFrame(6, 3, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5));
+		this.drawFrame(6, 3, new ItemStack(XMaterial.LIME_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 5));
 		// Item
 		this.drawButton(1, 3, new Button_Bare(auctionPrepare.getDisplayItem()));
 		// Price

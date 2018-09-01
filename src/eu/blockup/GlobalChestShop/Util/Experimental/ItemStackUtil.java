@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.Experimental;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -22,8 +23,8 @@ public class ItemStackUtil {
 		if (s.equalsIgnoreCase("null")) {
 			return new ItemStack(Material.AIR);
 		}
-		if (isInt(s)) {
-			return new ItemStack(Material.getMaterial(Integer.parseInt(s)));
+		if(XMaterial.fromString(s)!=null) {
+			return new ItemStack(XMaterial.fromString(s).parseItem());
 		}
 		byte meta = 0;
 		int amount = 1;

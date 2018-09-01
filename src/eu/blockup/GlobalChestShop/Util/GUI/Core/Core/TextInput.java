@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI.Core.Core;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -77,7 +78,7 @@ public abstract class TextInput {
   }
   
   public ItemStack toItemStack() {
-      ItemStack item = new ItemStack(Material.BOOK_AND_QUILL);
+      ItemStack item = new ItemStack(XMaterial.WRITABLE_BOOK.parseItem());
       BookMeta meta = (BookMeta) item.getItemMeta();
       meta.setDisplayName(this.getName());
       if (this.pages.isEmpty()) {

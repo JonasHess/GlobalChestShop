@@ -74,8 +74,8 @@ public class DefaultCategory {
 			public int compare(ItemStack arg0, ItemStack arg1) {
 
 				try {
-					int itemid0 = arg0.getTypeId();
-					int itemid1 = arg1.getTypeId();
+					int itemid0 = arg0.getType().getId();
+					int itemid1 = arg1.getType().getId();
 					byte damage0 = arg0.getData().getData();
 					byte damage1 = arg1.getData().getData();
 					if (itemid0 == itemid1)

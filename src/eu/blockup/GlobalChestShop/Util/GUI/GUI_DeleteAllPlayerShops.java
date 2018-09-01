@@ -1,6 +1,7 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,7 +23,7 @@ public class GUI_DeleteAllPlayerShops extends SimpleIInventoryGUI{
 
 	@Override
 	protected void drawButtons(Player player) {
-		this.drawFrame(4,3,new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
+		this.drawFrame(4,3,new ItemStack(XMaterial.RED_STAINED_GLASS_PANE.parseMaterial(), 1, (short) 14));
 		this.drawButton(4, 3, new Button(new ItemStack(Material.REDSTONE_BLOCK), ChatColor.RED + "Delete all player-shops") {
 			
 			@Override
@@ -102,12 +103,12 @@ public class GUI_DeleteAllPlayerShops extends SimpleIInventoryGUI{
 					
 					@Override
 					public Button_Bare get_YesButton() {
-						return new Button_Bare(new ItemStack(Material.WOOL, 1, (short) 5), ChatColor.RED + " DELETE ALL");
+						return new Button_Bare(new ItemStack(XMaterial.LIME_WOOL.parseItem()), ChatColor.RED + " DELETE ALL");
 					}
 					
 					@Override
 					public Button_Bare get_NoButton() {
-						return new Button_Bare(new ItemStack(Material.WOOL, 1, (short) 14), ChatColor.GREEN + "Cancel");
+						return new Button_Bare(new ItemStack(XMaterial.RED_WOOL.parseItem()), ChatColor.GREEN + "Cancel");
 					}
 					
 					@Override

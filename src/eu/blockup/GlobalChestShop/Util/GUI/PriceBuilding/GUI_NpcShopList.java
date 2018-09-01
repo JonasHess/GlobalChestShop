@@ -2,6 +2,7 @@ package eu.blockup.GlobalChestShop.Util.GUI.PriceBuilding;
 
 import java.util.List;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ public class GUI_NpcShopList extends GUI_PageView<Shop>{
 	private int worldGroup;
 	private String worldName;
 	public GUI_NpcShopList(String title, int npcId, int worldGroup, String worldName, InventoryGUI parentGUI) {
-		super(title, new ItemStack(Material.MONSTER_EGG), 1, parentGUI);
+		super(title, new ItemStack(XMaterial.GHAST_SPAWN_EGG.parseItem()), 1, parentGUI);
 		this.npcId = npcId;
 		this.worldGroup = worldGroup;
 		this.worldName = worldName;
@@ -45,7 +46,7 @@ public class GUI_NpcShopList extends GUI_PageView<Shop>{
 	public void drawAditionalButtons(Player player) {
 		this.drawButton(4, 0, new Button_Bare(this.getDisplayIcon(), this.getTitle()));
 		
-		this.drawButton(this.getWidth() -1, this.getHeight() -1, new Button(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5), "Add shop to NPC") {
+		this.drawButton(this.getWidth() -1, this.getHeight() -1, new Button(new ItemStack(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()), "Add shop to NPC") {
 			
 			@Override
 			public void onRefresh(InventoryGUI inventoryGUI, Player player) {

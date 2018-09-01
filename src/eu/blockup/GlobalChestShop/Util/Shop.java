@@ -655,7 +655,7 @@ public class Shop {
 	@SuppressWarnings("deprecation")
 	public Location getSchildHalter(Location schildLoc) {
 		Location halter = schildLoc.clone();
-		if (schildLoc.getBlock().getTypeId() == 63) {
+		if (schildLoc.getBlock().getType().equals(XMaterial.SIGN.parseMaterial())) {
 			halter.setY(halter.getY() - 1);
 			return halter;
 		}

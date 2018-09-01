@@ -3,6 +3,7 @@ package eu.blockup.GlobalChestShop.Util.GUI.PriceBuilding;
 import java.sql.Date;
 import java.sql.Time;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -100,7 +101,7 @@ public class GUI_PriceChanger extends InventoryGUI {
 					@Override
 					protected void drawAdditionalButtons(Player player) {
 						// -1.0 Button
-						this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14), this.getValueObject(), -99.0D, ModifyTyp.setValue, amount, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
+						this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseItem()), this.getValueObject(), -99.0D, ModifyTyp.setValue, amount, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
 
 					}
 
@@ -172,7 +173,7 @@ public class GUI_PriceChanger extends InventoryGUI {
 					@Override
 					protected void drawAdditionalButtons(Player player) {
 						// -1.0 Button
-						this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14), this.getValueObject(), -99.0D, ModifyTyp.setValue, amount, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
+						this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseItem()), this.getValueObject(), -99.0D, ModifyTyp.setValue, amount, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
 
 					}
 
@@ -190,7 +191,7 @@ public class GUI_PriceChanger extends InventoryGUI {
 		});
 
 		// Leave button
-		this.drawButton(0, 0, new Button_PolarQuestion(new ItemStack(Material.WOODEN_DOOR), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAdminShop_ExitSave), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAdminShop_ExitSave_DESC)) {
+		this.drawButton(0, 0, new Button_PolarQuestion(new ItemStack(XMaterial.OAK_DOOR.parseItem()), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAdminShop_ExitSave), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAdminShop_ExitSave_DESC)) {
 
 			@Override
 			public ButtonTypEnum whichButtonShouldBeClickedOnTimeout() {
@@ -285,12 +286,12 @@ public class GUI_PriceChanger extends InventoryGUI {
 
 			@Override
 			public Button_Bare get_YesButton() {
-				return new Button_Bare(new ItemStack(Material.WOOL, 1, (byte) 5), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_YES));
+				return new Button_Bare(new ItemStack(XMaterial.LIME_WOOL.parseItem()), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_YES));
 			}
 
 			@Override
 			public Button_Bare get_NoButton() {
-				return new Button_Bare(new ItemStack(Material.WOOL, 1, (byte) 14), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_NO_Leave_NO_SAVE));
+				return new Button_Bare(new ItemStack(XMaterial.RED_WOOL.parseItem()), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_NO_Leave_NO_SAVE));
 			}
 
 			@Override

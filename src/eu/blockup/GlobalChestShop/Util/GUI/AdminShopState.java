@@ -62,7 +62,7 @@ public class AdminShopState extends StateKeeper<Boolean> {
 	@Override
 	public Button_Bare formatToDisplayButton(Player player, int amount) {
 		ItemStack item = new ItemStack(Material.ENDER_CHEST);
-		// ItemStack item = new ItemStack(Material.WOOL, 1, (short) 5);
+		// ItemStack item = new ItemStack(XMaterial.LIME_WOOL.parseItem());
 		// ItemStack item = new ItemStack(Material.WOOL, 1, (byte) 14);
 		if (this.getCurrentState(player)) {
 			return new Button_Bare(item, GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAdminShop_Toggle_ON), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAdminShop_Toggle_ON_DESC));

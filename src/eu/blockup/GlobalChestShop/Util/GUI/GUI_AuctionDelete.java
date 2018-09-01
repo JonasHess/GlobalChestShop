@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -34,7 +35,7 @@ public class GUI_AuctionDelete extends SimpleIInventoryGUI {
 	protected void drawButtons(Player player) {
 			if (GlobalChestShop.plugin.validatePermissionCheck(player, Permissions.MODERATOR_DELETE_AUCTIONS)) {
 				// Remove ALl Auction of this player
-				this.drawButton(getWidth() -1, getHeight() -1 ,new Button(new ItemStack (Material.WOOL, 1, (short) 14), "Cancel all auctions of this player!") {
+				this.drawButton(getWidth() -1, getHeight() -1 ,new Button(new ItemStack (XMaterial.RED_WOOL.parseMaterial(), 1, (short) 14), "Cancel all auctions of this player!") {
 					
 					@Override
 					public void onRefresh(InventoryGUI inventoryGUI, Player player) {
@@ -52,7 +53,7 @@ public class GUI_AuctionDelete extends SimpleIInventoryGUI {
 		this.drawButton(4, 1, new Button_Auction(auction, 1.0, true, false, this.worldGroup, true));
 
 		// Cancel Auction
-		this.drawButton(4, 3, new Button_PolarQuestion(new ItemStack(Material.WOOL, 1, (short) 14), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAuction_Cancel_Auction)) {
+		this.drawButton(4, 3, new Button_PolarQuestion(new ItemStack(XMaterial.RED_WOOL.parseItem()), GlobalChestShop.text.get(GlobalChestShop.text.GUI_AdministrateAuction_Cancel_Auction)) {
 
 			@Override
 			public ButtonTypEnum whichButtonShouldBeClickedOnTimeout() {
@@ -139,12 +140,12 @@ public class GUI_AuctionDelete extends SimpleIInventoryGUI {
 
 			@Override
 			public Button_Bare get_YesButton() {
-				return new Button_Bare(new ItemStack(Material.WOOL, 1, (short) 5), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_YES));
+				return new Button_Bare(new ItemStack(XMaterial.LIME_WOOL.parseItem()), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_YES));
 			}
 
 			@Override
 			public Button_Bare get_NoButton() {
-				return new Button_Bare(new ItemStack(Material.WOOL, 1, (short) 14), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_NO));
+				return new Button_Bare(new ItemStack(XMaterial.RED_WOOL.parseItem()), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_NO));
 			}
 
 			@Override

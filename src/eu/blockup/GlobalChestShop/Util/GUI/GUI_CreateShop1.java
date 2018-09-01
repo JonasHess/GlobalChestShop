@@ -1,5 +1,6 @@
 package eu.blockup.GlobalChestShop.Util.GUI;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -153,7 +154,7 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
     });
     
     // NPC Shop
-    this.drawButton(6, 2, new Button(new ItemStack(Material.MONSTER_EGG), "NPC Shop") {
+    this.drawButton(6, 2, new Button(new ItemStack(XMaterial.GHAST_SPAWN_EGG.parseMaterial()), "NPC Shop") {
       
       private boolean check(InventoryGUI inventoryGUI) {
         GUI_CreateShop1 gui = (GUI_CreateShop1)inventoryGUI;

@@ -2,6 +2,7 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 
 import java.util.UUID;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,7 +30,7 @@ public class GUI_RemoveAllAuctionOfPlayer extends SimpleIInventoryGUI{
 			return;
 		}
 		
-		this.drawButton(4, 1, new Button_GetStringInput(new ItemStack(Material.SKULL_ITEM), "Find Player") {
+		this.drawButton(4, 1, new Button_GetStringInput(new ItemStack(XMaterial.SKELETON_SKULL.parseMaterial()), "Find Player") {
 			
 			@Override
 			public void onRefresh(InventoryGUI inventoryGUI, Player player) {

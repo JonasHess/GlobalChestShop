@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -566,11 +567,11 @@ public abstract class InventoryGUI {
 
 				if (important) {
 					if (tickCount % 20 == 0) {
-						this.drawFrame(4, 1, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 14));
+						this.drawFrame(4, 1, new ItemStack(XMaterial.RED_STAINED_GLASS_PANE.parseItem()));
 						this.refresh(player);
 					}
 					if (tickCount % 20 == 10) {
-						this.drawFrame(4, 1, new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 6));
+						this.drawFrame(4, 1, new ItemStack(XMaterial.RED_STAINED_GLASS_PANE.parseItem()));
 						this.refresh(player);
 					}
 				}

@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 
-
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -119,7 +119,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
               @Override
               protected void drawAdditionalButtons(Player player) {
              // -1.0 Button
-                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14),
+                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 0, (short)14),
                     this.getValueObject(), -99.0D, ModifyTyp.setValue, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
               }
 
@@ -197,7 +197,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
               @Override
               protected void drawAdditionalButtons(Player player) {
              // -1.0 Button
-                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14),
+                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 0, (short)14),
                     this.getValueObject(), -99.0D, ModifyTyp.setValue, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
               }
 
@@ -215,7 +215,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
     });
 
     // Submit
-    this.drawButton(getWidth() - 1, getHeight() - 1, new Button(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5), ChatColor.GREEN + "Create AdminShop") {
+    this.drawButton(getWidth() - 1, getHeight() - 1, new Button(new ItemStack(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()), ChatColor.GREEN + "Create AdminShop") {
 
       @Override
       public void onRefresh(InventoryGUI inventoryGUI, Player player) {

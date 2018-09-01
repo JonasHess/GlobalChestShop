@@ -2,6 +2,7 @@ package eu.blockup.GlobalChestShop.Util.GUI;
 
 import java.util.List;
 
+import eu.blockup.GlobalChestShop.Util.XMaterial;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -67,11 +68,11 @@ public class GUI_AdminShopEdit extends InventoryGUI {
       @Override
       public Button_Bare formatToDisplayButton(Player player, int amount) {
         if (this.state) {
-          return new Button_Bare(new ItemStack(Material.WOOL, 1, (short) 5), GlobalChestShop.text
+          return new Button_Bare(new ItemStack(XMaterial.LIME_WOOL.parseItem()), GlobalChestShop.text
               .get(GlobalChestShop.text.GUI_AdministrateAdminShop_Toggle_ON), GlobalChestShop.text
               .get(GlobalChestShop.text.GUI_AdministrateAdminShop_Toggle_ON_DESC));
         }
-        return new Button_Bare(new ItemStack(Material.WOOL, 1, (short) 14), GlobalChestShop.text
+        return new Button_Bare(new ItemStack(XMaterial.RED_WOOL.parseItem()), GlobalChestShop.text
             .get(GlobalChestShop.text.GUI_AdministrateAdminShop_Toggle_OFF), GlobalChestShop.text
             .get(GlobalChestShop.text.GUI_AdministrateAdminShop_Toggle_OFF_DESC));
       }
@@ -153,7 +154,7 @@ public class GUI_AdminShopEdit extends InventoryGUI {
               @Override
               protected void drawAdditionalButtons(Player player) {
                 // -1.0 Button
-                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14),
+                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 0, (short)14),
                     this.getValueObject(), -99.0D, ModifyTyp.setValue, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
 
               }
@@ -232,7 +233,7 @@ public class GUI_AdminShopEdit extends InventoryGUI {
               @Override
               protected void drawAdditionalButtons(Player player) {
                 // -1.0 Button
-                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(Material.WOOL, 0, (short) 14),
+                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 0,(short)14),
                     this.getValueObject(), -99.0D, ModifyTyp.setValue, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
 
               }
@@ -251,7 +252,7 @@ public class GUI_AdminShopEdit extends InventoryGUI {
     });
 
     // Leave button
-    this.drawButton(0, 0, new Button_PolarQuestion(new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 5), GlobalChestShop.text
+    this.drawButton(0, 0, new Button_PolarQuestion(new ItemStack(XMaterial.LIME_STAINED_GLASS_PANE.parseItem()), GlobalChestShop.text
         .get(GlobalChestShop.text.GUI_AdministrateAdminShop_ExitSave), GlobalChestShop.text
         .get(GlobalChestShop.text.GUI_AdministrateAdminShop_ExitSave_DESC)) {
 
@@ -350,12 +351,12 @@ public class GUI_AdminShopEdit extends InventoryGUI {
 
       @Override
       public Button_Bare get_YesButton() {
-        return new Button_Bare(new ItemStack(Material.WOOL, 1, (byte) 5), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_YES));
+        return new Button_Bare(new ItemStack(XMaterial.LIME_WOOL.parseItem() ), GlobalChestShop.text.get(GlobalChestShop.text.PolarQuestion_YES));
       }
 
       @Override
       public Button_Bare get_NoButton() {
-        return new Button_Bare(new ItemStack(Material.WOOL, 1, (byte) 14), GlobalChestShop.text
+        return new Button_Bare(new ItemStack(XMaterial.RED_WOOL.parseItem()), GlobalChestShop.text
             .get(GlobalChestShop.text.PolarQuestion_NO_Leave_NO_SAVE));
       }
 
