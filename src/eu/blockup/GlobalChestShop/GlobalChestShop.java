@@ -225,7 +225,6 @@ public class GlobalChestShop extends JavaPlugin {
 		// Metrics
 		try {
 			Metrics metrics = new Metrics(this);
-			metrics.start();
 		} catch (Exception e) {
 			// Failed to submit the stats :-(
 			e.printStackTrace();
@@ -429,49 +428,9 @@ public class GlobalChestShop extends JavaPlugin {
 			}
 
 			// Material.Name
-			Material mat = Material.getMaterial(input.toUpperCase());
-			if (mat != null) {
-				result = new ItemStack(mat);
+			result = XMaterial.fromString(input).parseItem();
 
-				// Hand
-			} else if (cs != null) {
-				if (input.equalsIgnoreCase("hand")) {
-					if (!(cs instanceof Player)) {
-						throw new ItemStackNotFoundException();
-					}
-					if (((Player) cs).getItemInHand() == null) {
-						throw new ItemStackNotFoundException();
-					}
-					if (((Player) cs).getItemInHand().getType() == Material.AIR) {
-						throw new ItemStackNotFoundException();
-					}
-
-					return ((Player) cs).getItemInHand().clone();
-				}
-
-				// id:data
-			} else if (input.contains(":")) {
-				String[] a = input.split(":");
-				String id = a[0];
-				int damage = 0;
-				if (a.length == 2) {
-					damage = Integer.valueOf(a[1]);
-					// ItemStack result = new ItemStack(id, amount, (short) 0,
-					// (byte) damage);
-					result = XMaterial.requestXMaterial(id, (byte) damage).parseItem();
-					return result;
-				} else {
-					return null;
-				}
-
-				// id
-			} else {
-				try {
-					result = XMaterial.fromString(input).parseItem();
-				} catch (NumberFormatException e) {
-					result = null;
-				}
-			}
+			// Hand
 
 			if (result == null) {
 				throw new ItemStackNotFoundException();

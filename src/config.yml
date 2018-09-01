@@ -22,11 +22,11 @@ Appearance:
     AllItems:
       signFooter: AllItems
       displayItem: COMPASS
-  buyButton: '323:0'
+  buyButton: 'sign'
   sellButton: SIGN
-  amountButton: '145:0'
-  closeButton: '160:14'
-  background: '160:15'
+  amountButton: 'anvil'
+  closeButton: 'red_stained_glass_pane'
+  background: 'black_stained_glass_pane'
   showAuctionCountByAmount: false
 Other:
   showAdminshopsInsideGlobalShops: true

@@ -304,7 +304,7 @@ public class ItemController {
 			result += (Double) 0.00001 * durability;
 		} catch (Exception e) {
 			Bukkit.getLogger().log(Level.WARNING, "SortNumberOfItemStack was not found for " + item.toString());
-			Bukkit.getLogger().log(Level.WARNING, "Please send an email to the developer at edman@blockup.eu and tell him about this incidence");
+			Bukkit.getLogger().log(Level.WARNING, "Please contact the developer and tell him about this incidence");
 		}
 		return result;
 	}
