@@ -428,7 +428,7 @@ public class GlobalChestShop extends JavaPlugin {
 			}
 
 			// Material.Name
-			result = XMaterial.fromString(input).parseItem();
+			result = XMaterial.fromString(input.toUpperCase()).parseItem();
 
 			// Hand
 

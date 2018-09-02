@@ -238,7 +238,7 @@ public class DefaultCategoryController {
 	}
 
 	public DefaultCategory getResponsibleCategory(ItemStack item) {
-		String itemText = item.getData().getItemType().name();
+		String itemText = item.getType().name();
 		int categoryID = 1;
 
 		if (GlobalChestShop.plugin.getItemController().isItemBannedFromShops(item, worldGroup, false)) {
@@ -705,13 +705,9 @@ public class DefaultCategoryController {
 			categoryID = -1;
 		if (itemText.matches("NETHER_WARTS"))
 			categoryID = -1;
-		if (itemText.matches("CAULDRON"))
-			categoryID = -1;
 		if (itemText.matches("PRIPWIRE"))
 			categoryID = -1;
 		if (itemText.matches("COCOA"))
-			categoryID = -1;
-		if (itemText.matches("CARROT"))
 			categoryID = -1;
 		if (itemText.matches("SKULL"))
 			categoryID = -1;
@@ -721,8 +717,6 @@ public class DefaultCategoryController {
 			categoryID = -1;
 		if (itemText.matches("PORTAL"))
 			categoryID = -1;
-		if (itemText.matches("BREWING_STAND"))
-			categoryID = -1;
 		if (itemText.matches("SUGAR_CANE_BLOCK"))
 			categoryID = -1;
 		if (itemText.matches("PISTON_MOVING_PIECE"))
@@ -730,8 +724,6 @@ public class DefaultCategoryController {
 		if (itemText.matches("CAKE_BLOCK"))
 			categoryID = -1;
 		if (itemText.matches("MELON_STEM"))
-			categoryID = -1;
-		if (itemText.matches("POTATO"))
 			categoryID = -1;
 		if (itemText.matches("ENDER_PORTAL"))
 			categoryID = -1;
@@ -744,8 +736,6 @@ public class DefaultCategoryController {
 		if (itemText.matches("WALL_BANNER"))
 			categoryID = -1;
 		if (itemText.matches("STANDING_BANNER"))
-			categoryID = -1;
-		if (itemText.matches("FLOWER_POT"))
 			categoryID = -1;
 		if (itemText.matches("REDSTONE_EXTENSION"))
 			categoryID = -1;
@@ -760,16 +750,6 @@ public class DefaultCategoryController {
 		if (itemText.endsWith("_ON"))
 			categoryID = -1;
 		if (itemText.endsWith("_INVERTED"))
-			categoryID = -1;
-		if (itemText.matches("SPRUCE_DOOR"))
-			categoryID = -1;
-		if (itemText.matches("BIRCH_DOOR"))
-			categoryID = -1;
-		if (itemText.matches("JUNGLE_DOOR"))
-			categoryID = -1;
-		if (itemText.matches("ACACIA_DOOR"))
-			categoryID = -1;
-		if (itemText.matches("DARK_OAK_DOOR"))
 			categoryID = -1;
 		if (itemText.endsWith("STAIRS"))
 			categoryID = 1;
@@ -788,7 +768,34 @@ public class DefaultCategoryController {
 		if (itemText.matches("END_GATEWAY")){
 			categoryID = -1;
 		}
-
+		if(itemText.matches("DEAD_TUBE_CORAL_WALL_FAN")){
+			categoryID= -1;
+		}
+		if(itemText.contains("POTTED_")){
+			categoryID= -1;
+		}
+		if(itemText.contains("ATTACHED_")){
+			categoryID= -1;
+		}
+		if (itemText.matches("END_PORTAL")){
+			categoryID= -1;
+		}
+		if (itemText.matches("CARROTS")){
+			categoryID= -1;
+		}
+		if (itemText.contains("WALL_FAN")){
+			categoryID= -1;
+		}
+		if (itemText.matches("NETHER_PORTAL")){
+			categoryID = -1;
+		}
+		if (itemText.matches("BEETROOTS")){
+			categoryID = -1;
+		}
+		if(itemText.contains("WALL")&&!(itemText.matches("COBBLESTONE_WALL"))&&!(itemText.matches("MOSSY_COBBLESTONE_WALL"))&&!(itemText.matches("COBBLE_WALL"))) categoryID = -1;
+		if(itemText.matches("MOVING_PISTON")) categoryID = -1;
+		if (itemText.matches("PISTON_HEAD")) categoryID = -1;
+		if (itemText.matches("POTATOES")) categoryID = -1;
 		// if (itemText.contains("DOUBLE_STEP")) categoryID = -1;
 		return this.hashMap_Categories.get(categoryID);
 

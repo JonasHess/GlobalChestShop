@@ -519,7 +519,7 @@ public class ShopController {
 					rs.next();
 				}
 				try {
-					this.loadShopFromDB(shopID, rs.getInt("ownerID"), rs.getString("signLocation"), rs.getString("location2"), rs.getInt("worldGroup"), itemStack, rs.getBoolean("adminshopOnly"), rs.getBoolean("itemFrame"), npcID, categoryID, rs.getBoolean("holo"), rs.getBoolean("newAuctions"), rs.getBoolean("sellAll"), rs.getInt("appearance"), rs.getDouble("multiplier"), rs.getInt("defaultCategory"));
+					this.loadShopFromDB(shopID, rs.getInt("ownerID"), rs.getString("signLocation"), rs.getString("location2"), rs.getInt("worldGroup"), itemStack, rs.getBoolean("adminshopOnly"), rs.getBoolean("itemFrame"), npcID, categoryID, rs.getBoolean("holo"), rs.getBoolean("newAuctions"), rs.getBoolean("sellAll"), rs.getInt("appearance"), rs.getDouble("multiplier"), rs.getInt("defaultCategory")).init();
 
 				
 				} catch (LocationNotFoundException e) {

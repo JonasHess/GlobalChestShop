@@ -33,7 +33,7 @@ public class Button_PriceChangerAdminShop extends Button{
 		this.clearDesacription();
 		Auction  adminAuction = GlobalChestShop.plugin.getAuctionController(worldGroup).getAdminShopFromItemStack(itemStack);
 		if (adminAuction == null) {
-			this.setAmount(0);
+			this.setAmount(1);
 			this.addDescriptionLine(ChatColor.RED + "No price defined"); // TODO
 		} else {
 			this.setAmount(1);

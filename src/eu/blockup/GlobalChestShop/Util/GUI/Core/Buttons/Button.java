@@ -118,6 +118,7 @@ public abstract class Button {
 	}
 
 	public Button setAmount(int amount) {
+		if(amount==0)amount=1;
 		this.getDisplayIcon().setAmount(amount);
 		return this;
 	}

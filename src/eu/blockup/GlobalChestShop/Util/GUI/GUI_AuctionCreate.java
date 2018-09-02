@@ -44,7 +44,7 @@ public class GUI_AuctionCreate extends InventoryGUI {
 	}
 
 	public void setItemStack(ItemStack item, Player player) throws ItemIsDamagedException, ItemIsNotAlloedInThisWorldGroupException {
-		if (item != null && item.getData().getItemType() != Material.AIR) {
+		if (item != null && !item.getType().equals(Material.AIR)) {
 			if (item.getType().getMaxDurability() != 0 && item.getDurability() != 0) {
 				updateAfterChange(player);
 				throw new ItemIsDamagedException();

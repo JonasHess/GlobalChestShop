@@ -30,7 +30,7 @@ public abstract class InventoryGUI {
 	private final int				width					= 9;
 	private Button[][]				buttons;
 	private List<AnimatedButton>	animatedButtons;
-	private String					title;
+	private String					title = "Undefined";
 	private InventoryGUI			parentGUI;
 	private boolean					closeButtonWasPressed	= false;
 	private int						tickCount;
@@ -113,6 +113,9 @@ public abstract class InventoryGUI {
 
 	public InventoryGUI drawButton(int x, int y, Button button) {
 		try {
+			if (button!=null){
+				if (button.getAmount()==0)button.setAmount(1);
+			}
 			this.buttons[x][y] = null;
 			this.buttons[x][y] = button;
 		} catch (IndexOutOfBoundsException e) {

@@ -48,7 +48,7 @@ public class Button_AuctionList extends Button {
 	@Override
 	public void onRefresh(InventoryGUI inventoryGUI, Player player) {
 		if (GlobalChestShop.plugin.getMainConfig().indicateAuctionAmount) {
-			this.setAmount(Math.max(GlobalChestShop.plugin.getAuctionController(this.worldGroup).getAllActiveAuctionForItemStack(auctionItem, this.adminShopsOnly).size(), 0));
+			this.setAmount(Math.max(GlobalChestShop.plugin.getAuctionController(this.worldGroup).getAllActiveAuctionForItemStack(auctionItem, this.adminShopsOnly).size(), 1));
 		} else {
 			this.setAmount(1);
 		}

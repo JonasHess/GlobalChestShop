@@ -1,11 +1,12 @@
 name: GlobalChestShop
-version: 1.2.062
+version: 2.1.1
 authors: [EDMAN_93, TheCreepercow]
 depend: [Vault]
 softdepend: [HolographicDisplays, Citizens, MVdWPlaceholderAPI]
 description: Shop plugin
 main: eu.blockup.GlobalChestShop.GlobalChestShop
 database: false
+api-version: 1.13
 commands:
   globalchestshop:
     description: GlobalChestShop Command

@@ -35,11 +35,6 @@ public class Button_AuctionGetPrice extends Button{
 
 	@Override
 	public void onButtonClick(InventoryGUI inventoryGUI, Player player, ItemStack cursor, ItemStack current, ClickType type, InventoryClickEvent event) {
-
-		if (!(cursor == null || cursor.getData().getItemType().compareTo(Material.AIR) == 0)) {
-			return;
-		}
-
 		AuctionPrepare auctionPrepare = new AuctionPrepare();
 		Double lastPrice = GlobalChestShop.plugin.getAuctionController(this.worldGroup).getLastPriceForPlayersAuction(player, auctionItem);
 		if (lastPrice != null) {

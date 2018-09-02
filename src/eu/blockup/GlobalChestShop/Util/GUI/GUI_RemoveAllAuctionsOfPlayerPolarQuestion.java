@@ -25,7 +25,7 @@ public class GUI_RemoveAllAuctionsOfPlayerPolarQuestion extends GUI_PolarQuestio
 	private int worldGroup;
 	
 	public GUI_RemoveAllAuctionsOfPlayerPolarQuestion(InventoryGUI parentGUI, UUID bannedPlayer, int worldGroup) {
-		super("", parentGUI);
+		super(Bukkit.getPlayer(bannedPlayer).getDisplayName(), parentGUI);
 		this.bannedPlayer = bannedPlayer;
 		this.worldGroup = worldGroup;
 		

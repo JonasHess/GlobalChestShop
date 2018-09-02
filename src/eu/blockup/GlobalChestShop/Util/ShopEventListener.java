@@ -60,50 +60,36 @@ public class ShopEventListener implements Listener {
 	public static String													SIGN_HEADER_ADMIN_SHOP			= "AdminShop";
 	public static String													META_SHOP_KEY					= "GlobalChestShop_ShopObject";
 	public static String													META_CHEST_KEY					= "ChestOwner";
-	private HashMap<String, HashMap<Integer, HashMap<Integer, List<Shop>>>>	chunkMap;
+	private HashMap<Chunk,List<Shop>>	chunkMap = new HashMap<>();
 
 	public ShopEventListener() {
 		super();
 		// private HashMap<Integer, HashMap<Integer, Boolean>> chunkMap;
-		this.chunkMap = new HashMap<String, HashMap<Integer, HashMap<Integer, List<Shop>>>>();
 	}
 
 	public void registerShopToChunkManager(final Shop shop) {
 		GlobalChestShop.plugin.executeTaskSynchronous(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				Chunk chunk = shop.getSignLocation().getChunk();
-				String worldName = chunk.getWorld().getName();
-				Integer x = chunk.getX();
-				Integer z = chunk.getZ();
-				HashMap<Integer, HashMap<Integer, List<Shop>>> worldMap = chunkMap.get(worldName);
-				if (worldMap == null) {
-					worldMap = new HashMap<Integer, HashMap<Integer, List<Shop>>>();
-					chunkMap.put(worldName, worldMap);
+				if(chunkMap.get(chunk)==null){
+					ArrayList<Shop> newlist = new ArrayList<>();
+					newlist.add(shop);
+					chunkMap.put(chunk,newlist);
+				}else {
+					chunkMap.get(chunk).add(shop);
 				}
-				HashMap<Integer, List<Shop>> xMap = worldMap.get(x);
-				if (xMap == null) {
-					xMap = new HashMap<Integer, List<Shop>>();
-					worldMap.put(x, xMap);
-				}
-				List<Shop> shopList = xMap.get(z);
-				if (shopList == null) {
-					shopList = new ArrayList<Shop>();
-					xMap.put(z, shopList);
-				}
-				shopList.add(shop);
-				if (chunk.isLoaded()) {
+				if(chunk.isLoaded()){
 					shop.spawn();
 				}
-				
 			}
 		});
 	}
 
 	public void deleteShopFromChunkManager(final Shop shop) {
 		GlobalChestShop.plugin.executeTaskSynchronous(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				List<Shop> liste = getShopsForChunk(shop.getSignLocation().getChunk());
@@ -112,15 +98,12 @@ public class ShopEventListener implements Listener {
 				}
 			}
 		});
-	
+
 	}
 
 	private List<Shop> getShopsForChunk(Chunk chunk) {
 		try {
-			String worldName = chunk.getWorld().getName();
-			Integer x = chunk.getX();
-			Integer z = chunk.getZ();
-			return this.chunkMap.get(worldName).get(x).get(z);
+			return chunkMap.get(chunk);
 		} catch (NullPointerException npe) {
 			return null;
 		}
@@ -137,17 +120,6 @@ public class ShopEventListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
-	public void onChunkUnloadEvent(ChunkUnloadEvent event) {
-		List<Shop> x = this.getShopsForChunk(event.getChunk());
-		if (x == null) {
-			return;
-		}
-		for (Shop s : x) {
-			s.deSpawn();
-		}
-
-	}
 
 	// Place Chest
 	@EventHandler

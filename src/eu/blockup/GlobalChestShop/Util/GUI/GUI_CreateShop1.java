@@ -30,7 +30,7 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
     
     
     // Sign Shop
-    this.drawButton(2, 2, new Button(new ItemStack(Material.SIGN), "SignShop") {
+    this.drawButton(2, 2, new Button(new ItemStack(Material.SIGN), ChatColor.GREEN+"SignShop") {
       
       private boolean check(InventoryGUI inventoryGUI) {
         GUI_CreateShop1 gui = (GUI_CreateShop1)inventoryGUI;
@@ -43,7 +43,8 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
         if (check(inventoryGUI)) {
           this.setAmount(1);
         } else {
-          this.setAmount(0);
+          this.setTitle(ChatColor.RED+"SignShop");
+          this.setDescription(ChatColor.RED+""+ChatColor.BOLD+"Unavailable");
         }
       }
       
@@ -60,7 +61,7 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
       }
     });
     // Chest Shop
-    this.drawButton(3, 2, new Button(new ItemStack(Material.ENDER_CHEST), "EnderChest Shop") {
+    this.drawButton(3, 2, new Button(new ItemStack(Material.ENDER_CHEST), ChatColor.GREEN+"EnderChest Shop") {
       
       private boolean check(InventoryGUI inventoryGUI) {
         GUI_CreateShop1 gui = (GUI_CreateShop1)inventoryGUI;
@@ -73,7 +74,8 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
         if (check(inventoryGUI)) {
           this.setAmount(1);
         } else {
-          this.setAmount(0);
+          this.setTitle(ChatColor.RED+"EnderChest Shop");
+          this.setDescription(ChatColor.RED+""+ChatColor.BOLD+"Unavailable");
         }
       }
       
@@ -91,7 +93,7 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
       }
     });
     // ItemFrame Shop
-    this.drawButton(4, 2, new Button(new ItemStack(Material.ITEM_FRAME), "ItemFrame Shop") {
+    this.drawButton(4, 2, new Button(new ItemStack(Material.ITEM_FRAME), ChatColor.GREEN+"ItemFrame Shop") {
       
       private boolean check(InventoryGUI inventoryGUI) {
         GUI_CreateShop1 gui = (GUI_CreateShop1)inventoryGUI;
@@ -104,7 +106,8 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
         if (check(inventoryGUI)) {
           this.setAmount(1);
         } else {
-          this.setAmount(0);
+          this.setTitle(ChatColor.RED+"ItemFrame Shop");
+          this.setDescription(ChatColor.RED+""+ChatColor.BOLD+"Unavailable");
         }
       }
       
@@ -122,7 +125,7 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
       }
     });
  // Holo Shop
-    this.drawButton(5, 2, new Button(new ItemStack(Material.BEACON), "Holo Shop") {
+    this.drawButton(5, 2, new Button(new ItemStack(Material.BEACON), ChatColor.GREEN+"Holo Shop") {
       
       private boolean check(InventoryGUI inventoryGUI) {
         GUI_CreateShop1 gui = (GUI_CreateShop1)inventoryGUI;
@@ -135,7 +138,8 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
         if (check(inventoryGUI)) {
           this.setAmount(1);
         } else {
-          this.setAmount(0);
+          this.setTitle(ChatColor.RED+"Holo Shop");
+          this.setDescription(ChatColor.RED+""+ChatColor.BOLD+"Unavailable");
         }
       }
       
@@ -154,7 +158,7 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
     });
     
     // NPC Shop
-    this.drawButton(6, 2, new Button(new ItemStack(XMaterial.GHAST_SPAWN_EGG.parseMaterial()), "NPC Shop") {
+    this.drawButton(6, 2, new Button(new ItemStack(XMaterial.GHAST_SPAWN_EGG.parseMaterial()), ChatColor.GREEN+"NPC Shop") {
       
       private boolean check(InventoryGUI inventoryGUI) {
         GUI_CreateShop1 gui = (GUI_CreateShop1)inventoryGUI;
@@ -167,7 +171,8 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
         if (check(inventoryGUI)) {
           this.setAmount(1);
         } else {
-          this.setAmount(0);
+          this.setTitle(ChatColor.RED+"NPC Shop");
+          this.setDescription(ChatColor.RED+""+ChatColor.BOLD+"Unavailable");
         }
       }
       
@@ -188,7 +193,6 @@ public class GUI_CreateShop1 extends SimpleIInventoryGUI{
         gui.returnToParentGUI(player);
       }
     });
-
   }
 
 }

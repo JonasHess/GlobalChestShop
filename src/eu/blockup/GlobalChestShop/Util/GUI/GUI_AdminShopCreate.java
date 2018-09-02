@@ -119,7 +119,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
               @Override
               protected void drawAdditionalButtons(Player player) {
              // -1.0 Button
-                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 0, (short)14),
+                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 1, (short)14),
                     this.getValueObject(), -99.0D, ModifyTyp.setValue, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
               }
 
@@ -197,7 +197,7 @@ public class GUI_AdminShopCreate extends SimpleIInventoryGUI {
               @Override
               protected void drawAdditionalButtons(Player player) {
              // -1.0 Button
-                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 0, (short)14),
+                this.drawButton(this.getWidth() - 1, this.getHeight() - 1, new Button_changeDoubleState(new ItemStack(XMaterial.RED_WOOL.parseMaterial(), 1, (short)14),
                     this.getValueObject(), -99.0D, ModifyTyp.setValue, 1, GlobalChestShop.plugin.getMainConfig().pricePickerMultiplier, 1));
               }
 

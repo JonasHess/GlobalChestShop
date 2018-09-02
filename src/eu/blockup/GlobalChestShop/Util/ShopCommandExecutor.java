@@ -8,7 +8,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Openable;
 
 import eu.blockup.GlobalChestShop.GlobalChestShop;
 import eu.blockup.GlobalChestShop.Util.Exceptions.WorldHasNoWorldGroupException;
@@ -24,9 +23,7 @@ import eu.blockup.GlobalChestShop.Util.Statements.Permissions;
 
 public class ShopCommandExecutor implements CommandExecutor {
 
-	public ShopCommandExecutor() {
-		super();
-	}
+	public String testvalue = "registering";
 
 	@Override
 	public boolean onCommand(CommandSender cs, Command cmd, String label, String[] args) {
