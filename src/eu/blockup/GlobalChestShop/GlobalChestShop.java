@@ -408,7 +408,9 @@ public class GlobalChestShop extends JavaPlugin {
 				return true;
 			}
 		}
+
 		new NormalAuction(this.getItemStackDisplayName(item), item, previousGUI, true, worldGroup, item, newAuctions, adminShopOnly, multiplier).open(player);
+
 		;
 	}
 
@@ -707,6 +709,7 @@ public class GlobalChestShop extends JavaPlugin {
 		}
 		StringBuffer res = new StringBuffer();
 		String[] strArr = itemName.split(" ");
+		res.append(ChatColor.RESET);
 		for (String str : strArr) {
 			char[] stringArray = str.trim().toCharArray();
 			stringArray[0] = Character.toUpperCase(stringArray[0]);

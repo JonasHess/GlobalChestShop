@@ -213,17 +213,23 @@ public class ShopController {
 			st.setBoolean(12, s.isSellAll());
 			st.setInt(13, s.getAppearance());
 			st.setInt(14, s.getDefaultCategory());
-			shopId =  st.executeUpdate();
+
+			st.executeUpdate();
+			ResultSet rs = st.getGeneratedKeys();
+			if(rs.next()){
+				shopId = rs.getInt(1);
+			}
+			Shop shop = addShop(shopId, s.getOwner(), s.getSignLocation(), s.getLocation2(), s.getworldGroup(), s.getItemStack(), s.getAdminShopOnly(), s.getItemFrame(), s.getNpcID(), s.getCategoryID(), s.getHolo(), s.getNewAuctions(), s.isSellAll(), s.getAppearance(), s.getMultiplier(), s.getDefaultCategory());
+			shop.init();
+			rs.close();
+			return shop;
 		} catch (SQLException e) {
 			GlobalChestShop.plugin.handleFatalException(e);
 		} finally {
 			GlobalChestShop.plugin.getMysql().closeRessources(conn, null, st);
 			GlobalChestShop.plugin.getMysql().returnConnection(conn);
 		}
-		Shop shop = addShop(shopId, s.getOwner(), s.getSignLocation(), s.getLocation2(), s.getworldGroup(), s.getItemStack(), s.getAdminShopOnly(), s.getItemFrame(), s.getNpcID(), s.getCategoryID(), s.getHolo(), s.getNewAuctions(), s.isSellAll(), s.getAppearance(), s.getMultiplier(), s.getDefaultCategory());
-		shop.init();
-		return shop;
-
+		return null;
 	}
 
 	public synchronized Integer getAmountOfShopPlayerOwnsInThisWorldGroup(Integer playerID, Integer worldGroup) { // <---------
@@ -315,7 +321,7 @@ public class ShopController {
 	}
 
 	private synchronized Shop createNewShop(Integer playerID, Location signLocation, Location location2, Integer worldGroup, ItemStack itemStack, Boolean adminShopOnly, Boolean itemFrame, Integer npcID, Integer categoryID, boolean holo, boolean newAuctions, boolean sellAll, int appearance, double multiplier, int defaultShop) {
-		Shop shop = addShop(1, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop);
+		Shop shop = new Shop(1, playerID, signLocation, location2, worldGroup, itemStack, adminShopOnly, itemFrame, npcID, categoryID, holo, newAuctions, sellAll, appearance, multiplier, defaultShop, this);
 		this.setShopID(shop);
 		this.wirteShopToDatabase(shop);
 		return shop;

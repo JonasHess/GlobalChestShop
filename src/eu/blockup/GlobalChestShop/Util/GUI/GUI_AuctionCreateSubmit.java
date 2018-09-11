@@ -66,56 +66,46 @@ public class GUI_AuctionCreateSubmit extends InventoryGUI {
 				ItemStack itemForSale = null;
 				synchronized (player.getInventory()) {
 					for (ItemStack auctionItem : auctionPrepare.getItemStackList()) {
-						try {
-							if (itemForSale == null) {
-								itemForSale = auctionItem.clone();
-								itemForSale.setAmount(1);
-							}
-							GlobalChestShop.plugin.validatePlayerIsItemOwner(player, auctionItem);
-							player.getInventory().removeItem(auctionItem);
-							Auction.createNewAuction(auctionItem, auctionItem.getAmount(), -1, auctionPrepare.getPriceObject().getCurrentState(player), player.getUniqueId(), null, false, new Date(System.currentTimeMillis()), new Time(System.currentTimeMillis()), null, null, false, worldGroup);
-							soldStacks++;
-							soldItems += auctionItem.getAmount();
-							GlobalChestShop.plugin.getDefaultCategoryController(worldGroup).addItemToProtfolio(auctionItem);
-						} catch (PlayerDoesNotOwnClaimedItemException e) {
+						if (itemForSale == null) {
+							itemForSale = auctionItem.clone();
 						}
+						//GlobalChestShop.plugin.validatePlayerIsItemOwner(player, auctionItem);
+						player.getInventory().removeItem(auctionItem);
+						Auction.createNewAuction(auctionItem, auctionItem.getAmount(), -1, auctionPrepare.getPriceObject().getCurrentState(player), player.getUniqueId(), null, false, new Date(System.currentTimeMillis()), new Time(System.currentTimeMillis()), null, null, false, worldGroup);
+						soldStacks++;
+						soldItems += auctionItem.getAmount();
+						GlobalChestShop.plugin.getDefaultCategoryController(worldGroup).addItemToProtfolio(auctionItem);
 					}
 				}
 				InventoryGUI fallBackGUI = inventoryGUI.getFirstGUI();
-				if (soldStacks == 0) {
-					player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.Inventory_NoItem));
-					InventoryGUI.warning(GlobalChestShop.text.get(GlobalChestShop.text.Inventory_NoItem), false, player, inventoryGUI);
-					return;
-				} else {
-					player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitCreateAuction_Succsess));
-					
-					// BroadCast																													//player, 64, stone, price
-					String broadcastMessage = GlobalChestShop.text.get(GlobalChestShop.text.Message_BroadcastCreationOfNewAuction, player.getName(), String.valueOf(soldItems), GlobalChestShop.plugin.getItemStackDisplayName(itemForSale), GlobalChestShop.plugin.formatPrice(auctionPrepare.getPriceObject().getCurrentState(player), false));
-					GlobalChestShop.plugin.logToTradeLogger(player.getName(), player.getUniqueId(), broadcastMessage);
-					GlobalChestShop.plugin.getLogger().log(Level.INFO, ChatColor.stripColor(broadcastMessage));
-					if (GlobalChestShop.plugin.getMainConfig().broadcastCreationOfNewAuctions) {
-						for (Player p : GlobalChestShop.plugin.getServer().getOnlinePlayers()) {
-							try {
-								if (GlobalChestShop.plugin.getworldGroup(p.getLocation()) == worldGroup) {
-									if (p.getUniqueId().compareTo(player.getUniqueId()) == 0) {
-										 continue;
-									}
-									p.sendMessage(broadcastMessage);
-								}
-							} catch (WorldHasNoWorldGroupException e) {
-								continue;
-							}
+				player.sendMessage(GlobalChestShop.text.get(GlobalChestShop.text.GUI_SubmitCreateAuction_Succsess));
 
+				// BroadCast																													//player, 64, stone, price
+				String broadcastMessage = GlobalChestShop.text.get(GlobalChestShop.text.Message_BroadcastCreationOfNewAuction, player.getName(), String.valueOf(soldItems), GlobalChestShop.plugin.getItemStackDisplayName(itemForSale), GlobalChestShop.plugin.formatPrice(auctionPrepare.getPriceObject().getCurrentState(player), false));
+				GlobalChestShop.plugin.logToTradeLogger(player.getName(), player.getUniqueId(), broadcastMessage);
+				GlobalChestShop.plugin.getLogger().log(Level.INFO, ChatColor.stripColor(broadcastMessage));
+				if (GlobalChestShop.plugin.getMainConfig().broadcastCreationOfNewAuctions) {
+					for (Player p : GlobalChestShop.plugin.getServer().getOnlinePlayers()) {
+						try {
+							if (GlobalChestShop.plugin.getworldGroup(p.getLocation()) == worldGroup) {
+								if (p.getUniqueId().compareTo(player.getUniqueId()) == 0) {
+									 continue;
+								}
+								p.sendMessage(broadcastMessage);
+							}
+						} catch (WorldHasNoWorldGroupException e) {
+							continue;
 						}
+
 					}
-					
-					////
-					
-					if (fallBackGUI instanceof GUI_AuctionCreate) {
-						((GUI_AuctionCreate) fallBackGUI).unsetItem();
-					}
-					inventoryGUI.returnToFirstGUI(player);
 				}
+
+				////
+
+				if (fallBackGUI instanceof GUI_AuctionCreate) {
+					((GUI_AuctionCreate) fallBackGUI).unsetItem();
+				}
+				inventoryGUI.returnToFirstGUI(player);
 
 			}
 		});

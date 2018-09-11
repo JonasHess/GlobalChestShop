@@ -23,7 +23,7 @@ public class GUI_AuctionCreate extends InventoryGUI {
 	private int						amount				= 1;
 //	public boolean					priceWasInitialized	= false;
 	protected Integer				worldGroup;
-
+	private ItemStack originalItem = null;
 	public GUI_AuctionCreate(InventoryGUI parentInventoryGUI, Integer worldGroup, Player player) {
 		this(parentInventoryGUI, null, worldGroup, player);
 	}
@@ -44,6 +44,10 @@ public class GUI_AuctionCreate extends InventoryGUI {
 	}
 
 	public void setItemStack(ItemStack item, Player player) throws ItemIsDamagedException, ItemIsNotAlloedInThisWorldGroupException {
+		if (originalItem !=null && !originalItem.getType().equals(Material.AIR)){
+			player.getInventory().addItem(originalItem);
+			originalItem = null;
+		}
 		if (item != null && !item.getType().equals(Material.AIR)) {
 			if (item.getType().getMaxDurability() != 0 && item.getDurability() != 0) {
 				updateAfterChange(player);
@@ -55,10 +59,14 @@ public class GUI_AuctionCreate extends InventoryGUI {
 					throw new ItemIsNotAlloedInThisWorldGroupException();
 				}
 			}
+			originalItem = item;
 			ItemStack newItem = item.clone();
 			this.setAmount(item.getAmount());
-			newItem.setAmount(1);
 			this.itemStack = newItem;
+			if (player.getItemOnCursor()==null||player.getItemOnCursor().getType().equals(Material.AIR)) {
+				player.getInventory().removeItem(originalItem);
+			}
+			player.setItemOnCursor(null);
 //			Double lastPrice = GlobalChestShop.plugin.getAuctionController(this.worldGroup).getLastPriceForPlayersAuction(player, newItem);
 //			if (lastPrice != null) {
 //				this.price = new StateKeeperPrice(lastPrice, true, false);
@@ -163,7 +171,7 @@ public class GUI_AuctionCreate extends InventoryGUI {
 		if (this.itemStack != null) {
 			
 			ItemStack itemWithcorrectAmount = itemStack.clone();
-			itemWithcorrectAmount.setAmount(amount);           
+			//itemWithcorrectAmount.setAmount(amount);
 			
 			this.addAnimatedButton(new ButtonEffect_FadeIn(6, this.getHeight() - 1, 10), new Button_AuctionGetPrice(itemWithcorrectAmount, false,  worldGroup, new ItemStack(Material.ARROW), GlobalChestShop.text.get(GlobalChestShop.text.Button_SellSingle)));
 					
